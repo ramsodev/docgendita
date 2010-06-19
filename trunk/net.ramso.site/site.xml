@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/net.ramso.doc_1.0.0.201006191906.jar" id="net.ramso.doc" version="1.0.0.201006191906">
+      <category name="net.ramso.document"/>
+   </feature>
+   <category-def name="net.ramso.document" label="Documentator"/>
+</site>

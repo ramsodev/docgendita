@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+<extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerActionBinding viewerId="org.eclipse.datatools.connectivity.DataSourceExplorerNavigator">
+         <includes>
+            <actionExtension pattern="net.ramso.doc.datatools.ui.popup.actions.*" />
+         </includes>
+      </viewerActionBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <actionProvider
+            class="net.ramso.doc.datatools.ui.popup.DocumentationActionProvider"
+            id="net.ramso.doc.datatools.ui.popup.actions.documentationactionprovider">
+         <enablement>
+            <or>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Database"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Catalog"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Schema"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.tables.Table"/>               
+               <instanceof value="org.eclipse.datatools.modelbase.sql.datatypes.UserDefinedType"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.routines.Procedure"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.routines.UserDefinedFunction"/>
+            </or>
+         </enablement>
+      </actionProvider>
+   </extension>
+
+</plugin>
