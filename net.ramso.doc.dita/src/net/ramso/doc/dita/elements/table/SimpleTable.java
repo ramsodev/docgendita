@@ -15,12 +15,27 @@ import org.jdom.Element;
  */
 public class SimpleTable extends BaseDitaElement {
 	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
 	 * @param type
 	 */
 	public SimpleTable() {
 		super(TableTypes.SIMPLETABLE);
 		setFrame(FrameValues.ALL);
 		setExpanse("page");
+	}
+
+	public void addRow(String[] values) {
+		Element row = DitaFactory.createElement(TableTypes.STROW);
+		for (String value : values) {
+			row
+					.addContent(DitaFactory.createElement(TableTypes.STENTRY,
+							value));
+		}
+		addContent(row);
 	}
 
 	/**
@@ -37,14 +52,6 @@ public class SimpleTable extends BaseDitaElement {
 		setAttribute("frame", value.getLiteral());
 	}
 
-	public void setRelColWidth(int[] sizes) {
-		String value = "";
-		for (int i : sizes) {
-			value += +i + "* ";
-		}
-		setAttribute("relcolwidth", value);
-	}
-
 	public void setHeaders(String[] heads) {
 		Element head = DitaFactory.createElement(TableTypes.STHEAD);
 		for (String headValue : heads) {
@@ -54,12 +61,11 @@ public class SimpleTable extends BaseDitaElement {
 		addContent(head);
 	}
 
-	public void addRow(String[] values) {
-		Element row = DitaFactory.createElement(TableTypes.STROW);
-		for (String value : values) {
-			row.addContent(DitaFactory.createElement(TableTypes.STENTRY,
-					value));
+	public void setRelColWidth(int[] sizes) {
+		String value = "";
+		for (int i : sizes) {
+			value += +i + "* ";
 		}
-		addContent(row);
+		setAttribute("relcolwidth", value);
 	}
 }

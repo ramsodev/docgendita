@@ -6,12 +6,16 @@ package net.ramso.doc.dita.elements.bookmap;
 import net.ramso.doc.dita.elements.BaseDitaElement;
 import net.ramso.doc.dita.elements.BookMapTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
-import net.ramso.doc.dita.elements.IDitaTypes;
 
 /**
  * @author ramso
  */
 public class BookLists extends BaseDitaElement {
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
 	/**
 	 * @param type
 	 */
@@ -19,37 +23,25 @@ public class BookLists extends BaseDitaElement {
 		super(BookMapTypes.BOOKLISTS);
 	}
 
-	public void setToc(boolean set) {
-		if (set) {
-			if (!isToc()) {
-				addContent(DitaFactory.createElement(BookMapTypes.TOC));
-			}
-		}
-		else {
-			if (isToc()) {
-				removeChild(BookMapTypes.TOC.getLiteral());
-			}
-		}
+	/**
+	 * @return
+	 */
+	private boolean isAbbrevList() {
+		return getChild(BookMapTypes.ABBREVLIST.getLiteral()) != null;
 	}
 
 	/**
 	 * @return
 	 */
-	private boolean isToc() {
-		return getChild(BookMapTypes.TOC.getLiteral()) != null;
+	private boolean isBiblioList() {
+		return getChild(BookMapTypes.BIBLIOLIST.getLiteral()) != null;
 	}
 
-	public void setFigureList(boolean set) {
-		if (set) {
-			if (!isFigureList()) {
-				addContent(DitaFactory.createElement(BookMapTypes.FIGURELIST));
-			}
-		}
-		else {
-			if (isFigureList()) {
-				removeChild(BookMapTypes.FIGURELIST.getLiteral());
-			}
-		}
+	/**
+	 * @return
+	 */
+	private boolean isBookList() {
+		return getChild(BookMapTypes.BOOKLIST.getLiteral()) != null;
 	}
 
 	/**
@@ -59,17 +51,18 @@ public class BookLists extends BaseDitaElement {
 		return getChild(BookMapTypes.FIGURELIST.getLiteral()) != null;
 	}
 
-	public void setTableList(boolean set) {
-		if (set) {
-			if (!isToc()) {
-				addContent(DitaFactory.createElement(BookMapTypes.TABLELIST));
-			}
-		}
-		else {
-			if (isTableList()) {
-				removeChild(BookMapTypes.TABLELIST.getLiteral());
-			}
-		}
+	/**
+	 * @return
+	 */
+	private boolean isGlossayList() {
+		return getChild(BookMapTypes.GLOSSARYLIST.getLiteral()) != null;
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean isIndexList() {
+		return getChild(BookMapTypes.INDEXLIST.getLiteral()) != null;
 	}
 
 	/**
@@ -77,6 +70,20 @@ public class BookLists extends BaseDitaElement {
 	 */
 	private boolean isTableList() {
 		return getChild(BookMapTypes.TABLELIST.getLiteral()) != null;
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean isToc() {
+		return getChild(BookMapTypes.TOC.getLiteral()) != null;
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean isTrademarkList() {
+		return getChild(BookMapTypes.TRADEMARKLIST.getLiteral()) != null;
 	}
 
 	public void setAbbrevList(boolean set) {
@@ -92,34 +99,6 @@ public class BookLists extends BaseDitaElement {
 		}
 	}
 
-	/**
-	 * @return
-	 */
-	private boolean isAbbrevList() {
-		return getChild(BookMapTypes.ABBREVLIST.getLiteral()) != null;
-	}
-
-	public void setTrademarkList(boolean set) {
-		if (set) {
-			if (!isTrademarkList()) {
-				addContent(DitaFactory
-						.createElement(BookMapTypes.TRADEMARKLIST));
-			}
-		}
-		else {
-			if (isTrademarkList()) {
-				removeChild(BookMapTypes.TRADEMARKLIST.getLiteral());
-			}
-		}
-	}
-
-	/**
-	 * @return
-	 */
-	private boolean isTrademarkList() {
-		return getChild(BookMapTypes.TRADEMARKLIST.getLiteral()) != null;
-	}
-
 	public void setBiblioList(boolean set) {
 		if (set) {
 			if (!isBiblioList()) {
@@ -131,33 +110,6 @@ public class BookLists extends BaseDitaElement {
 				removeChild(BookMapTypes.BIBLIOLIST.getLiteral());
 			}
 		}
-	}
-
-	/**
-	 * @return
-	 */
-	private boolean isBiblioList() {
-		return getChild(BookMapTypes.BIBLIOLIST.getLiteral()) != null;
-	}
-
-	public void setIndexList(boolean set) {
-		if (set) {
-			if (!isIndexList()) {
-				addContent(DitaFactory.createElement(BookMapTypes.INDEXLIST));
-			}
-		}
-		else {
-			if (isIndexList()) {
-				removeChild(BookMapTypes.INDEXLIST.getLiteral());
-			}
-		}
-	}
-
-	/**
-	 * @return
-	 */
-	private boolean isIndexList() {
-		return getChild(BookMapTypes.INDEXLIST.getLiteral()) != null;
 	}
 
 	public void setBookList(boolean set) {
@@ -173,11 +125,17 @@ public class BookLists extends BaseDitaElement {
 		}
 	}
 
-	/**
-	 * @return
-	 */
-	private boolean isBookList() {
-		return getChild(BookMapTypes.BOOKLIST.getLiteral()) != null;
+	public void setFigureList(boolean set) {
+		if (set) {
+			if (!isFigureList()) {
+				addContent(DitaFactory.createElement(BookMapTypes.FIGURELIST));
+			}
+		}
+		else {
+			if (isFigureList()) {
+				removeChild(BookMapTypes.FIGURELIST.getLiteral());
+			}
+		}
 	}
 
 	public void setGlossaryList(boolean set) {
@@ -193,10 +151,56 @@ public class BookLists extends BaseDitaElement {
 		}
 	}
 
-	/**
-	 * @return
-	 */
-	private boolean isGlossayList() {
-		return getChild(BookMapTypes.GLOSSARYLIST.getLiteral()) != null;
+	public void setIndexList(boolean set) {
+		if (set) {
+			if (!isIndexList()) {
+				addContent(DitaFactory.createElement(BookMapTypes.INDEXLIST));
+			}
+		}
+		else {
+			if (isIndexList()) {
+				removeChild(BookMapTypes.INDEXLIST.getLiteral());
+			}
+		}
+	}
+
+	public void setTableList(boolean set) {
+		if (set) {
+			if (!isToc()) {
+				addContent(DitaFactory.createElement(BookMapTypes.TABLELIST));
+			}
+		}
+		else {
+			if (isTableList()) {
+				removeChild(BookMapTypes.TABLELIST.getLiteral());
+			}
+		}
+	}
+
+	public void setToc(boolean set) {
+		if (set) {
+			if (!isToc()) {
+				addContent(DitaFactory.createElement(BookMapTypes.TOC));
+			}
+		}
+		else {
+			if (isToc()) {
+				removeChild(BookMapTypes.TOC.getLiteral());
+			}
+		}
+	}
+
+	public void setTrademarkList(boolean set) {
+		if (set) {
+			if (!isTrademarkList()) {
+				addContent(DitaFactory
+						.createElement(BookMapTypes.TRADEMARKLIST));
+			}
+		}
+		else {
+			if (isTrademarkList()) {
+				removeChild(BookMapTypes.TRADEMARKLIST.getLiteral());
+			}
+		}
 	}
 }

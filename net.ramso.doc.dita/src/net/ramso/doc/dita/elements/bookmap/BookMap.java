@@ -1,25 +1,21 @@
 package net.ramso.doc.dita.elements.bookmap;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import net.ramso.doc.dita.elements.BaseDitaElement;
 import net.ramso.doc.dita.elements.BookMapTypes;
-import net.ramso.doc.dita.elements.DitaFactory;
-import net.ramso.doc.dita.elements.IDitaTypes;
-import net.ramso.doc.dita.elements.MapTypes;
-import net.ramso.doc.dita.elements.PrologTypes;
-import net.ramso.doc.dita.elements.TopicTypes;
 import net.ramso.doc.dita.elements.map.TopicRef;
-
-import org.jdom.Element;
 
 /**
  * @author ramso
  */
 public class BookMap extends BaseDitaElement {
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
 	/**
 	 * @param type
 	 */
@@ -31,11 +27,75 @@ public class BookMap extends BaseDitaElement {
 		setCollectionType("sequence");
 	}
 
+	public void addAppendix(Appendix appendix) {
+		addContent(appendix);
+	}
+
+	public void addBackMatter(BackMatter back) {
+		addContent(back);
+	}
+
+	public void addChapter(Chapter chapter) {
+		addContent(chapter);
+	}
+
+	public void addFrontMatter(FrontMatter front) {
+		addContent(front);
+	}
+
+	/**
+	 * @param parts
+	 */
+	public void addPart(List<Part> parts) {
+		addContent(parts);
+	}
+
+	public void addPart(Part part) {
+		addContent(part);
+	}
+
+	/**
+	 * @param preface
+	 */
+	public void addPreface(Preface preface) {
+		getFrontMatter().setPreface(preface);
+	}
+
+	public Appendix getAppendix(String id) {
+		return (Appendix) getContent(BookMapTypes.APPENDIX, id);
+	}
+
+	public Chapter getChapter(String id) {
+		return (Chapter) getContent(BookMapTypes.CHAPTER, id);
+	}
+
+	/**
+	 * @return
+	 */
+	private FrontMatter getFrontMatter() {
+		return (FrontMatter) getChild(BookMapTypes.FRONTMATTER.getLiteral());
+	}
+
+	public TopicRef getPart(String id) {
+		return (TopicRef) getContent(BookMapTypes.PART, id);
+	}
+
 	/**
 	 * @param string
 	 */
 	public void setCollectionType(String value) {
 		setAttribute("collection-type", value);
+	}
+
+	public void setTitle(String title) {
+		setAttribute("title", title);
+	}
+
+	public void setTitle(String title, String alts) {
+		BookTitle bookTitle = new BookTitle();
+		bookTitle.setTitle(title);
+		bookTitle.setTitleAlts(alts);
+		addContent(bookTitle);
 	}
 
 	/**
@@ -48,69 +108,5 @@ public class BookMap extends BaseDitaElement {
 		else {
 			setAttribute("translate", "no");
 		}
-	}
-
-	public void setTitle(String title) {
-		setAttribute("title", title);
-	}
-
-	public void addChapter(Chapter chapter) {
-		addContent(chapter);
-	}
-
-	public Chapter getChapter(String id) {
-		return (Chapter) getContent(BookMapTypes.CHAPTER, id);
-	}
-
-	public void addPart(Part part) {
-		addContent(part);
-	}
-
-	public TopicRef getPart(String id) {
-		return (TopicRef) getContent(BookMapTypes.PART, id);
-	}
-
-	public void addAppendix(Appendix appendix) {
-		addContent(appendix);
-	}
-
-	public Appendix getAppendix(String id) {
-		return (Appendix) getContent(BookMapTypes.APPENDIX, id);
-	}
-
-	public void setTitle(String title, String alts) {
-		BookTitle bookTitle = new BookTitle();
-		bookTitle.setTitle(title);
-		bookTitle.setTitleAlts(alts);
-		addContent(bookTitle);
-	}
-
-	public void addFrontMatter(FrontMatter front) {
-		addContent(front);
-	}
-
-	public void addBackMatter(BackMatter back) {
-		addContent(back);
-	}
-
-	/**
-	 * @param preface
-	 */
-	public void addPreface(Preface preface) {
-		getFrontMatter().setPreface(preface);
-	}
-
-	/**
-	 * @return
-	 */
-	private FrontMatter getFrontMatter() {
-		return (FrontMatter) getChild(BookMapTypes.FRONTMATTER.getLiteral());
-	}
-
-	/**
-	 * @param parts
-	 */
-	public void addPart(List<Part> parts) {
-		addContent(parts);
 	}
 }

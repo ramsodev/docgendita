@@ -8,9 +8,13 @@ import net.ramso.doc.dita.elements.map.BasicMapRef;
 
 /**
  * @author ramso
- *
  */
 public class Appendix extends BasicMapRef {
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
 	/**
 	 * @param type
 	 */

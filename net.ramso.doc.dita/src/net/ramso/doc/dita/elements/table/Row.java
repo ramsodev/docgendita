@@ -14,10 +14,24 @@ import net.ramso.doc.dita.elements.TableTypes;
  */
 public class Row extends BaseDitaElement {
 	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
 	 * @param type
 	 */
 	public Row() {
 		super(TableTypes.ROW);
+	}
+
+	public void appendEntry(Entry entry) {
+		addContent(entry);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Entry> getEntrys() {
+		return getChildren();
 	}
 
 	/**
@@ -34,14 +48,5 @@ public class Row extends BaseDitaElement {
 
 	public void setVAlign(VerticalAlignValues value) {
 		setAttribute("valign", value.getLiteral());
-	}
-
-	public void appendEntry(Entry entry) {
-		addContent(entry);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Entry> getEntrys() {
-		return getChildren();
 	}
 }

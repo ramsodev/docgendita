@@ -15,11 +15,27 @@ import net.ramso.doc.dita.elements.TopicTypes;
  */
 public class Table extends BasicTableAttributes {
 	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
 	 * @param type
 	 */
 	public Table() {
 		super(TableTypes.TABLE);
 		setFrame(FrameValues.ALL);
+	}
+
+	/**
+	 * @return
+	 */
+	public TGroup getTGroup() {
+		return (TGroup) getChild(TableTypes.TGROUP.getLiteral());
+	}
+
+	public void setDesc(String desc) {
+		addContent(DitaFactory.createElement(BodyTypes.DESC, desc));
 	}
 
 	/**
@@ -55,13 +71,6 @@ public class Table extends BasicTableAttributes {
 		setAttribute("scale", value.getLiteral());
 	}
 
-	/**
-	 * @return
-	 */
-	public TGroup getTGroup() {
-		return (TGroup) getChild(TableTypes.TGROUP.getLiteral());
-	}
-
 	public void setTGroup(TGroup tgroup) {
 		if (getTGroup() == null) {
 			addContent(tgroup);
@@ -70,9 +79,5 @@ public class Table extends BasicTableAttributes {
 
 	public void setTitle(String title) {
 		addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
-	}
-
-	public void setDesc(String desc) {
-		addContent(DitaFactory.createElement(BodyTypes.DESC, desc));
 	}
 }

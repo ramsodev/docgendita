@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.ramso.doc.datatools.Messages;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.bookmap.Part;
 import net.ramso.doc.dita.elements.bookmap.Preface;
@@ -23,35 +24,8 @@ public class ProcessDatabase {
 	private List<Part>	parts;
 
 	public ProcessDatabase(Database object, String path) {
-		this.database = object;
+		database = object;
 		this.path = path;
-	}
-
-	@SuppressWarnings("unchecked")
-	public String process(IProgressMonitor monitor) throws IOException {
-		preface = new Preface();
-		preface.setHref(database.getName() + ".dita");
-		TopicDocument topicDocument = new TopicDocument();
-		Topic topic = topicDocument.getTopic();
-		topic.setID(database.getName());
-		String title = "Base de Datos " + database.getName();
-		if (database.getDescription() != null) {
-			title += " - " + database.getDescription();
-		}
-		topic.setTitle(title);
-		topic.appendSection("Descripción", "des");
-		Section section = topic.getSection("des");
-		section.appendP(database.getDescription());
-		section.appendP("Fabricante: " + database.getVendor());
-		section.appendP("Version: " + database.getVersion());
-		if (database.getCatalogs().isEmpty()) {
-			addSchemas(database.getSchemas(), topic, monitor);
-		}
-		else {
-			addCatalogs(database.getCatalogs(), topic, monitor);
-		}
-		topicDocument.save(path);
-		return null;
 	}
 
 	/**
@@ -67,21 +41,6 @@ public class ProcessDatabase {
 				getPreface().appendTopicRef(createCatalog(catalog, monitor));
 			}
 		}
-	}
-
-	/**
-	 * @param catalog
-	 * @param monitor
-	 * @return
-	 * @throws IOException
-	 */
-	private TopicRef createCatalog(Catalog catalog, IProgressMonitor monitor)
-			throws IOException {
-		ProcessCatalog pCatalog = new ProcessCatalog(catalog, path);
-		pCatalog.setPrefix(database.getName() + "_");
-		pCatalog.process(monitor);
-		parts = pCatalog.getParts();
-		return pCatalog.getTopicRef();
 	}
 
 	/**
@@ -101,6 +60,21 @@ public class ProcessDatabase {
 	}
 
 	/**
+	 * @param catalog
+	 * @param monitor
+	 * @return
+	 * @throws IOException
+	 */
+	private TopicRef createCatalog(Catalog catalog, IProgressMonitor monitor)
+			throws IOException {
+		ProcessCatalog pCatalog = new ProcessCatalog(catalog, path);
+		pCatalog.setPrefix(database.getName() + "_"); //$NON-NLS-1$
+		pCatalog.process(monitor);
+		parts = pCatalog.getParts();
+		return pCatalog.getTopicRef();
+	}
+
+	/**
 	 * @param schema
 	 * @param monitor
 	 * @return
@@ -109,9 +83,16 @@ public class ProcessDatabase {
 	private Part createSchema(Schema schema, IProgressMonitor monitor)
 			throws IOException {
 		ProcessSchema pSchema = new ProcessSchema(schema, path);
-		pSchema.setPrefix(database.getName() + "_");
+		pSchema.setPrefix(database.getName() + "_"); //$NON-NLS-1$
 		pSchema.process(monitor);
 		return pSchema.getPart();
+	}
+
+	/**
+	 * @return the parts
+	 */
+	public List<Part> getParts() {
+		return parts;
 	}
 
 	/**
@@ -121,10 +102,30 @@ public class ProcessDatabase {
 		return preface;
 	}
 
-	/**
-	 * @return the parts
-	 */
-	public List<Part> getParts() {
-		return parts;
+	@SuppressWarnings("unchecked")
+	public String process(IProgressMonitor monitor) throws IOException {
+		preface = new Preface();
+		preface.setHref(database.getName() + ".dita"); //$NON-NLS-1$
+		TopicDocument topicDocument = new TopicDocument();
+		Topic topic = topicDocument.getTopic();
+		topic.setID(database.getName());
+		String title = Messages.ProcessDatabase_title + database.getName();
+		if (database.getDescription() != null) {
+			title += " - " + database.getDescription(); //$NON-NLS-1$
+		}
+		topic.setTitle(title);
+		topic.appendSection(Messages.ProcessDatabase_description, "des"); //$NON-NLS-2$
+		Section section = topic.getSection("des"); //$NON-NLS-1$
+		section.appendP(database.getDescription());
+		section.appendP(Messages.ProcessDatabase_vendor + database.getVendor());
+		section.appendP(Messages.ProcessDatabase_version + database.getVersion());
+		if (database.getCatalogs().isEmpty()) {
+			addSchemas(database.getSchemas(), topic, monitor);
+		}
+		else {
+			addCatalogs(database.getCatalogs(), topic, monitor);
+		}
+		topicDocument.save(path);
+		return null;
 	}
 }

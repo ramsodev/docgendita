@@ -6,7 +6,6 @@ import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.TopicTypes;
 import net.ramso.doc.dita.elements.topic.Section;
 
-
 public class Body extends BaseDitaElement {
 	/**
 	 * 
@@ -30,8 +29,8 @@ public class Body extends BaseDitaElement {
 		section.setTitle(title);
 		addContent(section);
 	}
-	
-	public Section getSection(String id){
+
+	public Section getSection(String id) {
 		return (Section) getContent(TopicTypes.SECTION, id);
 	}
 }

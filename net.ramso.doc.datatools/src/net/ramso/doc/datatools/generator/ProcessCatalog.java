@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.ramso.doc.datatools.Messages;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.bookmap.Chapter;
@@ -21,7 +22,7 @@ public class ProcessCatalog {
 	private Catalog			catalog;
 	private String			path;
 	private TopicRef		topicRef;
-	private String			prefix	= "";
+	private String			prefix	= ""; //$NON-NLS-1$
 	private boolean			isPreface;
 	private Preface			preface;
 	private ArrayList<Part>	parts;
@@ -38,35 +39,8 @@ public class ProcessCatalog {
 	public ProcessCatalog(Catalog catalog, String path, boolean preface) {
 		this.catalog = catalog;
 		this.path = path;
-		this.prefix = "";
-		this.isPreface = preface;
-	}
-
-	@SuppressWarnings("unchecked")
-	public String process(IProgressMonitor monitor) throws IOException {
-		String id = getPrefix() + catalog.getName();
-		if (isPreface) {
-			preface = new Preface();
-			preface.setHref(id + ".dita");
-		}
-		else {
-			topicRef = DitaFactory.createTopicRef();
-			topicRef.setHref(id + ".dita");
-		}
-		TopicDocument topicDocument = new TopicDocument();
-		Topic topic = topicDocument.getTopic();
-		topic.setID(id);
-		String title = "Catalogo " + catalog.getName();
-		if (catalog.getDescription() != null) {
-			title += " - " + catalog.getDescription();
-		}
-		topic.setTitle(title);
-		topic.appendSection("Descripción", "des");
-		Section section = topic.getSection("des");
-		section.appendP(catalog.getDescription());
-		addSchemas(catalog.getSchemas(), topic, monitor);
-		topicDocument.save(path);
-		return null;
+		prefix = ""; //$NON-NLS-1$
+		isPreface = preface;
 	}
 
 	/**
@@ -94,16 +68,9 @@ public class ProcessCatalog {
 	private Part createSchema(Schema schema, IProgressMonitor monitor)
 			throws IOException {
 		ProcessSchema pSchema = new ProcessSchema(schema, path);
-		pSchema.setPrefix(getPrefix() + catalog.getName() + "_");
+		pSchema.setPrefix(getPrefix() + catalog.getName() + "_"); //$NON-NLS-1$
 		pSchema.process(monitor);
 		return pSchema.getPart();
-	}
-
-	/**
-	 * @return
-	 */
-	public TopicRef getTopicRef() {
-		return topicRef;
 	}
 
 	public Chapter getChapter() {
@@ -112,18 +79,10 @@ public class ProcessCatalog {
 	}
 
 	/**
-	 * @return the prefix
+	 * @return the parts
 	 */
-	public String getPrefix() {
-		return prefix;
-	}
-
-	/**
-	 * @param prefix
-	 *            the prefix to set
-	 */
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
+	public ArrayList<Part> getParts() {
+		return parts;
 	}
 
 	/**
@@ -134,9 +93,51 @@ public class ProcessCatalog {
 	}
 
 	/**
-	 * @return the parts
+	 * @return the prefix
 	 */
-	public ArrayList<Part> getParts() {
-		return parts;
+	public String getPrefix() {
+		return prefix;
+	}
+
+	/**
+	 * @return
+	 */
+	public TopicRef getTopicRef() {
+		return topicRef;
+	}
+
+	@SuppressWarnings("unchecked")
+	public String process(IProgressMonitor monitor) throws IOException {
+		String id = getPrefix() + catalog.getName();
+		if (isPreface) {
+			preface = new Preface();
+			preface.setHref(id + ".dita"); //$NON-NLS-1$
+		}
+		else {
+			topicRef = DitaFactory.createTopicRef();
+			topicRef.setHref(id + ".dita"); //$NON-NLS-1$
+		}
+		TopicDocument topicDocument = new TopicDocument();
+		Topic topic = topicDocument.getTopic();
+		topic.setID(id);
+		String title = Messages.ProcessCatalog_title + catalog.getName();
+		if (catalog.getDescription() != null) {
+			title += " - " + catalog.getDescription(); //$NON-NLS-1$
+		}
+		topic.setTitle(title);
+		topic.appendSection(Messages.ProcessCatalog_description, "des"); //$NON-NLS-2$
+		Section section = topic.getSection("des"); //$NON-NLS-1$
+		section.appendP(catalog.getDescription());
+		addSchemas(catalog.getSchemas(), topic, monitor);
+		topicDocument.save(path);
+		return null;
+	}
+
+	/**
+	 * @param prefix
+	 *            the prefix to set
+	 */
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 }

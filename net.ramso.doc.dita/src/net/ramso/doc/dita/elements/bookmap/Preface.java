@@ -5,24 +5,29 @@ package net.ramso.doc.dita.elements.bookmap;
 
 import java.util.List;
 
-import org.jdom.Attribute;
-
 import net.ramso.doc.dita.elements.BookMapTypes;
 import net.ramso.doc.dita.elements.map.BasicMapRef;
 import net.ramso.doc.dita.elements.map.TopicRef;
+
+import org.jdom.Attribute;
 
 /**
  * @author ramso
  */
 public class Preface extends BasicMapRef {
 	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
 	 * @param type
 	 */
 	public Preface() {
 		super(BookMapTypes.PREFACE);
 	}
-	
-	public Preface(TopicRef topicref){
+
+	public Preface(TopicRef topicref) {
 		super(BookMapTypes.PREFACE);
 		importFromTopic(topicref);
 	}
@@ -36,6 +41,5 @@ public class Preface extends BasicMapRef {
 			setAttribute(attribute.getName(), attribute.getValue());
 		}
 		setContent(topicref.cloneContent());
-		
 	}
 }

@@ -14,21 +14,27 @@ import net.ramso.doc.dita.elements.TableTypes;
  */
 public class THead extends BaseDitaElement {
 	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
 	 * @param type
 	 */
 	public THead() {
 		super(TableTypes.THEAD);
 	}
 
-	public void setVAlign(VerticalAlignValues value) {
-		setAttribute("valign", value.getLiteral());
-	}
-	public void appendRow(Row row){
+	public void appendRow(Row row) {
 		addContent(row);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Row> getRows(){
+	public List<Row> getRows() {
 		return getChildren();
+	}
+
+	public void setVAlign(VerticalAlignValues value) {
+		setAttribute("valign", value.getLiteral());
 	}
 }

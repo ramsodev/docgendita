@@ -21,16 +21,9 @@ public class BaseDitaElement extends Element {
 		super(type.getLiteral());
 	}
 
-	public void setID(String id) {
-		setAttribute("id", id);
-	}
-
-	public String getID() {
-		return getAttribute("id").getValue();
-	}
-
-	public boolean isID(String id) {
-		return getID().equals(id);
+	@SuppressWarnings("unchecked")
+	public List<BaseDitaElement> getChilds(IDitaTypes type) {
+		return getChildren(type.getLiteral());
 	}
 
 	public Element getContent(IDitaTypes type, String id) {
@@ -43,6 +36,10 @@ public class BaseDitaElement extends Element {
 		return null;
 	}
 
+	public String getID() {
+		return getAttribute("id").getValue();
+	}
+
 	/**
 	 * @param type
 	 * @return
@@ -53,13 +50,16 @@ public class BaseDitaElement extends Element {
 			return -1;
 		}
 		else {
-			return indexOf(childs.get(childs.size()-1));
+			return indexOf(childs.get(childs.size() - 1));
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<BaseDitaElement> getChilds(IDitaTypes type) {
-		return getChildren(type.getLiteral());
+	public boolean isID(String id) {
+		return getID().equals(id);
+	}
+
+	public void setID(String id) {
+		setAttribute("id", id);
 	}
 
 	public void setLang(String lang) {

@@ -31,6 +31,15 @@ public class Topic extends BaseDitaElement {
 		body.appendP(text);
 	}
 
+	/**
+	 * @param string
+	 * @return
+	 */
+	public void appendSection(String title, String id) {
+		Body body = getBody();
+		body.appendSection(title, id);
+	}
+
 	public Body getBody() {
 		Element body = getChild(TopicTypes.BODY.getLiteral());
 		Body result;
@@ -44,25 +53,14 @@ public class Topic extends BaseDitaElement {
 		return result;
 	}
 
-	public void setTitle(String title) {
-		addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
-	}
-
-	/**
-	 * @param string
-	 * @return
-	 */
-	public void appendSection(String title, String id) {
-		Body body = getBody();
-		body.appendSection(title, id);
-	}
-
 	/**
 	 * @param set
 	 */
 	public Section getSection(String id) {
 		return getBody().getSection(id);
-		
 	}
-	
+
+	public void setTitle(String title) {
+		addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
+	}
 }
