@@ -1,0 +1,11 @@
+#summary One-sentence summary of this page.
+#labels Featured
+
+= Introduction =
+
+This plugin add documentation generation for Database. The output format is DITA.   
+
+
+= Use =
+
+In the Database view select a element push right button and select Documentation Generation
