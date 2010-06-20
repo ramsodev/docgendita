@@ -30,8 +30,8 @@ public enum ScaleValues {
 	public static final int					_200_VALUE				= 11;
 	public static final int					DITA_USE_CONREF_VALUE	= 12;
 	private static final ScaleValues[]		VALUES_ARRAY			= new ScaleValues[] {
-			_50, _60, _70, _80._90, _100, _110, _120, _140, _160, _180, _200,
-			DITA_USE_CONREF										};
+			_50, _60, _70, ScaleValues._90, _100, _110, _120, _140, _160, _180,
+			_200, DITA_USE_CONREF									};
 	public static final List<ScaleValues>	VALUES					= Collections
 																			.unmodifiableList(Arrays
 																					.asList(VALUES_ARRAY));

@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.ramso.doc.datatools.Messages;
 import net.ramso.doc.datatools.ui.wizards.DocumentationWizard;
 
 import org.eclipse.datatools.connectivity.sqm.core.ui.explorer.virtual.IVirtualNode;
@@ -27,25 +28,16 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.navigator.CommonViewer;
 
 public class DocumentationAction extends Action {
-	private static final String TEXT = "Generar Documentación";
-	private static final ImageDescriptor descriptor = null;
-
-	protected SelectionChangedEvent event;
-	protected CommonViewer viewer;
+	private static final String				TEXT		= Messages.DocumentationAction_title;
+	private static final ImageDescriptor	descriptor	= null;
+	protected SelectionChangedEvent			event;
+	protected CommonViewer					viewer;
 
 	public DocumentationAction() {
 		this.setImageDescriptor(descriptor);
 		this.setDisabledImageDescriptor(descriptor);
 		this.setText(TEXT);
 		this.setToolTipText(TEXT);
-	}
-
-	public void setCommonViewer(CommonViewer viewer) {
-		this.viewer = viewer;
-	}
-
-	public void selectionChanged(SelectionChangedEvent event) {
-		this.event = event;
 	}
 
 	private void addSQLObject(List linkedList, Object selected) {
@@ -56,8 +48,8 @@ public class DocumentationAction extends Action {
 
 	protected List getMultipleSelection() {
 		List linkedList = new LinkedList();
-		if (this.event.getSelection() instanceof IStructuredSelection) {
-			for (Iterator i = ((IStructuredSelection) this.event.getSelection())
+		if (event.getSelection() instanceof IStructuredSelection) {
+			for (Iterator i = ((IStructuredSelection) event.getSelection())
 					.iterator(); i.hasNext();) {
 				Object nextSelected = i.next();
 				if (nextSelected instanceof IVirtualNode) {
@@ -66,7 +58,8 @@ public class DocumentationAction extends Action {
 					for (int j = 0, n = children.length; j < n; j++) {
 						addSQLObject(linkedList, children[j]);
 					}
-				} else {
+				}
+				else {
 					addSQLObject(linkedList, nextSelected);
 				}
 			}
@@ -74,19 +67,28 @@ public class DocumentationAction extends Action {
 		return linkedList;
 	}
 
+	@Override
 	public void run() {
 		try {
 			List list = this.getMultipleSelection();
 			if (list.size() > 0) {
-				 Wizard wizard = new DocumentationWizard(list);
-				 WizardDialog dialog = new
-				 WizardDialog(this.viewer.getControl().getShell(), wizard);
-				 dialog.create();
-				 dialog.open();
-				
+				Wizard wizard = new DocumentationWizard(list);
+				WizardDialog dialog = new WizardDialog(viewer.getControl()
+						.getShell(), wizard);
+				dialog.create();
+				dialog.open();
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void selectionChanged(SelectionChangedEvent event) {
+		this.event = event;
+	}
+
+	public void setCommonViewer(CommonViewer viewer) {
+		this.viewer = viewer;
 	}
 }

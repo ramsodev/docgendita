@@ -12,6 +12,11 @@ import net.ramso.doc.dita.elements.DitaFactory;
  */
 public class BookTitle extends BaseDitaElement {
 	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
 	 * @param type
 	 */
 	public BookTitle() {

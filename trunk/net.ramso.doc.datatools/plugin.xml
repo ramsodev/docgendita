@@ -19,6 +19,7 @@
                <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Database"/>
                <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Catalog"/>
                <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Schema"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Sequence"/>
                <instanceof value="org.eclipse.datatools.modelbase.sql.tables.Table"/>               
                <instanceof value="org.eclipse.datatools.modelbase.sql.datatypes.UserDefinedType"/>
                <instanceof value="org.eclipse.datatools.modelbase.sql.routines.Procedure"/>

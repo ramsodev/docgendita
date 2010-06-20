@@ -29,18 +29,10 @@
       <import plugin="org.eclipse.datatools.modelbase.sql" version="1.0.3" match="greaterOrEqual"/>
       <import plugin="net.ramso.doc.dita" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.datatools.connectivity.sqm.core" version="1.1.1" match="greaterOrEqual"/>
-      <import plugin="org.jdom" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
          id="net.ramso.doc.datatools"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="net.ramso.doc.dita"
          download-size="0"
          install-size="0"
          version="0.0.0"

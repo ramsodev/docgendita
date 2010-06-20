@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.ramso.doc.datatools.Messages;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.bookmap.Chapter;
 import net.ramso.doc.dita.elements.bookmap.Part;
@@ -20,162 +21,17 @@ import org.eclipse.datatools.modelbase.sql.schema.Sequence;
 import org.eclipse.datatools.modelbase.sql.tables.PersistentTable;
 import org.eclipse.datatools.modelbase.sql.tables.Table;
 import org.eclipse.datatools.modelbase.sql.tables.ViewTable;
-import org.eclipse.emf.common.util.EList;
 
 public class ProcessSchema {
 	private Part	part;
 	private Schema	schema;
 	private String	path;
-	private String	prefix	= "";
+	private String	prefix	= ""; //$NON-NLS-1$
 
 	public ProcessSchema(Schema schema, String path) {
 		this.schema = schema;
 		this.path = path;
-		this.prefix = "";
-	}
-
-	@SuppressWarnings("unchecked")
-	public String process(IProgressMonitor monitor) throws IOException {
-		part = new Part();
-		String id = getPrefix() + schema.getName();
-		part.setHref(id + ".dita");
-		TopicDocument topicDocument = new TopicDocument();
-		Topic topic = topicDocument.getTopic();
-		topic.setID(id);
-		String title = "Esquema " + schema.getName();
-		if (schema.getDescription() != null) {
-			title += " - " + schema.getDescription();
-		}
-		topic.setTitle(title);
-		topic.appendSection("Descripción", "des");
-		Section section = topic.getSection("des");
-		section.appendP(schema.getDescription());
-		addTables(schema.getTables(), monitor);
-		addViews(schema.getTables(), monitor);
-		addSequences(schema.getSequences(), monitor);
-		addStoreProcedures(schema.getProcedures(), monitor);
-		addUDFs(schema.getUDFs(), monitor);
-		addUDTs(schema.getUserDefinedTypes(), monitor);
-		topicDocument.save(path);
-		return null;
-	}
-
-	/**
-	 * @param userDefinedTypes
-	 * @param monitor
-	 */
-	private void addUDTs(List<UserDefinedType> udts, IProgressMonitor monitor) throws IOException {
-		if (!udts.isEmpty()) {
-			Chapter chapter = new Chapter();
-			String id = getPrefix() + schema.getName() + "_udfs_Chapter";
-			chapter.setHref(id + ".dita");
-			TopicDocument topicDocument = new TopicDocument();
-			Topic topic = topicDocument.getTopic();
-			topic.setID(id);
-			String title = "Tipos Definidos por el Usuario del esquema "
-					+ schema.getName();
-			topic.setTitle(title);
-			topic.appendSection("Descripción", "des");
-			Section section = topic.getSection("des");
-			topicDocument.save(path);
-			for (UserDefinedType udf : udts) {
-				chapter.appendTopicRef(createUDT(udf, monitor));
-			}
-			getPart().addChapter(chapter);
-		}
-	}
-
-	/**
-	 * @param udf
-	 * @param monitor
-	 * @return
-	 * @throws IOException
-	 */
-	private TopicRef createUDT(UserDefinedType udf, IProgressMonitor monitor)
-			throws IOException {
-		ProcessUDT pProcedure = new ProcessUDT(udf, path);
-		pProcedure.setPrefix(prefix + schema.getName() + "_");
-		pProcedure.process(monitor);
-		return pProcedure.getTopicRef();
-	}
-	/**
-	 * @param monitor
-	 * @param udFs
-	 */
-	private void addUDFs(List<UserDefinedFunction> udfs,
-			IProgressMonitor monitor) throws IOException {
-		if (!udfs.isEmpty()) {
-			Chapter chapter = new Chapter();
-			String id = getPrefix() + schema.getName() + "_udfs_Chapter";
-			chapter.setHref(id + ".dita");
-			TopicDocument topicDocument = new TopicDocument();
-			Topic topic = topicDocument.getTopic();
-			topic.setID(id);
-			String title = "Funciones Definidas por el Usuario del esquema "
-					+ schema.getName();
-			topic.setTitle(title);
-			topic.appendSection("Descripción", "des");
-			Section section = topic.getSection("des");
-			topicDocument.save(path);
-			for (UserDefinedFunction udf : udfs) {
-				chapter.appendTopicRef(createUDF(udf, monitor));
-			}
-			getPart().addChapter(chapter);
-		}
-	}
-
-	/**
-	 * @param udf
-	 * @param monitor
-	 * @return
-	 * @throws IOException
-	 */
-	private TopicRef createUDF(UserDefinedFunction udf, IProgressMonitor monitor)
-			throws IOException {
-		ProcessUDF pProcedure = new ProcessUDF(udf, path);
-		pProcedure.setPrefix(prefix + schema.getName() + "_");
-		pProcedure.process(monitor);
-		return pProcedure.getTopicRef();
-	}
-
-	/**
-	 * @param procedures
-	 * @param monitor
-	 */
-	private void addStoreProcedures(List<Procedure> procedures,
-			IProgressMonitor monitor) throws IOException {
-		if (!procedures.isEmpty()) {
-			Chapter chapter = new Chapter();
-			String id = getPrefix() + schema.getName() + "_procedures_Chapter";
-			chapter.setHref(id + ".dita");
-			TopicDocument topicDocument = new TopicDocument();
-			Topic topic = topicDocument.getTopic();
-			topic.setID(id);
-			String title = "Procedimientos Almacenados del esquema "
-					+ schema.getName();
-			topic.setTitle(title);
-			topic.appendSection("Descripción", "des");
-			Section section = topic.getSection("des");
-			topicDocument.save(path);
-			for (Procedure procedure : procedures) {
-				chapter.appendTopicRef(createProcedure(procedure, monitor));
-			}
-			getPart().addChapter(chapter);
-		}
-	}
-
-	/**
-	 * @param procedure
-	 * @param monitor
-	 * @return
-	 * @throws IOException
-	 */
-	private TopicRef createProcedure(Procedure procedure,
-			IProgressMonitor monitor) throws IOException {
-		ProcessProcedure pProcedure = new ProcessProcedure(procedure, path);
-		pProcedure.setPrefix(prefix + schema.getName() + "_");
-		pProcedure.process(monitor);
-		return pProcedure.getTopicRef();
+		prefix = ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -186,15 +42,16 @@ public class ProcessSchema {
 			throws IOException {
 		if (!sequences.isEmpty()) {
 			Chapter chapter = new Chapter();
-			String id = getPrefix() + schema.getName() + "_sequences_Chapter";
-			chapter.setHref(id + ".dita");
+			String id = getPrefix() + schema.getName() + "_sequences_Chapter"; //$NON-NLS-1$
+			chapter.setHref(id + ".dita"); //$NON-NLS-1$
 			TopicDocument topicDocument = new TopicDocument();
 			Topic topic = topicDocument.getTopic();
 			topic.setID(id);
-			String title = "Secuencias del esquema " + schema.getName();
+			String title = Messages.ProcessSchema_sequence + schema.getName();
 			topic.setTitle(title);
-			topic.appendSection("Descripción", "des");
-			Section section = topic.getSection("des");
+			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
+			@SuppressWarnings("unused")
+			Section section = topic.getSection("des"); //$NON-NLS-1$
 			topicDocument.save(path);
 			for (Sequence sequence : sequences) {
 				chapter.appendTopicRef(createSequence(sequence, monitor));
@@ -204,17 +61,109 @@ public class ProcessSchema {
 	}
 
 	/**
-	 * @param sequence
+	 * @param procedures
 	 * @param monitor
-	 * @return
-	 * @throws IOException
 	 */
-	private TopicRef createSequence(Sequence sequence, IProgressMonitor monitor)
+	private void addStoreProcedures(List<Procedure> procedures,
+			IProgressMonitor monitor) throws IOException {
+		if (!procedures.isEmpty()) {
+			Chapter chapter = new Chapter();
+			String id = getPrefix() + schema.getName() + "_procedures_Chapter"; //$NON-NLS-1$
+			chapter.setHref(id + ".dita"); //$NON-NLS-1$
+			TopicDocument topicDocument = new TopicDocument();
+			Topic topic = topicDocument.getTopic();
+			topic.setID(id);
+			String title = Messages.ProcessSchema_procedure
+					+ schema.getName();
+			topic.setTitle(title);
+			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
+			@SuppressWarnings("unused")
+			Section section = topic.getSection("des"); //$NON-NLS-1$
+			topicDocument.save(path);
+			for (Procedure procedure : procedures) {
+				chapter.appendTopicRef(createProcedure(procedure, monitor));
+			}
+			getPart().addChapter(chapter);
+		}
+	}
+
+	private void addTables(List<Table> tables, IProgressMonitor monitor)
 			throws IOException {
-		ProcessSequence pView = new ProcessSequence(sequence, path);
-		pView.setPrefix(prefix + schema.getName() + "_");
-		pView.process(monitor);
-		return pView.getTopicRef();
+		if (!tables.isEmpty()) {
+			Chapter chapter = new Chapter();
+			String id = getPrefix() + schema.getName() + "_tables_chapter"; //$NON-NLS-1$
+			chapter.setHref(id + ".dita"); //$NON-NLS-1$
+			TopicDocument topicDocument = new TopicDocument();
+			Topic topic = topicDocument.getTopic();
+			topic.setID(id);
+			String title = Messages.ProcessSchema_tables + schema.getName();
+			topic.setTitle(title);
+			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
+			@SuppressWarnings("unused")
+			Section section = topic.getSection("des"); //$NON-NLS-1$
+			topicDocument.save(path);
+			for (Table table : tables) {
+				if (table instanceof PersistentTable) {
+					chapter.appendTopicRef(createTable((PersistentTable) table,
+							monitor));
+				}
+			}
+			getPart().addChapter(chapter);
+		}
+	}
+
+	/**
+	 * @param monitor
+	 * @param udFs
+	 */
+	private void addUDFs(List<UserDefinedFunction> udfs,
+			IProgressMonitor monitor) throws IOException {
+		if (!udfs.isEmpty()) {
+			Chapter chapter = new Chapter();
+			String id = getPrefix() + schema.getName() + "_udfs_Chapter"; //$NON-NLS-1$
+			chapter.setHref(id + ".dita"); //$NON-NLS-1$
+			TopicDocument topicDocument = new TopicDocument();
+			Topic topic = topicDocument.getTopic();
+			topic.setID(id);
+			String title = Messages.ProcessSchema_udfs
+					+ schema.getName();
+			topic.setTitle(title);
+			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
+			@SuppressWarnings("unused")
+			Section section = topic.getSection("des"); //$NON-NLS-1$
+			topicDocument.save(path);
+			for (UserDefinedFunction udf : udfs) {
+				chapter.appendTopicRef(createUDF(udf, monitor));
+			}
+			getPart().addChapter(chapter);
+		}
+	}
+
+	/**
+	 * @param userDefinedTypes
+	 * @param monitor
+	 */
+	private void addUDTs(List<UserDefinedType> udts, IProgressMonitor monitor)
+			throws IOException {
+		if (!udts.isEmpty()) {
+			Chapter chapter = new Chapter();
+			String id = getPrefix() + schema.getName() + "_udfs_Chapter"; //$NON-NLS-1$
+			chapter.setHref(id + ".dita"); //$NON-NLS-1$
+			TopicDocument topicDocument = new TopicDocument();
+			Topic topic = topicDocument.getTopic();
+			topic.setID(id);
+			String title = Messages.ProcessSchema_udts
+					+ schema.getName();
+			topic.setTitle(title);
+			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
+			@SuppressWarnings("unused")
+			Section section = topic.getSection("des"); //$NON-NLS-1$
+			topicDocument.save(path);
+			for (UserDefinedType udf : udts) {
+				chapter.appendTopicRef(createUDT(udf, monitor));
+			}
+			getPart().addChapter(chapter);
+		}
 	}
 
 	/**
@@ -233,21 +182,20 @@ public class ProcessSchema {
 		}
 		if (!views.isEmpty()) {
 			Chapter chapter = new Chapter();
-			String id = getPrefix() + schema.getName() + "_views_Chapter";
-			chapter.setHref(id + ".dita");
+			String id = getPrefix() + schema.getName() + "_views_Chapter"; //$NON-NLS-1$
+			chapter.setHref(id + ".dita"); //$NON-NLS-1$
 			TopicDocument topicDocument = new TopicDocument();
 			Topic topic = topicDocument.getTopic();
 			topic.setID(id);
-			String title = "Vistas del esquema " + schema.getName();
+			String title = Messages.ProcessSchema_views + schema.getName();
 			topic.setTitle(title);
-			topic.appendSection("Descripción", "des");
-			Section section = topic.getSection("des");
+			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
+			@SuppressWarnings("unused")
+			Section section = topic.getSection("des"); //$NON-NLS-1$
 			topicDocument.save(path);
 			for (ViewTable view : views) {
 				if (view instanceof ViewTable) {
-					chapter
-							.appendTopicRef(createView((ViewTable) view,
-									monitor));
+					chapter.appendTopicRef(createView(view, monitor));
 				}
 			}
 			getPart().addChapter(chapter);
@@ -255,41 +203,31 @@ public class ProcessSchema {
 	}
 
 	/**
-	 * @param view
+	 * @param procedure
 	 * @param monitor
 	 * @return
 	 * @throws IOException
 	 */
-	private TopicRef createView(ViewTable view, IProgressMonitor monitor)
-			throws IOException {
-		ProcessView pView = new ProcessView(view, path);
-		pView.setPrefix(prefix + schema.getName() + "_");
-		pView.process(monitor);
-		return pView.getTopicRef();
+	private TopicRef createProcedure(Procedure procedure,
+			IProgressMonitor monitor) throws IOException {
+		ProcessProcedure pProcedure = new ProcessProcedure(procedure, path);
+		pProcedure.setPrefix(prefix + schema.getName() + "_"); //$NON-NLS-1$
+		pProcedure.process(monitor);
+		return pProcedure.getTopicRef();
 	}
 
-	private void addTables(List<Table> tables, IProgressMonitor monitor)
+	/**
+	 * @param sequence
+	 * @param monitor
+	 * @return
+	 * @throws IOException
+	 */
+	private TopicRef createSequence(Sequence sequence, IProgressMonitor monitor)
 			throws IOException {
-		if (!tables.isEmpty()) {
-			Chapter chapter = new Chapter();
-			String id = getPrefix() + schema.getName() + "_tables_chapter";
-			chapter.setHref(id + ".dita");
-			TopicDocument topicDocument = new TopicDocument();
-			Topic topic = topicDocument.getTopic();
-			topic.setID(id);
-			String title = "Tablas del esquema " + schema.getName();
-			topic.setTitle(title);
-			topic.appendSection("Descripción", "des");
-			Section section = topic.getSection("des");
-			topicDocument.save(path);
-			for (Table table : tables) {
-				if (table instanceof PersistentTable) {
-					chapter.appendTopicRef(createTable((PersistentTable) table,
-							monitor));
-				}
-			}
-			getPart().addChapter(chapter);
-		}
+		ProcessSequence pView = new ProcessSequence(sequence, path);
+		pView.setPrefix(prefix + schema.getName() + "_"); //$NON-NLS-1$
+		pView.process(monitor);
+		return pView.getTopicRef();
 	}
 
 	/**
@@ -301,9 +239,51 @@ public class ProcessSchema {
 	private TopicRef createTable(PersistentTable table, IProgressMonitor monitor)
 			throws IOException {
 		ProcessTable pSchema = new ProcessTable(table, path);
-		pSchema.setPrefix(prefix + schema.getName() + "_");
+		pSchema.setPrefix(prefix + schema.getName() + "_"); //$NON-NLS-1$
 		pSchema.process(monitor);
 		return pSchema.getTopicRef();
+	}
+
+	/**
+	 * @param udf
+	 * @param monitor
+	 * @return
+	 * @throws IOException
+	 */
+	private TopicRef createUDF(UserDefinedFunction udf, IProgressMonitor monitor)
+			throws IOException {
+		ProcessUDF pProcedure = new ProcessUDF(udf, path);
+		pProcedure.setPrefix(prefix + schema.getName() + "_"); //$NON-NLS-1$
+		pProcedure.process(monitor);
+		return pProcedure.getTopicRef();
+	}
+
+	/**
+	 * @param udf
+	 * @param monitor
+	 * @return
+	 * @throws IOException
+	 */
+	private TopicRef createUDT(UserDefinedType udf, IProgressMonitor monitor)
+			throws IOException {
+		ProcessUDT pProcedure = new ProcessUDT(udf, path);
+		pProcedure.setPrefix(prefix + schema.getName() + "_"); //$NON-NLS-1$
+		pProcedure.process(monitor);
+		return pProcedure.getTopicRef();
+	}
+
+	/**
+	 * @param view
+	 * @param monitor
+	 * @return
+	 * @throws IOException
+	 */
+	private TopicRef createView(ViewTable view, IProgressMonitor monitor)
+			throws IOException {
+		ProcessView pView = new ProcessView(view, path);
+		pView.setPrefix(prefix + schema.getName() + "_"); //$NON-NLS-1$
+		pView.process(monitor);
+		return pView.getTopicRef();
 	}
 
 	public Part getPart() {
@@ -315,6 +295,32 @@ public class ProcessSchema {
 	 */
 	public String getPrefix() {
 		return prefix;
+	}
+
+	@SuppressWarnings("unchecked")
+	public String process(IProgressMonitor monitor) throws IOException {
+		part = new Part();
+		String id = getPrefix() + schema.getName();
+		part.setHref(id + ".dita"); //$NON-NLS-1$
+		TopicDocument topicDocument = new TopicDocument();
+		Topic topic = topicDocument.getTopic();
+		topic.setID(id);
+		String title = Messages.ProcessSchema_title + schema.getName();
+		if (schema.getDescription() != null) {
+			title += " - " + schema.getDescription(); //$NON-NLS-1$
+		}
+		topic.setTitle(title);
+		topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
+		Section section = topic.getSection("des"); //$NON-NLS-1$
+		section.appendP(schema.getDescription());
+		addTables(schema.getTables(), monitor);
+		addViews(schema.getTables(), monitor);
+		addSequences(schema.getSequences(), monitor);
+		addStoreProcedures(schema.getProcedures(), monitor);
+		addUDFs(schema.getUDFs(), monitor);
+		addUDTs(schema.getUserDefinedTypes(), monitor);
+		topicDocument.save(path);
+		return null;
 	}
 
 	/**

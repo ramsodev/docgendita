@@ -11,7 +11,6 @@ import net.ramso.doc.dita.elements.TopicTypes;
 import net.ramso.doc.dita.elements.body.Dl;
 import net.ramso.doc.dita.elements.table.SimpleTable;
 
-
 /**
  * @author ramso
  */
@@ -28,30 +27,8 @@ public class Section extends BaseDitaElement {
 		super(TopicTypes.SECTION);
 	}
 
-	public void setTitle(String title) {
-		addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
-	}
-
 	public void appendP(String text) {
 		addContent(DitaFactory.createElement(BodyTypes.P, text));
-	}
-
-	/**
-	 * @param string
-	 */
-	public Dl getDL(String id, boolean create) {
-		Dl dl = (Dl) getContent(BodyTypes.DL, id);
-		if(create && dl == null){
-			dl = DitaFactory.createDl();
-			dl.setID(id);
-			addContent(dl);
-		}
-		return dl;
-	}
-	
-	public Dl getDL(String id) {
-		return getDL(id, false);
-		
 	}
 
 	/**
@@ -65,9 +42,30 @@ public class Section extends BaseDitaElement {
 		table.setHeaders(heads);
 		table.setRelColWidth(sizes);
 		addContent(table);
-		
 	}
-	public SimpleTable getSimpleTable(String id){
-		return (SimpleTable) getContent(TableTypes.SIMPLETABLE,id);
+
+	public Dl getDL(String id) {
+		return getDL(id, false);
+	}
+
+	/**
+	 * @param string
+	 */
+	public Dl getDL(String id, boolean create) {
+		Dl dl = (Dl) getContent(BodyTypes.DL, id);
+		if (create && dl == null) {
+			dl = DitaFactory.createDl();
+			dl.setID(id);
+			addContent(dl);
+		}
+		return dl;
+	}
+
+	public SimpleTable getSimpleTable(String id) {
+		return (SimpleTable) getContent(TableTypes.SIMPLETABLE, id);
+	}
+
+	public void setTitle(String title) {
+		addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
 	}
 }

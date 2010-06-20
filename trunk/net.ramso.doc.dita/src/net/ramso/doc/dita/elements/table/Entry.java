@@ -12,6 +12,11 @@ import net.ramso.doc.dita.elements.TableTypes;
  */
 public class Entry extends BasicTableAttributes {
 	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
 	 * @param type
 	 */
 	public Entry() {
@@ -20,10 +25,6 @@ public class Entry extends BasicTableAttributes {
 
 	public void setAlign(AlignValues value) {
 		setAttribute("align", value.getLiteral());
-	}
-
-	public void setVAlign(VerticalAlignValues value) {
-		setAttribute("valign", value.getLiteral());
 	}
 
 	public void setChar(char value) {
@@ -42,15 +43,19 @@ public class Entry extends BasicTableAttributes {
 		setAttribute("colname", name);
 	}
 
-	public void setNamest(String name) {
-		setAttribute("namest", name);
+	public void setMoreRows(int rows) {
+		setAttribute("morerows", String.valueOf(rows));
 	}
 
 	public void setNameEnd(String name) {
 		setAttribute("nameend", name);
 	}
 
-	public void setMoreRows(int rows) {
-		setAttribute("morerows", String.valueOf(rows));
+	public void setNamest(String name) {
+		setAttribute("namest", name);
+	}
+
+	public void setVAlign(VerticalAlignValues value) {
+		setAttribute("valign", value.getLiteral());
 	}
 }

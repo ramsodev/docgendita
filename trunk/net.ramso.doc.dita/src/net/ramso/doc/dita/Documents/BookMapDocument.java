@@ -5,7 +5,6 @@ package net.ramso.doc.dita.Documents;
 
 import net.ramso.doc.dita.elements.BookMapTypes;
 import net.ramso.doc.dita.elements.bookmap.BookMap;
-import net.ramso.doc.dita.elements.map.Map;
 
 /**
  * @author ramso

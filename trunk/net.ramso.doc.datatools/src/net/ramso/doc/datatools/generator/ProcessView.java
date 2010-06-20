@@ -6,10 +6,10 @@ package net.ramso.doc.datatools.generator;
 import java.io.IOException;
 import java.util.List;
 
+import net.ramso.doc.datatools.Messages;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.attributes.AlignValues;
 import net.ramso.doc.dita.attributes.FrameValues;
-import net.ramso.doc.dita.attributes.ScaleValues;
 import net.ramso.doc.dita.attributes.VerticalAlignValues;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.connectivity.sqm.core.containment.ContainmentServiceImpl;
 import org.eclipse.datatools.connectivity.sqm.core.definition.DatabaseDefinition;
 import org.eclipse.datatools.connectivity.sqm.core.rte.DDLGenerator;
+import org.eclipse.datatools.connectivity.sqm.core.rte.EngineeringOption;
 import org.eclipse.datatools.connectivity.sqm.internal.core.RDBCorePlugin;
 import org.eclipse.datatools.connectivity.sqm.internal.core.definition.DatabaseDefinitionRegistryImpl;
 import org.eclipse.datatools.modelbase.sql.datatypes.PredefinedDataType;
@@ -51,39 +52,12 @@ public class ProcessView {
 	private TopicRef	topicRef;
 	private ViewTable	view;
 	private String		path;
-	private String		prefix	= "";
+	private String		prefix	= "";	//$NON-NLS-1$
 
 	public ProcessView(ViewTable view, String path) {
 		this.view = view;
 		this.path = path;
-		this.prefix = "";
-	}
-
-	@SuppressWarnings("unchecked")
-	public String process(IProgressMonitor monitor) throws IOException {
-		topicRef = DitaFactory.createTopicRef();
-		String id = getPrefix() + view.getName();
-		topicRef.setHref(id + ".dita");
-		TopicDocument topicDocument = new TopicDocument();
-		Topic topic = topicDocument.getTopic();
-		topic.setID(id);
-		String title = "Vista " + view.getName();
-		if (view.getDescription() != null) {
-			title += " - " + view.getDescription();
-		}
-		topic.setTitle(title);
-		topic.getBody().addContent(
-				DitaFactory.createElement(BodyTypes.P, view.getDescription()));
-		List<Comment> comments = view.getComments();
-		for (Comment comment : comments) {
-			topic.getBody().addContent(
-					DitaFactory.createElement(BodyTypes.P, comment
-							.getDescription()));
-		}
-		addColumns(view.getColumns(), topic);
-		addDDL(topic, monitor);
-		topicDocument.save(path);
-		return null;
+		prefix = ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -91,8 +65,12 @@ public class ProcessView {
 	 * @param topic
 	 */
 	private void addColumns(List<Column> columns, Topic topic) {
-		String[] heads = { "NOMBRE", "DESCRIPCION", "TIPO" };
-		String[] sizes = { "2*", "6*", "2*" };
+		if (columns.isEmpty())
+			return;
+		String[] heads = { Messages.ProcessView_columns_headers_name,
+				Messages.ProcessView_columns_headers_description,
+				Messages.ProcessView_columns_headers_type };
+		String[] sizes = { "2*", "6*", "2*" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		AlignValues[] aligns = { AlignValues.LEFT, AlignValues.LEFT,
 				AlignValues.LEFT };
 		Table table = new Table();
@@ -101,8 +79,8 @@ public class ProcessView {
 		table.setRowSep(true);
 		table.setPGWide(true);
 		// table.setScale(ScaleValues._80);
-		table.setID("table_columns");
-		table.setTitle("Columnas de la Vista ");
+		table.setID("table_columns"); //$NON-NLS-1$
+		table.setTitle(Messages.ProcessView_columns_table_title);
 		table.setTGroup(new TGroup());
 		table.getTGroup().setCols(heads.length);
 		for (int i = 0; i < heads.length; i++) {
@@ -158,17 +136,44 @@ public class ProcessView {
 					.getDatabaseDefinitionRegistry().getDefinition(
 							database.getVendor(), database.getVersion());
 			DDLGenerator feProvider = databaseDefinition.getDDLGenerator();
-			String[] ddlScripts = feProvider.generateDDL(
-					new SQLObject[] { view }, monitor);
-			String ddlscript = "";
-			for (int i = 0; i < ddlScripts.length; i++) {
-				ddlscript += ddlScripts[i] + ";\n\n";
+			@SuppressWarnings("unused")
+			EngineeringOption[] opts = feProvider
+					.getOptions(new SQLObject[] { view });
+			String[] ddlScripts = new String[0];
+			try {
+				ddlScripts = feProvider.generateDDL(new SQLObject[] { view },
+						monitor);
 			}
-			topic.appendSection("DDL", "ddl");
-			Section section = topic.getSection("ddl");
+			catch (Exception e) {
+			}
+			String ddlscript = ""; //$NON-NLS-1$
+			for (int i = 0; i < ddlScripts.length; i++) {
+				ddlscript += ddlScripts[i] + ";\n\n"; //$NON-NLS-1$
+			}
+			topic.appendSection(Messages.ProcessView_ddl, "ddl"); //$NON-NLS-2$
+			Section section = topic.getSection("ddl"); //$NON-NLS-1$
 			section.addContent(DitaFactory.createElement(
 					ProgrammingTypes.CODEBLOCK, ddlscript));
 		}
+	}
+
+	public Chapter getChapter() {
+		Chapter chapter = new Chapter(getTopicRef());
+		return chapter;
+	}
+
+	/**
+	 * @return the prefix
+	 */
+	public String getPrefix() {
+		return prefix;
+	}
+
+	/**
+	 * @return
+	 */
+	public TopicRef getTopicRef() {
+		return topicRef;
 	}
 
 	/**
@@ -193,7 +198,7 @@ public class ProcessView {
 			UserDefinedType referencedType = typedElement.getReferencedType();
 			if (referencedType != null) {
 				if (referencedType.getSchema() != schema) {
-					return referencedType.getSchema().getName() + "."
+					return referencedType.getSchema().getName() + "." //$NON-NLS-1$
 							+ referencedType.getName();
 				}
 				else {
@@ -204,23 +209,31 @@ public class ProcessView {
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
-	public TopicRef getTopicRef() {
-		return topicRef;
-	}
-
-	public Chapter getChapter() {
-		Chapter chapter = new Chapter(getTopicRef());
-		return chapter;
-	}
-
-	/**
-	 * @return the prefix
-	 */
-	public String getPrefix() {
-		return prefix;
+	@SuppressWarnings("unchecked")
+	public String process(IProgressMonitor monitor) throws IOException {
+		topicRef = DitaFactory.createTopicRef();
+		String id = getPrefix() + view.getName();
+		topicRef.setHref(id + ".dita"); //$NON-NLS-1$
+		TopicDocument topicDocument = new TopicDocument();
+		Topic topic = topicDocument.getTopic();
+		topic.setID(id);
+		String title = Messages.ProcessView_title + view.getName();
+		if (view.getDescription() != null) {
+			title += " - " + view.getDescription(); //$NON-NLS-1$
+		}
+		topic.setTitle(title);
+		topic.getBody().addContent(
+				DitaFactory.createElement(BodyTypes.P, view.getDescription()));
+		List<Comment> comments = view.getComments();
+		for (Comment comment : comments) {
+			topic.getBody().addContent(
+					DitaFactory.createElement(BodyTypes.P, comment
+							.getDescription()));
+		}
+		addColumns(view.getColumns(), topic);
+		addDDL(topic, monitor);
+		topicDocument.save(path);
+		return null;
 	}
 
 	/**

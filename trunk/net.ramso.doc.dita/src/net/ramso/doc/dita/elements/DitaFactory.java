@@ -15,15 +15,21 @@ import org.jdom.Element;
 public class DitaFactory {
 	private static DefaultJDOMFactory	factory		= new DefaultJDOMFactory();
 	public static final String			BASE_URI	= null;
-	
 
 	public static Body createBody() {
 		return new Body();
 	}
 
-	public static DocType createDocType(IDitaTypes type, String publicId, String systemId) {
-		return factory
-				.docType(type.getLiteral(), publicId, systemId );
+	/**
+	 * @return
+	 */
+	public static Dl createDl() {
+		return new Dl();
+	}
+
+	public static DocType createDocType(IDitaTypes type, String publicId,
+			String systemId) {
+		return factory.docType(type.getLiteral(), publicId, systemId);
 	}
 
 	public static Element createElement(IDitaTypes type) {
@@ -36,10 +42,6 @@ public class DitaFactory {
 		return element;
 	}
 
-	public static Document createTopicDocument() {
-		return new TopicDocument();
-	}
-
 	/**
 	 * @return
 	 */
@@ -50,21 +52,18 @@ public class DitaFactory {
 	/**
 	 * @return
 	 */
-	public static TopicRef createTopicRef() {
-		return new TopicRef();
-	}
-
-	/**
-	 * @return
-	 */
-	public static Dl createDl() {
-		return new Dl();
-	}
-
-	/**
-	 * @return
-	 */
 	public static SimpleTable createSimpleTable() {
 		return new SimpleTable();
+	}
+
+	public static Document createTopicDocument() {
+		return new TopicDocument();
+	}
+
+	/**
+	 * @return
+	 */
+	public static TopicRef createTopicRef() {
+		return new TopicRef();
 	}
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.ramso.doc.datatools.Messages;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
@@ -21,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.connectivity.sqm.core.containment.ContainmentServiceImpl;
 import org.eclipse.datatools.connectivity.sqm.core.definition.DatabaseDefinition;
 import org.eclipse.datatools.connectivity.sqm.core.rte.DDLGenerator;
+import org.eclipse.datatools.connectivity.sqm.core.rte.EngineeringOption;
 import org.eclipse.datatools.connectivity.sqm.internal.core.RDBCorePlugin;
 import org.eclipse.datatools.connectivity.sqm.internal.core.definition.DatabaseDefinitionRegistryImpl;
 import org.eclipse.datatools.modelbase.sql.datatypes.PredefinedDataType;
@@ -40,53 +42,15 @@ import org.jdom.Element;
  * @author ramso
  */
 public class ProcessSequence {
-	private TopicRef		topicRef;
+	private TopicRef	topicRef;
 	private Sequence	sequence;
-	private String			path;
-	private String			prefix	= "";
+	private String		path;
+	private String		prefix	= ""; //$NON-NLS-1$
 
 	public ProcessSequence(Sequence sequence, String path) {
 		this.sequence = sequence;
 		this.path = path;
-		this.prefix = "";
-	}
-
-	@SuppressWarnings("unchecked")
-	public String process(IProgressMonitor monitor) throws IOException {
-		topicRef = DitaFactory.createTopicRef();
-		String id = getPrefix() + sequence.getName();
-		topicRef.setHref(id + ".dita");
-		TopicDocument topicDocument = new TopicDocument();
-		Topic topic = topicDocument.getTopic();
-		topic.setID(id);
-		String title = "Sequencia " + sequence.getName();
-		if (sequence.getDescription() != null) {
-			title += " - " + sequence.getDescription();
-		}
-		topic.setTitle(title);
-		topic.getBody().addContent(
-				DitaFactory.createElement(BodyTypes.P, sequence
-						.getDescription()));
-		List<Comment> comments = sequence.getComments();
-		for (Comment comment : comments) {
-			topic.getBody().addContent(
-					DitaFactory.createElement(BodyTypes.P, comment
-							.getDescription()));
-		}
-		addInfo(monitor);
-		addDDL(topic, monitor);
-		topicDocument.save(path);
-		return null;
-	}
-
-	/**
-	 * @param monitor
-	 */
-	private void addInfo(IProgressMonitor monitor) {
-		Dl dl = new Dl();
-		dl.addItem("Tipo", getType(sequence, sequence.getSchema()));
-		dl.addContent(getID(sequence.getIdentity()));
-		
+		prefix = ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -106,35 +70,70 @@ public class ProcessSequence {
 					.getDatabaseDefinitionRegistry().getDefinition(
 							database.getVendor(), database.getVersion());
 			DDLGenerator feProvider = databaseDefinition.getDDLGenerator();
+			@SuppressWarnings("unused")
+			EngineeringOption[] opts = feProvider
+					.getOptions(new SQLObject[] { sequence });
 			String[] ddlScripts = feProvider.generateDDL(
 					new SQLObject[] { sequence }, monitor);
-			String ddlscript = "";
+			ddlScripts = feProvider.createSQLObjects(
+					new SQLObject[] { sequence }, false, false, monitor);
+			String ddlscript = ""; //$NON-NLS-1$
 			for (int i = 0; i < ddlScripts.length; i++) {
-				ddlscript += ddlScripts[i] + ";\n\n";
+				ddlscript += ddlScripts[i] + ";\n\n"; //$NON-NLS-1$
 			}
-			topic.appendSection("DDL", "ddl");
-			Section section = topic.getSection("ddl");
+			topic.appendSection(Messages.ProcessSequence_ddl, "ddl"); //$NON-NLS-2$
+			Section section = topic.getSection("ddl"); //$NON-NLS-1$
 			section.addContent(DitaFactory.createElement(
 					ProgrammingTypes.CODEBLOCK, ddlscript));
 		}
 	}
 
-	
+	/**
+	 * @param topic
+	 * @param monitor
+	 */
+	private void addInfo(Topic topic, IProgressMonitor monitor) {
+		Dl dl = new Dl();
+		dl.addItem(Messages.ProcessSequence_type, getType(sequence, sequence.getSchema()));
+		dl.addContent(getID(sequence.getIdentity()));
+		topic.getBody().addContent(dl);
+	}
 
+	public Chapter getChapter() {
+		Chapter chapter = new Chapter(getTopicRef());
+		return chapter;
+	}
 
-	private List<Element> getID(IdentitySpecifier id){
+	private List<Element> getID(IdentitySpecifier id) {
 		List<Element> dlentrys = new ArrayList<Element>(7);
-		dlentrys.add(Dl.getEntry("Valor inicial", String.valueOf(id.getStartValue())));
-		dlentrys.add(Dl.getEntry("Incremento", String.valueOf(id.getIncrement())));
-		dlentrys.add(Dl.getEntry("Valor minimo", String.valueOf(id.getMinimum())));
-		dlentrys.add(Dl.getEntry("Valor maximo", String.valueOf(id.getMaximum())));
-		dlentrys.add(Dl.getEntry("Valor inicial", String.valueOf(id.getStartValue())));
-		dlentrys.add(Dl.getEntry("Ciclico", String.valueOf(id.isCycleOption())));
+		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_start, String.valueOf(id
+				.getStartValue())));
+		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_increment, String
+				.valueOf(id.getIncrement())));
+		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_minimum, String
+				.valueOf(id.getMinimum())));
+		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_maximum, String
+				.valueOf(id.getMaximum())));
+		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_start, String.valueOf(id
+				.getStartValue())));
+		dlentrys
+				.add(Dl.getEntry(Messages.ProcessSequence_cycle, String.valueOf(id.isCycleOption())));
 		return dlentrys;
 	}
-	
 
-	
+	/**
+	 * @return the prefix
+	 */
+	public String getPrefix() {
+		return prefix;
+	}
+
+	/**
+	 * @return
+	 */
+	public TopicRef getTopicRef() {
+		return topicRef;
+	}
 
 	/**
 	 * @param containedType
@@ -158,7 +157,7 @@ public class ProcessSequence {
 			UserDefinedType referencedType = typedElement.getReferencedType();
 			if (referencedType != null) {
 				if (referencedType.getSchema() != schema) {
-					return referencedType.getSchema().getName() + "."
+					return referencedType.getSchema().getName() + "." //$NON-NLS-1$
 							+ referencedType.getName();
 				}
 				else {
@@ -169,23 +168,32 @@ public class ProcessSequence {
 		return null;
 	}
 
-	/**
-	 * @return
-	 */
-	public TopicRef getTopicRef() {
-		return topicRef;
-	}
-
-	public Chapter getChapter() {
-		Chapter chapter = new Chapter(getTopicRef());
-		return chapter;
-	}
-
-	/**
-	 * @return the prefix
-	 */
-	public String getPrefix() {
-		return prefix;
+	@SuppressWarnings("unchecked")
+	public String process(IProgressMonitor monitor) throws IOException {
+		topicRef = DitaFactory.createTopicRef();
+		String id = getPrefix() + sequence.getName();
+		topicRef.setHref(id + ".dita"); //$NON-NLS-1$
+		TopicDocument topicDocument = new TopicDocument();
+		Topic topic = topicDocument.getTopic();
+		topic.setID(id);
+		String title = Messages.ProcessSequence_title + sequence.getName();
+		if (sequence.getDescription() != null) {
+			title += " - " + sequence.getDescription(); //$NON-NLS-1$
+		}
+		topic.setTitle(title);
+		topic.getBody().addContent(
+				DitaFactory.createElement(BodyTypes.P, sequence
+						.getDescription()));
+		List<Comment> comments = sequence.getComments();
+		for (Comment comment : comments) {
+			topic.getBody().addContent(
+					DitaFactory.createElement(BodyTypes.P, comment
+							.getDescription()));
+		}
+		addInfo(topic, monitor);
+		addDDL(topic, monitor);
+		topicDocument.save(path);
+		return null;
 	}
 
 	/**

@@ -3,8 +3,6 @@
  */
 package net.ramso.doc.dita.elements.table;
 
-import org.jdom.Element;
-
 import net.ramso.doc.dita.attributes.AlignValues;
 import net.ramso.doc.dita.elements.TableTypes;
 
@@ -13,18 +11,15 @@ import net.ramso.doc.dita.elements.TableTypes;
  */
 public class TGroup extends BasicTableAttributes {
 	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
 	 * @param type
 	 */
 	public TGroup() {
 		super(TableTypes.TGROUP);
-	}
-
-	public void setAlign(AlignValues value) {
-		setAttribute("align", value.getLiteral());
-	}
-
-	public void setCols(int cols) {
-		setAttribute("cols", String.valueOf(cols));
 	}
 
 	public void appendColSpec(ColSpec colSpec) {
@@ -39,6 +34,28 @@ public class TGroup extends BasicTableAttributes {
 		}
 	}
 
+	public TBody getTBody() {
+		return (TBody) getChild(TableTypes.TBODY.getLiteral());
+	}
+
+	public THead getTHead() {
+		return (THead) getChild(TableTypes.THEAD.getLiteral());
+	}
+
+	public void setAlign(AlignValues value) {
+		setAttribute("align", value.getLiteral());
+	}
+
+	public void setCols(int cols) {
+		setAttribute("cols", String.valueOf(cols));
+	}
+
+	public void setTBody(TBody tbody) {
+		if (getTBody() == null) {
+			addContent(tbody);
+		}
+	}
+
 	public void setTHead(THead thead) {
 		if (getTHead() == null) {
 			int pos = getLastElementIdx(TableTypes.TBODY);
@@ -50,19 +67,5 @@ public class TGroup extends BasicTableAttributes {
 				addContent(pos, thead);
 			}
 		}
-	}
-
-	public THead getTHead() {
-		return (THead) getChild(TableTypes.THEAD.getLiteral());
-	}
-
-	public void setTBody(TBody tbody) {
-		if (getTBody() == null) {
-			addContent(tbody);
-		}
-	}
-
-	public TBody getTBody() {
-		return (TBody) getChild(TableTypes.TBODY.getLiteral());
 	}
 }

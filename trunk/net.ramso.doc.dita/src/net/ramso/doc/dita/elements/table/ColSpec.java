@@ -11,6 +11,11 @@ import net.ramso.doc.dita.elements.TableTypes;
  */
 public class ColSpec extends BasicTableAttributes {
 	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
 	 * @param type
 	 */
 	public ColSpec() {
@@ -19,10 +24,6 @@ public class ColSpec extends BasicTableAttributes {
 
 	public void setAlign(AlignValues value) {
 		setAttribute("align", value.getLiteral());
-	}
-
-	public void setColNum(int col) {
-		setAttribute("colnum", String.valueOf(col));
 	}
 
 	public void setChar(char value) {
@@ -39,6 +40,10 @@ public class ColSpec extends BasicTableAttributes {
 
 	public void setColName(String name) {
 		setAttribute("colname", name);
+	}
+
+	public void setColNum(int col) {
+		setAttribute("colnum", String.valueOf(col));
 	}
 
 	public void setColWidth(String colwidth) {

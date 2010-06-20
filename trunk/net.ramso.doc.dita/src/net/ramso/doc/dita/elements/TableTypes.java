@@ -29,7 +29,7 @@ public enum TableTypes implements IDitaTypes {
 	public static final int					ENTRY_VALUE			= 10;
 	private static final TableTypes[]		VALUES_ARRAY		= new TableTypes[] {
 			SIMPLETABLE, STHEAD, STROW, STENTRY, TABLE, TGROUP, COLSPEC, THEAD,
-			TBODY, ROW, ENTRY};
+			TBODY, ROW, ENTRY									};
 	public static final List<TableTypes>	VALUES				= Collections
 																		.unmodifiableList(Arrays
 																				.asList(VALUES_ARRAY));

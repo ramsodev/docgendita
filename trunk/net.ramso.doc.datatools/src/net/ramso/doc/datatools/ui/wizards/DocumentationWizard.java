@@ -15,38 +15,24 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
 public class DocumentationWizard extends Wizard {
-	private DocumentationWizardPage page;
-	private ISelection selection;
-	private List<SQLObject> sqlobjects;
+	private DocumentationWizardPage	page;
+	private ISelection				selection;
+	private List<SQLObject>			sqlobjects;
 
 	public DocumentationWizard(List list) {
-
 		super();
-		this.sqlobjects = list;
+		sqlobjects = list;
 		setNeedsProgressMonitor(true);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.wizard.Wizard#addPages()
+	 */
 	@Override
-	public boolean performFinish() {
-		WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
-			protected void execute(IProgressMonitor monitor) {
-				try {
-					performDocumentationGeneration(monitor);
-				} catch (Exception e) {
-//					System.out.println(e.getMessage());
-					e.printStackTrace();
-				} finally {
-					monitor.done();
-				}
-			}
-		};
-
-		try {
-			getContainer().run(false, false, operation);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return true;
+	public void addPages() {
+		page = new DocumentationWizardPage(selection);
+		addPage(page);
 	}
 
 	public void performDocumentationGeneration(IProgressMonitor monitor) {
@@ -64,15 +50,29 @@ public class DocumentationWizard extends Wizard {
 		monitor.worked(5);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#addPages()
-	 */
 	@Override
-	public void addPages() {
-		page = new DocumentationWizardPage(selection);
-		addPage(page);
+	public boolean performFinish() {
+		WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
+			@Override
+			protected void execute(IProgressMonitor monitor) {
+				try {
+					performDocumentationGeneration(monitor);
+				}
+				catch (Exception e) {
+					// System.out.println(e.getMessage());
+					e.printStackTrace();
+				}
+				finally {
+					monitor.done();
+				}
+			}
+		};
+		try {
+			getContainer().run(false, false, operation);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
 	}
-
 }

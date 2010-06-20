@@ -10,14 +10,14 @@ import java.util.List;
 /**
  * @author ramso
  */
-public enum MapTypes implements IDitaTypes{
+public enum MapTypes implements IDitaTypes {
 	MAP(0, "MAP", "map"), TOPICREF(1, "TOPIC_REF", "topicref"), TOPICMETA(2,
 			"TOPICMETA", "topicmeta");
 	public static final int				MAP_VALUE		= 0;
 	public static final int				TOPICREF_VALUE	= 1;
 	public static final int				TOPICMETA_VALUE	= 2;
 	private static final MapTypes[]		VALUES_ARRAY	= new MapTypes[] { MAP,
-			TOPICREF, TOPICMETA};
+			TOPICREF, TOPICMETA						};
 	public static final List<MapTypes>	VALUES			= Collections
 																.unmodifiableList(Arrays
 																		.asList(VALUES_ARRAY));
