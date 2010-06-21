@@ -3,10 +3,12 @@
  */
 package net.ramso.doc.datatools.generator;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
+import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
@@ -44,7 +46,7 @@ public class ProcessProcedure {
 	private TopicRef	topicRef;
 	private Procedure	procedure;
 	private String		path;
-	private String		prefix	= ""; //$NON-NLS-1$
+	private String		prefix	= "";	//$NON-NLS-1$
 
 	public ProcessProcedure(Procedure procedure, String path) {
 		this.procedure = procedure;
@@ -92,13 +94,15 @@ public class ProcessProcedure {
 	@SuppressWarnings("unchecked")
 	private void addInfo(Topic topic, IProgressMonitor monitor) {
 		Dl dl = new Dl();
-		dl.addItem(Messages.ProcessProcedure_especific, procedure.getSpecificName());
-		dl.addItem(Messages.ProcessProcedure_resultsets, String.valueOf(procedure.getMaxResultSets()));
+		dl.addItem(Messages.ProcessProcedure_especific, procedure
+				.getSpecificName());
+		dl.addItem(Messages.ProcessProcedure_resultsets, String
+				.valueOf(procedure.getMaxResultSets()));
 		dl.addItem(Messages.ProcessProcedure_language, procedure.getLanguage());
-		dl.addItem(Messages.ProcessProcedure_paramenter_style, procedure.getParameterStyle());
-		dl
-				.addItem(Messages.ProcessProcedure_sql_data_access, procedure.getSqlDataAccess()
-						.getLiteral());
+		dl.addItem(Messages.ProcessProcedure_paramenter_style, procedure
+				.getParameterStyle());
+		dl.addItem(Messages.ProcessProcedure_sql_data_access, procedure
+				.getSqlDataAccess().getLiteral());
 		List<Parameter> in = procedure.getInputParameters();
 		if (!in.isEmpty()) {
 			Element sl = DitaFactory.createElement(BodyTypes.SL);
@@ -198,7 +202,9 @@ public class ProcessProcedure {
 		}
 		addInfo(topic, monitor);
 		addDDL(topic, monitor);
-		topicDocument.save(path);
+		path += File.separator + topicDocument.getFileName();
+		ResourceUtils.getInstance().saveDitaFileAsResource(
+				topicDocument.getDocumentContent(), path);
 		return null;
 	}
 

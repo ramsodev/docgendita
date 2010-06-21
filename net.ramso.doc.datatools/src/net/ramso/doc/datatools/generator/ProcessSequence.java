@@ -3,11 +3,13 @@
  */
 package net.ramso.doc.datatools.generator;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
+import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
@@ -45,7 +47,7 @@ public class ProcessSequence {
 	private TopicRef	topicRef;
 	private Sequence	sequence;
 	private String		path;
-	private String		prefix	= ""; //$NON-NLS-1$
+	private String		prefix	= "";	//$NON-NLS-1$
 
 	public ProcessSequence(Sequence sequence, String path) {
 		this.sequence = sequence;
@@ -94,7 +96,8 @@ public class ProcessSequence {
 	 */
 	private void addInfo(Topic topic, IProgressMonitor monitor) {
 		Dl dl = new Dl();
-		dl.addItem(Messages.ProcessSequence_type, getType(sequence, sequence.getSchema()));
+		dl.addItem(Messages.ProcessSequence_type, getType(sequence, sequence
+				.getSchema()));
 		dl.addContent(getID(sequence.getIdentity()));
 		topic.getBody().addContent(dl);
 	}
@@ -106,18 +109,18 @@ public class ProcessSequence {
 
 	private List<Element> getID(IdentitySpecifier id) {
 		List<Element> dlentrys = new ArrayList<Element>(7);
-		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_start, String.valueOf(id
-				.getStartValue())));
+		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_start, String
+				.valueOf(id.getStartValue())));
 		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_increment, String
 				.valueOf(id.getIncrement())));
 		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_minimum, String
 				.valueOf(id.getMinimum())));
 		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_maximum, String
 				.valueOf(id.getMaximum())));
-		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_start, String.valueOf(id
-				.getStartValue())));
-		dlentrys
-				.add(Dl.getEntry(Messages.ProcessSequence_cycle, String.valueOf(id.isCycleOption())));
+		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_start, String
+				.valueOf(id.getStartValue())));
+		dlentrys.add(Dl.getEntry(Messages.ProcessSequence_cycle, String
+				.valueOf(id.isCycleOption())));
 		return dlentrys;
 	}
 
@@ -192,7 +195,9 @@ public class ProcessSequence {
 		}
 		addInfo(topic, monitor);
 		addDDL(topic, monitor);
-		topicDocument.save(path);
+		path += File.separator + topicDocument.getFileName();
+		ResourceUtils.getInstance().saveDitaFileAsResource(
+				topicDocument.getDocumentContent(), path);
 		return null;
 	}
 

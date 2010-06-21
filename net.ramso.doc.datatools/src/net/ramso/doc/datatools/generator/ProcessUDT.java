@@ -3,11 +3,13 @@
  */
 package net.ramso.doc.datatools.generator;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
+import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
@@ -50,7 +52,7 @@ public class ProcessUDT {
 	private TopicRef		topicRef;
 	private UserDefinedType	udt;
 	private String			path;
-	private String			prefix	= ""; //$NON-NLS-1$
+	private String			prefix	= "";	//$NON-NLS-1$
 
 	public ProcessUDT(UserDefinedType udt, String path) {
 		this.udt = udt;
@@ -118,19 +120,21 @@ public class ProcessUDT {
 	@SuppressWarnings("unchecked")
 	private List<Element> addType(ArrayDataType udt) {
 		List<Element> entrys = new ArrayList<Element>(3);
-		entrys.add(Dl.getEntry(Messages.ProcessUDT_type_udt, Messages.ProcessUDT_array));
-		entrys.add(Dl.getEntry(Messages.ProcessUDT_max_cardinality, String.valueOf(udt
-				.getMaxCardinality())));
-		//Para Eclipse 3.5
+		entrys.add(Dl.getEntry(Messages.ProcessUDT_type_udt,
+				Messages.ProcessUDT_array));
+		entrys.add(Dl.getEntry(Messages.ProcessUDT_max_cardinality, String
+				.valueOf(udt.getMaxCardinality())));
+		// Para Eclipse 3.5
 		List<DataType> types = udt.getElement();
 		if (!types.isEmpty()) {
 			for (DataType dataType : types) {
-				entrys.add(Dl.getEntry(Messages.ProcessUDT_type, getType(dataType)));
+				entrys.add(Dl.getEntry(Messages.ProcessUDT_type,
+						getType(dataType)));
 			}
 		}
-		//Para Eclipse 3.6 Helios y IBM Data Studio 2.2
-//		ElementType type = udt.getElementType();
-//		entrys.add(Dl.getEntry("Tipo", getType(type, this.udt.getSchema())));
+		// Para Eclipse 3.6 Helios y IBM Data Studio 2.2
+		// ElementType type = udt.getElementType();
+		// entrys.add(Dl.getEntry("Tipo", getType(type, this.udt.getSchema())));
 		return entrys;
 	}
 
@@ -140,7 +144,8 @@ public class ProcessUDT {
 	 */
 	private List<Element> addType(DistinctUserDefinedType udt) {
 		List<Element> entrys = new ArrayList<Element>(2);
-		entrys.add(Dl.getEntry(Messages.ProcessUDT_type_udt, Messages.ProcessUDT_distinct));
+		entrys.add(Dl.getEntry(Messages.ProcessUDT_type_udt,
+				Messages.ProcessUDT_distinct));
 		entrys.add(Dl.getEntry(Messages.ProcessUDT_type, getType(udt
 				.getPredefinedRepresentation())));
 		return entrys;
@@ -149,7 +154,8 @@ public class ProcessUDT {
 	@SuppressWarnings("unchecked")
 	private List<Element> addType(RowDataType udt) {
 		List<Element> entrys = new ArrayList<Element>(2);
-		entrys.add(Dl.getEntry(Messages.ProcessUDT_type_udt, Messages.ProcessUDT_row));
+		entrys.add(Dl.getEntry(Messages.ProcessUDT_type_udt,
+				Messages.ProcessUDT_row));
 		List<Field> fields = udt.getFields();
 		if (!fields.isEmpty()) {
 			Element sl = DitaFactory.createElement(BodyTypes.SL);
@@ -170,7 +176,8 @@ public class ProcessUDT {
 	@SuppressWarnings("unchecked")
 	private List<Element> addType(StructuredUserDefinedType udt) {
 		List<Element> entrys = new ArrayList<Element>(2);
-		entrys.add(Dl.getEntry(Messages.ProcessUDT_type_udt, Messages.ProcessUDT_structured));
+		entrys.add(Dl.getEntry(Messages.ProcessUDT_type_udt,
+				Messages.ProcessUDT_structured));
 		List<AttributeDefinition> atrs = udt.getAttributes();
 		if (!atrs.isEmpty()) {
 			Element sl = DitaFactory.createElement(BodyTypes.SL);
@@ -274,7 +281,9 @@ public class ProcessUDT {
 		}
 		addInfo(topic, monitor);
 		addDDL(topic, monitor);
-		topicDocument.save(path);
+		path += File.separator + topicDocument.getFileName();
+		ResourceUtils.getInstance().saveDitaFileAsResource(
+				topicDocument.getDocumentContent(), path);
 		return null;
 	}
 

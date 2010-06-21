@@ -1,9 +1,11 @@
 package net.ramso.doc.datatools.generator;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
+import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.BookMapDocument;
 import net.ramso.doc.dita.elements.bookmap.BackMatter;
 import net.ramso.doc.dita.elements.bookmap.BookLists;
@@ -21,6 +23,9 @@ import org.eclipse.datatools.modelbase.sql.schema.Schema;
 import org.eclipse.datatools.modelbase.sql.schema.Sequence;
 import org.eclipse.datatools.modelbase.sql.tables.PersistentTable;
 import org.eclipse.datatools.modelbase.sql.tables.ViewTable;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 
 public class ProcessGenerator {
 	private List<SQLObject>	objects;
@@ -68,7 +73,7 @@ public class ProcessGenerator {
 	}
 
 	public void process(IProgressMonitor monitor) {
-		String path = folder.getLocation().toOSString();
+		String path = folder.getFullPath().toOSString();
 		BookMapDocument map = new BookMapDocument();
 		map.getMap().setTitle(getTitle(), getDes());
 		map.getMap().setID("DBDoc"); //$NON-NLS-1$
@@ -148,11 +153,19 @@ public class ProcessGenerator {
 		backMatter.addBookLists(bookLists);
 		map.getMap().addBackMatter(backMatter);
 		try {
-			map.save(path);
+			path += File.separator + map.getFileName();
+			ResourceUtils.getInstance().saveDitaFileAsResource(
+					map.getDocumentContent(), path);
 		}
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		finally {
+			MessageBox box = new MessageBox(Display.getCurrent()
+					.getActiveShell(), SWT.OK | SWT.ICON_INFORMATION);
+			box.setMessage("Generation of documentation is finished"); //$NON-NLS-1
+			box.open();
 		}
 	}
 

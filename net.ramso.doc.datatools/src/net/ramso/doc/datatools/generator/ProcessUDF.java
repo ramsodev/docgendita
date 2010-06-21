@@ -3,10 +3,12 @@
  */
 package net.ramso.doc.datatools.generator;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
+import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
@@ -46,7 +48,7 @@ public class ProcessUDF {
 	private TopicRef			topicRef;
 	private UserDefinedFunction	udf;
 	private String				path;
-	private String				prefix	= ""; //$NON-NLS-1$
+	private String				prefix	= "";	//$NON-NLS-1$
 
 	public ProcessUDF(UserDefinedFunction udf, String path) {
 		this.udf = udf;
@@ -96,8 +98,10 @@ public class ProcessUDF {
 		Dl dl = new Dl();
 		dl.addItem(Messages.ProcessUDF_specific_name, udf.getSpecificName());
 		dl.addItem(Messages.ProcessUDF_language, udf.getLanguage());
-		dl.addItem(Messages.ProcessUDF_sql_data_access, udf.getSqlDataAccess().getLiteral());
-		dl.addItem(Messages.ProcessUDF_deterministic, String.valueOf(udf.isDeterministic()));
+		dl.addItem(Messages.ProcessUDF_sql_data_access, udf.getSqlDataAccess()
+				.getLiteral());
+		dl.addItem(Messages.ProcessUDF_deterministic, String.valueOf(udf
+				.isDeterministic()));
 		Parameter rparams = udf.getReturnCast();
 		if (rparams != null) {
 			String text = ""; //$NON-NLS-1$
@@ -230,7 +234,9 @@ public class ProcessUDF {
 		}
 		addInfo(topic, monitor);
 		addDDL(topic, monitor);
-		topicDocument.save(path);
+		path += File.separator + topicDocument.getFileName();
+		ResourceUtils.getInstance().saveDitaFileAsResource(
+				topicDocument.getDocumentContent(), path);
 		return null;
 	}
 
