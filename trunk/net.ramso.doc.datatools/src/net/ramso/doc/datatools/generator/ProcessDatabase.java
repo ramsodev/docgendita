@@ -1,10 +1,12 @@
 package net.ramso.doc.datatools.generator;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
+import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.bookmap.Part;
 import net.ramso.doc.dita.elements.bookmap.Preface;
@@ -118,14 +120,17 @@ public class ProcessDatabase {
 		Section section = topic.getSection("des"); //$NON-NLS-1$
 		section.appendP(database.getDescription());
 		section.appendP(Messages.ProcessDatabase_vendor + database.getVendor());
-		section.appendP(Messages.ProcessDatabase_version + database.getVersion());
+		section.appendP(Messages.ProcessDatabase_version
+				+ database.getVersion());
 		if (database.getCatalogs().isEmpty()) {
 			addSchemas(database.getSchemas(), topic, monitor);
 		}
 		else {
 			addCatalogs(database.getCatalogs(), topic, monitor);
 		}
-		topicDocument.save(path);
+		path += File.separator + topicDocument.getFileName();
+		ResourceUtils.getInstance().saveDitaFileAsResource(
+				topicDocument.getDocumentContent(), path);
 		return null;
 	}
 }

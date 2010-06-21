@@ -1,10 +1,12 @@
 package net.ramso.doc.datatools.generator;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
+import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.bookmap.Chapter;
 import net.ramso.doc.dita.elements.bookmap.Part;
@@ -26,7 +28,7 @@ public class ProcessSchema {
 	private Part	part;
 	private Schema	schema;
 	private String	path;
-	private String	prefix	= ""; //$NON-NLS-1$
+	private String	prefix	= "";	//$NON-NLS-1$
 
 	public ProcessSchema(Schema schema, String path) {
 		this.schema = schema;
@@ -52,7 +54,9 @@ public class ProcessSchema {
 			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
 			@SuppressWarnings("unused")
 			Section section = topic.getSection("des"); //$NON-NLS-1$
-			topicDocument.save(path);
+			ResourceUtils.getInstance().saveDitaFileAsResource(
+					topicDocument.getDocumentContent(),
+					path + File.separator + topicDocument.getFileName());
 			for (Sequence sequence : sequences) {
 				chapter.appendTopicRef(createSequence(sequence, monitor));
 			}
@@ -73,13 +77,14 @@ public class ProcessSchema {
 			TopicDocument topicDocument = new TopicDocument();
 			Topic topic = topicDocument.getTopic();
 			topic.setID(id);
-			String title = Messages.ProcessSchema_procedure
-					+ schema.getName();
+			String title = Messages.ProcessSchema_procedure + schema.getName();
 			topic.setTitle(title);
 			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
 			@SuppressWarnings("unused")
 			Section section = topic.getSection("des"); //$NON-NLS-1$
-			topicDocument.save(path);
+			ResourceUtils.getInstance().saveDitaFileAsResource(
+					topicDocument.getDocumentContent(),
+					path + File.separator + topicDocument.getFileName());
 			for (Procedure procedure : procedures) {
 				chapter.appendTopicRef(createProcedure(procedure, monitor));
 			}
@@ -101,7 +106,9 @@ public class ProcessSchema {
 			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
 			@SuppressWarnings("unused")
 			Section section = topic.getSection("des"); //$NON-NLS-1$
-			topicDocument.save(path);
+			ResourceUtils.getInstance().saveDitaFileAsResource(
+					topicDocument.getDocumentContent(),
+					path + File.separator + topicDocument.getFileName());
 			for (Table table : tables) {
 				if (table instanceof PersistentTable) {
 					chapter.appendTopicRef(createTable((PersistentTable) table,
@@ -125,13 +132,14 @@ public class ProcessSchema {
 			TopicDocument topicDocument = new TopicDocument();
 			Topic topic = topicDocument.getTopic();
 			topic.setID(id);
-			String title = Messages.ProcessSchema_udfs
-					+ schema.getName();
+			String title = Messages.ProcessSchema_udfs + schema.getName();
 			topic.setTitle(title);
 			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
 			@SuppressWarnings("unused")
 			Section section = topic.getSection("des"); //$NON-NLS-1$
-			topicDocument.save(path);
+			ResourceUtils.getInstance().saveDitaFileAsResource(
+					topicDocument.getDocumentContent(),
+					path + File.separator + topicDocument.getFileName());
 			for (UserDefinedFunction udf : udfs) {
 				chapter.appendTopicRef(createUDF(udf, monitor));
 			}
@@ -152,13 +160,14 @@ public class ProcessSchema {
 			TopicDocument topicDocument = new TopicDocument();
 			Topic topic = topicDocument.getTopic();
 			topic.setID(id);
-			String title = Messages.ProcessSchema_udts
-					+ schema.getName();
+			String title = Messages.ProcessSchema_udts + schema.getName();
 			topic.setTitle(title);
 			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
 			@SuppressWarnings("unused")
 			Section section = topic.getSection("des"); //$NON-NLS-1$
-			topicDocument.save(path);
+			ResourceUtils.getInstance().saveDitaFileAsResource(
+					topicDocument.getDocumentContent(),
+					path + File.separator + topicDocument.getFileName());
 			for (UserDefinedType udf : udts) {
 				chapter.appendTopicRef(createUDT(udf, monitor));
 			}
@@ -192,7 +201,9 @@ public class ProcessSchema {
 			topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
 			@SuppressWarnings("unused")
 			Section section = topic.getSection("des"); //$NON-NLS-1$
-			topicDocument.save(path);
+			ResourceUtils.getInstance().saveDitaFileAsResource(
+					topicDocument.getDocumentContent(),
+					path + File.separator + topicDocument.getFileName());
 			for (ViewTable view : views) {
 				if (view instanceof ViewTable) {
 					chapter.appendTopicRef(createView(view, monitor));
@@ -319,7 +330,9 @@ public class ProcessSchema {
 		addStoreProcedures(schema.getProcedures(), monitor);
 		addUDFs(schema.getUDFs(), monitor);
 		addUDTs(schema.getUserDefinedTypes(), monitor);
-		topicDocument.save(path);
+		ResourceUtils.getInstance().saveDitaFileAsResource(
+				topicDocument.getDocumentContent(),
+				path + File.separator + topicDocument.getFileName());
 		return null;
 	}
 

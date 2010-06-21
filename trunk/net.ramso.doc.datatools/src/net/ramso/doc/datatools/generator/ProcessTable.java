@@ -3,12 +3,14 @@
  */
 package net.ramso.doc.datatools.generator;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
+import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.attributes.AlignValues;
 import net.ramso.doc.dita.attributes.FrameValues;
@@ -67,7 +69,7 @@ public class ProcessTable {
 	private TopicRef		topicRef;
 	private PersistentTable	persistentTable;
 	private String			path;
-	private String			prefix	= ""; //$NON-NLS-1$
+	private String			prefix	= "";		//$NON-NLS-1$
 
 	public ProcessTable(PersistentTable persistentTable, String path) {
 		this.persistentTable = persistentTable;
@@ -88,7 +90,8 @@ public class ProcessTable {
 		}
 		if (!checks.isEmpty()) {
 			for (CheckConstraint check : checks) {
-				topic.appendSection(Messages.ProcessTable_check + check.getName(), "ck_" //$NON-NLS-2$
+				topic.appendSection(Messages.ProcessTable_check
+						+ check.getName(), "ck_" //$NON-NLS-2$
 						+ check.getName());
 				Section section = topic.getSection("ck_" + check.getName()); //$NON-NLS-1$
 				if (check.getDescription() != null) {
@@ -106,8 +109,14 @@ public class ProcessTable {
 	 * @param topic
 	 */
 	private void addColumns(List<Column> columns, Topic topic) {
-		String[] heads = { Messages.ProcessTable_colums_headers_name, Messages.ProcessTable_colums_headers_type, Messages.ProcessTable_colums_headers_defvalue, Messages.ProcessTable_colums_headers_id, Messages.ProcessTable_colums_headers_null, Messages.ProcessTable_colums_headers_pk,
-				Messages.ProcessTable_colums_headers_fk, Messages.ProcessTable_colums_headers_uq };
+		String[] heads = { Messages.ProcessTable_colums_headers_name,
+				Messages.ProcessTable_colums_headers_type,
+				Messages.ProcessTable_colums_headers_defvalue,
+				Messages.ProcessTable_colums_headers_id,
+				Messages.ProcessTable_colums_headers_null,
+				Messages.ProcessTable_colums_headers_pk,
+				Messages.ProcessTable_colums_headers_fk,
+				Messages.ProcessTable_colums_headers_uq };
 		String[] sizes = { "2*", "2*", "3*", "1*", "1*", "1*", "1*", "1*" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 		AlignValues[] aligns = { AlignValues.LEFT, AlignValues.LEFT,
 				AlignValues.LEFT, AlignValues.CENTER, AlignValues.CENTER,
@@ -226,8 +235,8 @@ public class ProcessTable {
 	private void addFK(List<ForeignKey> foreignKeys, Topic topic) {
 		if (!foreignKeys.isEmpty()) {
 			for (ForeignKey foreignKey : foreignKeys) {
-				topic.appendSection(Messages.ProcessTable_fk + foreignKey.getName(),
-						"fk_" + foreignKey.getName()); //$NON-NLS-1$
+				topic.appendSection(Messages.ProcessTable_fk
+						+ foreignKey.getName(), "fk_" + foreignKey.getName()); //$NON-NLS-1$
 				Section section = topic
 						.getSection("fk_" + foreignKey.getName()); //$NON-NLS-1$
 				if (foreignKey.getDescription() != null) {
@@ -266,8 +275,10 @@ public class ProcessTable {
 					}
 					dl.addItem(Messages.ProcessTable_ref_columns, sl);
 				}
-				dl.addItem(Messages.ProcessTable_onupdate, foreignKey.getOnUpdate().getLiteral());
-				dl.addItem(Messages.ProcessTable_ondelete, foreignKey.getOnDelete().getLiteral());
+				dl.addItem(Messages.ProcessTable_onupdate, foreignKey
+						.getOnUpdate().getLiteral());
+				dl.addItem(Messages.ProcessTable_ondelete, foreignKey
+						.getOnDelete().getLiteral());
 			}
 		}
 	}
@@ -280,8 +291,9 @@ public class ProcessTable {
 	private void addIndex(List<Index> index, Topic topic) {
 		if (!index.isEmpty()) {
 			for (Index idx : index) {
-				topic.appendSection(Messages.ProcessTable_index + idx.getName(), "idx_" //$NON-NLS-2$
-						+ idx.getName());
+				topic.appendSection(
+						Messages.ProcessTable_index + idx.getName(), "idx_" //$NON-NLS-2$
+								+ idx.getName());
 				Section section = topic.getSection("idx_" + idx.getName()); //$NON-NLS-1$
 				if (idx.getDescription() != null) {
 					section.appendP(idx.getDescription());
@@ -299,7 +311,8 @@ public class ProcessTable {
 					}
 					dl.addItem(Messages.ProcessTable_columns, sl);
 				}
-				dl.addItem(Messages.ProcessTable_unique, String.valueOf(idx.isUnique()));
+				dl.addItem(Messages.ProcessTable_unique, String.valueOf(idx
+						.isUnique()));
 			}
 		}
 	}
@@ -311,7 +324,8 @@ public class ProcessTable {
 	@SuppressWarnings("unchecked")
 	private void addPK(PrimaryKey primaryKey, Topic topic) {
 		if (primaryKey != null) {
-			topic.appendSection(Messages.ProcessTable_pk + primaryKey.getName(), "pk"); //$NON-NLS-2$
+			topic.appendSection(
+					Messages.ProcessTable_pk + primaryKey.getName(), "pk"); //$NON-NLS-2$
 			Section section = topic.getSection("pk"); //$NON-NLS-1$
 			if (primaryKey.getDescription() != null) {
 				section.appendP(primaryKey.getDescription());
@@ -338,41 +352,49 @@ public class ProcessTable {
 	private void addTrigers(List<Trigger> triggers, Topic topic) {
 		if (!triggers.isEmpty()) {
 			for (Trigger trigger : triggers) {
-				topic.appendSection(Messages.ProcessTable_trigger + trigger.getName(), "trg_" //$NON-NLS-2$
+				topic.appendSection(Messages.ProcessTable_trigger
+						+ trigger.getName(), "trg_" //$NON-NLS-2$
 						+ trigger.getName());
 				Section section = topic.getSection("trg_" + trigger.getName()); //$NON-NLS-1$
 				Dl dl = section.getDL("trg_" + trigger.getName(), true); //$NON-NLS-1$
-				dl.addItem(Messages.ProcessTable_actiontime, trigger.getActionTime().getLiteral());
-				dl.addItem(Messages.ProcessTable_granularity, trigger.getActionGranularity()
-						.getLiteral());
-				dl.addItem(Messages.ProcessTable_eventtype, getEventType(trigger));
+				dl.addItem(Messages.ProcessTable_actiontime, trigger
+						.getActionTime().getLiteral());
+				dl.addItem(Messages.ProcessTable_granularity, trigger
+						.getActionGranularity().getLiteral());
+				dl.addItem(Messages.ProcessTable_eventtype,
+						getEventType(trigger));
 				if (trigger.getOldTable() != null
 						&& !trigger.getOldTable().isEmpty()) {
-					dl.addItem(Messages.ProcessTable_oldtable, trigger.getOldTable());
+					dl.addItem(Messages.ProcessTable_oldtable, trigger
+							.getOldTable());
 				}
 				if (trigger.getOldRow() != null
 						&& !trigger.getOldRow().isEmpty()) {
-					dl.addItem(Messages.ProcessTable_oldrow, trigger.getOldRow());
+					dl.addItem(Messages.ProcessTable_oldrow, trigger
+							.getOldRow());
 				}
 				if (trigger.getNewTable() != null
 						&& !trigger.getNewTable().isEmpty()) {
-					dl.addItem(Messages.ProcessTable_newtable, trigger.getNewTable());
+					dl.addItem(Messages.ProcessTable_newtable, trigger
+							.getNewTable());
 				}
 				if (trigger.getNewRow() != null
 						&& !trigger.getNewRow().isEmpty()) {
-					dl.addItem(Messages.ProcessTable_newrow, trigger.getNewRow());
+					dl.addItem(Messages.ProcessTable_newrow, trigger
+							.getNewRow());
 				}
-				dl
-						.addItem(Messages.ProcessTable_when, DitaFactory.createElement(
-								ProgrammingTypes.CODEBLOCK, trigger.getWhen()
-										.getSQL()));
+				dl.addItem(Messages.ProcessTable_when, DitaFactory
+						.createElement(ProgrammingTypes.CODEBLOCK, trigger
+								.getWhen().getSQL()));
 				String triggerBody = ""; //$NON-NLS-1$
 				Collection<SQLStatement> body = trigger.getActionStatement();
 				for (SQLStatement sqlStatement : body) {
 					triggerBody += sqlStatement.getSQL() + "\n"; //$NON-NLS-1$
 				}
-				dl.addItem(Messages.ProcessTable_body, DitaFactory.createElement(
-						ProgrammingTypes.CODEBLOCK, triggerBody));
+				dl
+						.addItem(Messages.ProcessTable_body, DitaFactory
+								.createElement(ProgrammingTypes.CODEBLOCK,
+										triggerBody));
 			}
 		}
 	}
@@ -385,9 +407,9 @@ public class ProcessTable {
 	private void addUQ(List<UniqueConstraint> uniqueConstraints, Topic topic) {
 		if (!uniqueConstraints.isEmpty()) {
 			for (UniqueConstraint uniqueConstraint : uniqueConstraints) {
-				topic.appendSection(
-						Messages.ProcessTable_uq + uniqueConstraint.getName(), "uq_" //$NON-NLS-2$
-								+ uniqueConstraint.getName());
+				topic.appendSection(Messages.ProcessTable_uq
+						+ uniqueConstraint.getName(), "uq_" //$NON-NLS-2$
+						+ uniqueConstraint.getName());
 				Section section = topic.getSection("uq_" //$NON-NLS-1$
 						+ uniqueConstraint.getName());
 				if (uniqueConstraint.getDescription() != null) {
@@ -465,7 +487,9 @@ public class ProcessTable {
 		if (identitySpecifier == null) {
 			return Messages.ProcessTable_false;
 		}
-		return Messages.ProcessTable_start + identitySpecifier.getStartValue().toString() + Messages.ProcessTable_increment
+		return Messages.ProcessTable_start
+				+ identitySpecifier.getStartValue().toString()
+				+ Messages.ProcessTable_increment
 				+ identitySpecifier.getIncrement().toString();
 	}
 
@@ -546,7 +570,9 @@ public class ProcessTable {
 		addTrigers(persistentTable.getTriggers(), topic);
 		addIndex(persistentTable.getIndex(), topic);
 		addDDL(topic, monitor);
-		topicDocument.save(path);
+		path += File.separator + topicDocument.getFileName();
+		ResourceUtils.getInstance().saveDitaFileAsResource(
+				topicDocument.getDocumentContent(), path);
 		return null;
 	}
 

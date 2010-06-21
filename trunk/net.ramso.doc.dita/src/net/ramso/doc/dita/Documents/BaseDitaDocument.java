@@ -3,6 +3,8 @@ package net.ramso.doc.dita.Documents;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 
 import net.ramso.doc.dita.elements.BaseDitaElement;
 import net.ramso.doc.dita.elements.DitaFactory;
@@ -31,14 +33,26 @@ public class BaseDitaDocument extends Document {
 	/**
 	 * @return
 	 */
-	protected String getFileName() {
-		return getElementRoot().getID();
+	public String getFileName() {
+		return getElementRoot().getID() + EXT;
 	}
 
 	public void save(String path) throws IOException {
-		String name = getFileName();
+		save(new FileWriter(path + File.separator + getFileName()));
+	}
+
+	public StringWriter getDocumentContent() throws IOException {
+		StringWriter out = new StringWriter();
+		save(out);
+		return out;
+	}
+
+	/**
+	 * @param out
+	 * @throws IOException
+	 */
+	public void save(Writer out) throws IOException {
 		XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-		outputter.output(this, new FileWriter(path + File.separator + name
-				+ EXT));
+		outputter.output(this, out);
 	}
 }

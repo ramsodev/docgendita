@@ -1,10 +1,12 @@
 package net.ramso.doc.datatools.generator;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
+import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.bookmap.Chapter;
@@ -22,7 +24,7 @@ public class ProcessCatalog {
 	private Catalog			catalog;
 	private String			path;
 	private TopicRef		topicRef;
-	private String			prefix	= ""; //$NON-NLS-1$
+	private String			prefix	= "";	//$NON-NLS-1$
 	private boolean			isPreface;
 	private Preface			preface;
 	private ArrayList<Part>	parts;
@@ -129,7 +131,9 @@ public class ProcessCatalog {
 		Section section = topic.getSection("des"); //$NON-NLS-1$
 		section.appendP(catalog.getDescription());
 		addSchemas(catalog.getSchemas(), topic, monitor);
-		topicDocument.save(path);
+		path += File.separator + topicDocument.getFileName();
+		ResourceUtils.getInstance().saveDitaFileAsResource(
+				topicDocument.getDocumentContent(), path);
 		return null;
 	}
 
