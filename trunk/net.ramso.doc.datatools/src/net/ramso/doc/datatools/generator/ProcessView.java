@@ -220,9 +220,12 @@ public class ProcessView {
 		Topic topic = topicDocument.getTopic();
 		topic.setID(id);
 		String title = Messages.ProcessView_title + view.getName();
+		if (view.getLabel() != null) {
+			title += " - " + view.getLabel(); //$NON-NLS-1$
+		}else
 		if (view.getDescription() != null) {
 			title += " - " + view.getDescription(); //$NON-NLS-1$
-		}
+		} 
 		topic.setTitle(title);
 		topic.getBody().addContent(
 				DitaFactory.createElement(BodyTypes.P, view.getDescription()));

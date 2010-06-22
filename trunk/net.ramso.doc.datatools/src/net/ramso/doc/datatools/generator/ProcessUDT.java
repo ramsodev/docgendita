@@ -267,10 +267,14 @@ public class ProcessUDT {
 		Topic topic = topicDocument.getTopic();
 		topic.setID(id);
 		String title = Messages.ProcessUDT_title + udt.getName();
-		if (udt.getDescription() != null) {
+		if (udt.getLabel() != null) {
+			title += " - " + udt.getLabel(); //$NON-NLS-1$
+		}
+		else if (udt.getDescription() != null) {
 			title += " - " + udt.getDescription(); //$NON-NLS-1$
 		}
 		topic.setTitle(title);
+		
 		topic.getBody().addContent(
 				DitaFactory.createElement(BodyTypes.P, udt.getDescription()));
 		List<Comment> comments = udt.getComments();

@@ -97,6 +97,13 @@ public class ProcessTable {
 				if (check.getDescription() != null) {
 					section.appendP(check.getDescription());
 				}
+				if (check.getLabel() != null) {
+					section.appendP(check.getLabel());
+				}
+				List<Comment> comments = check.getComments();
+				for (Comment comment : comments) {
+					section.appendP(comment.getDescription());
+				}
 				section.addContent(DitaFactory.createElement(
 						ProgrammingTypes.CODEBLOCK, check.getSearchCondition()
 								.getSQL()));
@@ -184,7 +191,19 @@ public class ProcessTable {
 			table.getTGroup().getTBody().appendRow(row);
 			row = new Row();
 			entry = new Entry();
-			entry.setText(column.getDescription());
+			String des = column.getLabel();
+			if (des != null) {
+				entry.setText(des);
+			}
+			else {
+				entry.setText(column.getDescription());
+			}
+			List<Comment> comments = column.getComments();
+			for (Comment comment : comments) {
+				Element p = DitaFactory.createElement(BodyTypes.P, comment
+						.getDescription());
+				entry.addContent(p);
+			}
 			entry.setColName("DES"); //$NON-NLS-1$
 			entry.setNamest(heads[1]);
 			entry.setNameEnd(heads[7]);
@@ -242,6 +261,13 @@ public class ProcessTable {
 				if (foreignKey.getDescription() != null) {
 					section.appendP(foreignKey.getDescription());
 				}
+				if (foreignKey.getLabel() != null) {
+					section.appendP(foreignKey.getLabel());
+				}
+				List<Comment> comments = foreignKey.getComments();
+				for (Comment comment : comments) {
+					section.appendP(comment.getDescription());
+				}
 				Dl dl = section.getDL("fk_dl_" + foreignKey.getName(), true); //$NON-NLS-1$
 				List<Column> columns = foreignKey.getMembers();
 				if (!columns.isEmpty()) {
@@ -298,6 +324,13 @@ public class ProcessTable {
 				if (idx.getDescription() != null) {
 					section.appendP(idx.getDescription());
 				}
+				if (idx.getLabel() != null) {
+					section.appendP(idx.getLabel());
+				}
+				List<Comment> comments = idx.getComments();
+				for (Comment comment : comments) {
+					section.appendP(comment.getDescription());
+				}
 				Dl dl = section.getDL("idx" + idx.getName(), true); //$NON-NLS-1$
 				List<IndexMember> cols = idx.getMembers();
 				if (!cols.isEmpty()) {
@@ -330,6 +363,13 @@ public class ProcessTable {
 			if (primaryKey.getDescription() != null) {
 				section.appendP(primaryKey.getDescription());
 			}
+			if (primaryKey.getLabel() != null) {
+				section.appendP(primaryKey.getLabel());
+			}
+			List<Comment> comments = primaryKey.getComments();
+			for (Comment comment : comments) {
+				section.appendP(comment.getDescription());
+			}
 			List<Column> columns = primaryKey.getMembers();
 			if (!columns.isEmpty()) {
 				Dl dl = new Dl();
@@ -356,6 +396,16 @@ public class ProcessTable {
 						+ trigger.getName(), "trg_" //$NON-NLS-2$
 						+ trigger.getName());
 				Section section = topic.getSection("trg_" + trigger.getName()); //$NON-NLS-1$
+				if (trigger.getDescription() != null) {
+					section.appendP(trigger.getDescription());
+				}
+				if (trigger.getLabel() != null) {
+					section.appendP(trigger.getLabel());
+				}
+				List<Comment> comments = trigger.getComments();
+				for (Comment comment : comments) {
+					section.appendP(comment.getDescription());
+				}
 				Dl dl = section.getDL("trg_" + trigger.getName(), true); //$NON-NLS-1$
 				dl.addItem(Messages.ProcessTable_actiontime, trigger
 						.getActionTime().getLiteral());
@@ -414,6 +464,13 @@ public class ProcessTable {
 						+ uniqueConstraint.getName());
 				if (uniqueConstraint.getDescription() != null) {
 					section.appendP(uniqueConstraint.getDescription());
+				}
+				if (uniqueConstraint.getLabel() != null) {
+					section.appendP(uniqueConstraint.getLabel());
+				}
+				List<Comment> comments = uniqueConstraint.getComments();
+				for (Comment comment : comments) {
+					section.appendP(comment.getDescription());
 				}
 				Dl dl = section.getDL("uk_dl_" + uniqueConstraint.getName(), //$NON-NLS-1$
 						true);
@@ -549,13 +606,18 @@ public class ProcessTable {
 		Topic topic = topicDocument.getTopic();
 		topic.setID(id);
 		String title = Messages.ProcessTable_title + persistentTable.getName();
-		if (persistentTable.getDescription() != null) {
+		if (persistentTable.getLabel() != null) {
+			title += " - " + persistentTable.getLabel(); //$NON-NLS-1$
+		}
+		else if (persistentTable.getDescription() != null) {
 			title += " - " + persistentTable.getDescription(); //$NON-NLS-1$
 		}
 		topic.setTitle(title);
-		topic.getBody().addContent(
-				DitaFactory.createElement(BodyTypes.P, persistentTable
-						.getDescription()));
+		if (persistentTable.getDescription() != null) {
+			topic.getBody().addContent(
+					DitaFactory.createElement(BodyTypes.P, persistentTable
+							.getDescription()));
+		}
 		List<Comment> comments = persistentTable.getComments();
 		for (Comment comment : comments) {
 			topic.getBody().addContent(

@@ -8,6 +8,8 @@ import java.util.List;
 import net.ramso.doc.datatools.Messages;
 import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
+import net.ramso.doc.dita.elements.BodyTypes;
+import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.bookmap.Part;
 import net.ramso.doc.dita.elements.bookmap.Preface;
 import net.ramso.doc.dita.elements.map.TopicRef;
@@ -16,6 +18,7 @@ import net.ramso.doc.dita.elements.topic.Topic;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.modelbase.sql.schema.Catalog;
+import org.eclipse.datatools.modelbase.sql.schema.Comment;
 import org.eclipse.datatools.modelbase.sql.schema.Database;
 import org.eclipse.datatools.modelbase.sql.schema.Schema;
 
@@ -112,7 +115,10 @@ public class ProcessDatabase {
 		Topic topic = topicDocument.getTopic();
 		topic.setID(database.getName());
 		String title = Messages.ProcessDatabase_title + database.getName();
-		if (database.getDescription() != null) {
+		if (database.getLabel() != null) {
+			title += " - " + database.getLabel(); //$NON-NLS-1$
+		}
+		else if (database.getDescription() != null) {
 			title += " - " + database.getDescription(); //$NON-NLS-1$
 		}
 		topic.setTitle(title);
@@ -122,6 +128,11 @@ public class ProcessDatabase {
 		section.appendP(Messages.ProcessDatabase_vendor + database.getVendor());
 		section.appendP(Messages.ProcessDatabase_version
 				+ database.getVersion());
+		List<Comment> comments = database.getComments();
+		for (Comment comment : comments) {
+			section.addContent(DitaFactory.createElement(BodyTypes.P, comment
+					.getDescription()));
+		}
 		if (database.getCatalogs().isEmpty()) {
 			addSchemas(database.getSchemas(), topic, monitor);
 		}

@@ -8,6 +8,7 @@ import java.util.List;
 import net.ramso.doc.datatools.Messages;
 import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
+import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.bookmap.Chapter;
 import net.ramso.doc.dita.elements.bookmap.Part;
@@ -18,6 +19,7 @@ import net.ramso.doc.dita.elements.topic.Topic;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.modelbase.sql.schema.Catalog;
+import org.eclipse.datatools.modelbase.sql.schema.Comment;
 import org.eclipse.datatools.modelbase.sql.schema.Schema;
 
 public class ProcessCatalog {
@@ -123,13 +125,21 @@ public class ProcessCatalog {
 		Topic topic = topicDocument.getTopic();
 		topic.setID(id);
 		String title = Messages.ProcessCatalog_title + catalog.getName();
-		if (catalog.getDescription() != null) {
+		if (catalog.getLabel() != null) {
+			title += " - " + catalog.getLabel(); //$NON-NLS-1$
+		}
+		else if (catalog.getDescription() != null) {
 			title += " - " + catalog.getDescription(); //$NON-NLS-1$
 		}
 		topic.setTitle(title);
 		topic.appendSection(Messages.ProcessCatalog_description, "des"); //$NON-NLS-2$
 		Section section = topic.getSection("des"); //$NON-NLS-1$
 		section.appendP(catalog.getDescription());
+		List<Comment> comments = catalog.getComments();
+		for (Comment comment : comments) {
+			section.addContent(DitaFactory.createElement(BodyTypes.P, comment
+					.getDescription()));
+		}
 		addSchemas(catalog.getSchemas(), topic, monitor);
 		path += File.separator + topicDocument.getFileName();
 		ResourceUtils.getInstance().saveDitaFileAsResource(
