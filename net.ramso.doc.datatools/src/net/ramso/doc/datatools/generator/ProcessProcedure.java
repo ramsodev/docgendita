@@ -187,7 +187,10 @@ public class ProcessProcedure {
 		Topic topic = topicDocument.getTopic();
 		topic.setID(id);
 		String title = Messages.ProcessProcedure_title + procedure.getName();
-		if (procedure.getDescription() != null) {
+		if (procedure.getLabel() != null) {
+			title += " - " + procedure.getLabel(); //$NON-NLS-1$
+		}
+		else if (procedure.getDescription() != null) {
 			title += " - " + procedure.getDescription(); //$NON-NLS-1$
 		}
 		topic.setTitle(title);

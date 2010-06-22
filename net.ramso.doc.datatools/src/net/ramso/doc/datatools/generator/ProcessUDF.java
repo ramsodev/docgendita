@@ -220,12 +220,19 @@ public class ProcessUDF {
 		Topic topic = topicDocument.getTopic();
 		topic.setID(id);
 		String title = Messages.ProcessUDF_title + udf.getName();
-		if (udf.getDescription() != null) {
+		if (udf.getLabel() != null) {
+			title += " - " + udf.getLabel(); //$NON-NLS-1$
+		}
+		else if (udf.getDescription() != null) {
 			title += " - " + udf.getDescription(); //$NON-NLS-1$
 		}
 		topic.setTitle(title);
-		topic.getBody().addContent(
-				DitaFactory.createElement(BodyTypes.P, udf.getDescription()));
+		if (udf.getDescription() != null) {
+			topic.getBody().addContent(
+					DitaFactory
+							.createElement(BodyTypes.P, udf.getDescription()));
+		}
+		
 		List<Comment> comments = udf.getComments();
 		for (Comment comment : comments) {
 			topic.getBody().addContent(

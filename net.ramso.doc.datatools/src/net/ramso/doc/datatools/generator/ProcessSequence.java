@@ -180,7 +180,10 @@ public class ProcessSequence {
 		Topic topic = topicDocument.getTopic();
 		topic.setID(id);
 		String title = Messages.ProcessSequence_title + sequence.getName();
-		if (sequence.getDescription() != null) {
+		if (sequence.getLabel() != null) {
+			title += " - " + sequence.getLabel(); //$NON-NLS-1$
+		}
+		else if (sequence.getDescription() != null) {
 			title += " - " + sequence.getDescription(); //$NON-NLS-1$
 		}
 		topic.setTitle(title);

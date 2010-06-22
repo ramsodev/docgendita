@@ -8,6 +8,8 @@ import java.util.List;
 import net.ramso.doc.datatools.Messages;
 import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
+import net.ramso.doc.dita.elements.BodyTypes;
+import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.bookmap.Chapter;
 import net.ramso.doc.dita.elements.bookmap.Part;
 import net.ramso.doc.dita.elements.map.TopicRef;
@@ -18,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.modelbase.sql.datatypes.UserDefinedType;
 import org.eclipse.datatools.modelbase.sql.routines.Procedure;
 import org.eclipse.datatools.modelbase.sql.routines.UserDefinedFunction;
+import org.eclipse.datatools.modelbase.sql.schema.Comment;
 import org.eclipse.datatools.modelbase.sql.schema.Schema;
 import org.eclipse.datatools.modelbase.sql.schema.Sequence;
 import org.eclipse.datatools.modelbase.sql.tables.PersistentTable;
@@ -317,13 +320,21 @@ public class ProcessSchema {
 		Topic topic = topicDocument.getTopic();
 		topic.setID(id);
 		String title = Messages.ProcessSchema_title + schema.getName();
-		if (schema.getDescription() != null) {
+		if (schema.getLabel() != null) {
+			title += " - " + schema.getLabel(); //$NON-NLS-1$
+		}
+		else if (schema.getDescription() != null) {
 			title += " - " + schema.getDescription(); //$NON-NLS-1$
 		}
 		topic.setTitle(title);
 		topic.appendSection(Messages.ProcessSchema_description, "des"); //$NON-NLS-2$
 		Section section = topic.getSection("des"); //$NON-NLS-1$
 		section.appendP(schema.getDescription());
+		List<Comment> comments = schema.getComments();
+		for (Comment comment : comments) {
+			section.addContent(DitaFactory.createElement(BodyTypes.P, comment
+					.getDescription()));
+		}
 		addTables(schema.getTables(), monitor);
 		addViews(schema.getTables(), monitor);
 		addSequences(schema.getSequences(), monitor);
