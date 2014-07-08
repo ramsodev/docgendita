@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+<extension point="org.eclipse.ui.menus">
+   <menuContribution
+           locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+        
+	        <command
+	              commandId="net.ramso.xsd.command.generate"
+	              id="GenerateDita"
+	              style="push" >
+	           <visibleWhen checkEnabled="false">
+	              <or>
+					<iterate ifEmpty="false">
+						<adapt
+							type="org.eclipse.core.resources.IFile">
+							<test
+								property="org.eclipse.wst.sse.core.resources.contentTypeId"
+                    			value="org.eclipse.wst.xsd.core.xsdsource">
+							</test>
+						</adapt>
+					</iterate>
+				 </or>	
+	           </visibleWhen>
+	        </command>
+        
+     </menuContribution>
+   
+   
+</extension>
+ <extension
+       point="org.eclipse.ui.commands">
+	    <command
+	          id="net.ramso.xsd.command.generate"
+	          name="Generar Documentacion ">
+	    </command>
+	    </extension>
+<extension
+      point="org.eclipse.ui.handlers">
+   <handler
+         class="net.ramso.doc.xsd.handlers.DocumentationHandler"
+         commandId="net.ramso.xsd.command.generate">
+   </handler>
+</extension>
+</plugin>
