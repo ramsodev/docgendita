@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Svg
+Bundle-SymbolicName: net.ramso.doc.svg
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: net.ramso.doc.svg.Activator
+Bundle-Vendor: Ramso.net
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources;bundle-version="3.8.101"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: net.ramso.doc.svg.utils
