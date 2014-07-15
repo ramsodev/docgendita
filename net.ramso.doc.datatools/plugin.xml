@@ -2,40 +2,31 @@
 <?eclipse version="3.4"?>
 <plugin>
 <extension
-         point="org.eclipse.ui.commands">
-      <category
-            name="Gendoc Dita"
-            id="net.ramso.doc.as400.commands.category">
-      </category>
-      <command
-            name="AS400 Legacy Documentation Generation"
-            categoryId="net.ramso.doc.as400.commands.category"
-            id="net.ramso.doc.as400.commands.gendoc">
-      </command>
-   </extension>
-<extension
-         point="org.eclipse.ui.menus">
-         
-      <menuContribution
-            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
-         <menu
-               label="Gendoc"
-               mnemonic="M"
-               id="net.ramso.doc.as400.menus.gendoc">
-            <command
-                  commandId="net.ramso.doc.as400.commands.gendoc"
-                  mnemonic="S"
-                  id="net.ramso.doc.as400.menus.gendoc">
-            </command>
-         </menu>
-      </menuContribution>
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerActionBinding viewerId="org.eclipse.datatools.connectivity.DataSourceExplorerNavigator">
+         <includes>
+            <actionExtension pattern="net.ramso.doc.datatools.ui.popup.actions.*" />
+         </includes>
+      </viewerActionBinding>
    </extension>
    <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            commandId="net.ramso.doc.as400.commands.gendoc"
-            class="net.ramso.doc.as400.handlers.GendocHandler">
-      </handler>
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <actionProvider
+            class="net.ramso.doc.datatools.ui.popup.DocumentationActionProvider"
+            id="net.ramso.doc.datatools.ui.popup.actions.documentationactionprovider">
+         <enablement>
+            <or>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Database"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Catalog"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Schema"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.schema.Sequence"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.tables.Table"/>               
+               <instanceof value="org.eclipse.datatools.modelbase.sql.datatypes.UserDefinedType"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.routines.Procedure"/>
+               <instanceof value="org.eclipse.datatools.modelbase.sql.routines.UserDefinedFunction"/>
+            </or>
+         </enablement>
+      </actionProvider>
    </extension>
 
 </plugin>
