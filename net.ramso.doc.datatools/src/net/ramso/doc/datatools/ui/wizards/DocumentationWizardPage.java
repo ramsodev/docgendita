@@ -238,11 +238,11 @@ public class DocumentationWizardPage extends WizardPage {
 			}
 		}
 		autorText.setText(System.getProperties().getProperty("user.name")); //$NON-NLS-1$
-		String lang = Locale.getDefault().getLanguage() + "_" //$NON-NLS-1$
+		String lang = Locale.getDefault().getLanguage() + "-" //$NON-NLS-1$
 				+ Locale.getDefault().getCountry();
 		Locale[] locales = Locale.getAvailableLocales();
 		for (Locale locale : locales) {
-			langCombo.add(locale.getLanguage() + "_" + locale.getCountry()); //$NON-NLS-1$
+			langCombo.add(locale.getLanguage() + "-" + locale.getCountry()); //$NON-NLS-1$
 		}
 		langCombo.select(getLang(lang, langCombo.getItems()));
 	}

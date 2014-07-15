@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
-import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
@@ -15,6 +14,7 @@ import net.ramso.doc.dita.elements.bookmap.Preface;
 import net.ramso.doc.dita.elements.map.TopicRef;
 import net.ramso.doc.dita.elements.topic.Section;
 import net.ramso.doc.dita.elements.topic.Topic;
+import net.ramso.doc.dita.utils.ResourceUtils;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.modelbase.sql.schema.Catalog;
