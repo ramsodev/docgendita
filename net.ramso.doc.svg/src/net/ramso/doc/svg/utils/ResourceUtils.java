@@ -24,8 +24,7 @@ import org.eclipse.core.runtime.Path;
 public class ResourceUtils {
 	/**  */
 	private final static ResourceUtils	save							= new ResourceUtils();
-	private static final String			DITA_FILE_EXTENSION				= "dita";
-	private static final String			ALTERNATE_DITA_FILE_EXTENSION	= "ditamap";
+	public static final String			SVG_FILE_EXTENSION				= "svg";
 	private static final String			UTF8							= "UTF-8";
 
 	/**  */
@@ -56,13 +55,12 @@ public class ResourceUtils {
 		}
 	}
 
-	public IFile saveDitaFileAsResource(StringWriter out, String filename) {
+	public IFile saveSVGFileAsResource(StringWriter out, String filename) {
 		IPath thePath = new Path(filename);
 		if ((thePath.getFileExtension() == null)
 				|| (!(thePath.getFileExtension().equalsIgnoreCase(
-						DITA_FILE_EXTENSION) || thePath.getFileExtension()
-						.equalsIgnoreCase(ALTERNATE_DITA_FILE_EXTENSION)))) {
-			thePath = thePath.addFileExtension(DITA_FILE_EXTENSION);
+						SVG_FILE_EXTENSION) ))) {
+			thePath = thePath.addFileExtension(SVG_FILE_EXTENSION);
 		}
 		IFile theFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
 				thePath);
@@ -101,7 +99,7 @@ public class ResourceUtils {
 	 * @param document
 	 *            , the document to save
 	 */
-	public void saveDitaFile(StringWriter out, String filename) {
+	public void saveSVGFile(StringWriter out, String filename) {
 		OutputStream file = null;
 		try {
 			if (shouldSaveAsResource(filename) == null) {

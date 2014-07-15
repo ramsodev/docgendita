@@ -25,7 +25,6 @@ import net.ramso.doc.svg.shapes.IShape;
 import net.ramso.doc.svg.shapes.SVGException;
 import net.ramso.doc.svg.shapes.SVGFactory;
 
-import org.abego.treelayout.TreeForTreeLayout;
 import org.abego.treelayout.TreeLayout;
 import org.abego.treelayout.util.DefaultConfiguration;
 import org.w3c.dom.Document;
@@ -35,14 +34,12 @@ import org.w3c.dom.Element;
  * @author ramso
  */
 public abstract class BaseDiagram {
-	/**
-		 * 
-		 */
-	private static final long	serialVersionUID	= 1L;
+	
 	protected String			EXT					= ".svg";
 	private Document			doc					= null;
 	private String				fileName			= null;
-	private static double		BORDER				= 20;
+	private static double		BORDERTOTAL			= 20;
+	private static int			BORDER				= 10;
 
 	public BaseDiagram() {
 		setDocument(SVGFactory.createDocument());
@@ -52,8 +49,10 @@ public abstract class BaseDiagram {
 		try {
 			getSvgRoot().setAttributeNS(null, "width", String.valueOf(width));
 			getSvgRoot().setAttributeNS(null, "height", String.valueOf(height));
-//			getSvgRoot().setAttributeNS(null, "x", String.valueOf(-10));
-//			getSvgRoot().setAttributeNS(null, "y", String.valueOf(-10));
+			// getSvgRoot().setAttributeNS(null, "x", String.valueOf(-10));
+			// getSvgRoot().setAttributeNS(null, "y", String.valueOf(-10));
+			getSvgRoot().appendChild(SVGFactory
+					.createG(SVGFactory.GROUP, getDocument(), BORDER, BORDER));
 		}
 		catch (Exception e) {
 			System.out.println("Excepcion: " + e);
@@ -65,12 +64,13 @@ public abstract class BaseDiagram {
 	 */
 	protected void layout(IShapeTreeForTreeLayout tree) {
 		DefaultConfiguration<IShape> configuration = new DefaultConfiguration<IShape>(
-				SVGFactory.VERTICAL, SVGFactory.HORIZONTAL );
+				SVGFactory.VERTICAL, SVGFactory.HORIZONTAL);
 		ShapesNodeExtendProvider nodeExtentProvider = new ShapesNodeExtendProvider();
 		TreeLayout<IShape> treeLayout = new TreeLayout<IShape>(tree.getTree(),
 				nodeExtentProvider, configuration);
 		Dimension size = treeLayout.getBounds().getBounds().getSize();
-		setRootAtr(size.getWidth() + BORDER, size.getHeight() + BORDER);
+		setRootAtr(size.getWidth() + BORDERTOTAL, size.getHeight()
+				+ BORDERTOTAL);
 		for (IShape shape : treeLayout.getNodeBounds().keySet()) {
 			try {
 				Rectangle2D.Double box = treeLayout.getNodeBounds().get(shape);
@@ -85,8 +85,6 @@ public abstract class BaseDiagram {
 		IShape root = treeLayout.getTree().getRoot();
 		addConnectors(treeLayout, root);
 	}
-	
-	
 
 	/**
 	 * @return
@@ -147,7 +145,9 @@ public abstract class BaseDiagram {
 	public Element getSvgRoot() {
 		return getDocument().getDocumentElement();
 	}
-
+	public Element getGroup() {
+		return (Element) getDocument().getDocumentElement().getFirstChild();
+	}
 	/**
 	 * @param fileName
 	 *            the fileName to set
@@ -155,11 +155,13 @@ public abstract class BaseDiagram {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
+
 	/**
 	 * Create the connectors between the shapes
+	 * 
 	 * @param treeLayout
 	 * @param parent
 	 */
-	public abstract void addConnectors(TreeLayout<IShape> treeLayout, IShape parent);
+	public abstract void addConnectors(TreeLayout<IShape> treeLayout,
+			IShape parent);
 }

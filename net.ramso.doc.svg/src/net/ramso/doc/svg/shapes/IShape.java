@@ -53,6 +53,11 @@ public interface IShape {
 	int getY();
 
 	void setY(int y);
+	
+	/**
+	 * @return
+	 */
+	String getId();
 
 	/**
 	 * create a shape in the svg document
@@ -60,4 +65,5 @@ public interface IShape {
 	 * @throws SVGException
 	 */
 	void addShape() throws SVGException;
+	
 }

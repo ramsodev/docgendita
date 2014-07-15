@@ -16,6 +16,7 @@ public abstract class BasicShape implements IShape {
 	public  int width = 0;
 	public  int x = 0;
 	public  int y = 0;
+	private String id;
 	
 	
 	/**
@@ -50,7 +51,9 @@ public abstract class BasicShape implements IShape {
 	}
 	
 	public Element getSvgRoot(){
-		return getDocument().getDocumentElement();
+//		return getDocument().getDocumentElement();
+		
+		return (Element) getDocument().getDocumentElement().getFirstChild();
 	}
 
 	
@@ -119,6 +122,20 @@ public abstract class BasicShape implements IShape {
 	 */
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	

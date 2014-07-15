@@ -1,17 +1,11 @@
 /**
  * 
  */
-package net.ramso.doc.svg.diagrams;
+package net.ramso.doc.svg.as400;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.ramso.doc.svg.as400.AS400BasicShape;
-import net.ramso.doc.svg.as400.AS400Object;
-import net.ramso.doc.svg.as400.DisplayShape;
-import net.ramso.doc.svg.as400.FileShape;
-import net.ramso.doc.svg.as400.PGMShape;
-import net.ramso.doc.svg.as400.ReportShape;
 import net.ramso.doc.svg.layout.IShapeTreeForTreeLayout;
 import net.ramso.doc.svg.shapes.IShape;
 

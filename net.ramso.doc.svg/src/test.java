@@ -3,8 +3,8 @@ import java.util.ArrayList;
 
 import javax.xml.transform.TransformerException;
 
+import net.ramso.doc.svg.as400.AS400Diagram;
 import net.ramso.doc.svg.as400.AS400Object;
-import net.ramso.doc.svg.diagrams.AS400Diagram;
 
 /**
  * 

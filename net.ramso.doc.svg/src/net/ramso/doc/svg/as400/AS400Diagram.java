@@ -1,12 +1,12 @@
 /**
  * 
  */
-package net.ramso.doc.svg.diagrams;
+package net.ramso.doc.svg.as400;
 
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-import net.ramso.doc.svg.as400.AS400Object;
+import net.ramso.doc.svg.diagrams.BaseDiagram;
 import net.ramso.doc.svg.shapes.IShape;
 import net.ramso.doc.svg.shapes.SVGFactory;
 
@@ -67,8 +67,8 @@ public class AS400Diagram extends BaseDiagram {
 				Rectangle2D.Double childPosition = treeLayout.getNodeBounds().get(shape);
 				pos[2] = new Double(childPosition.getCenterX()).intValue();
 				pos[3] = new Double(childPosition.getCenterY()).intValue() - shape.getHeight()/2;
-				Element con = SVGFactory.createConnectorPath(pos, getDocument());
-				getSvgRoot().appendChild(con);
+				Element con = SVGFactory.createConnectorPath("",SVGFactory.VERTICALDIR, pos, getDocument());
+				getGroup().appendChild(con);
 				addConnectors(treeLayout, shape);
 			}
 		}
