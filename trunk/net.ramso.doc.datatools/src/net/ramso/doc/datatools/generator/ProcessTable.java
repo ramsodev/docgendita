@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.xml.transform.TransformerException;
+
 import net.ramso.doc.datatools.Messages;
-import net.ramso.doc.datatools.utils.ResourceUtils;
+import net.ramso.doc.datatools.ui.wizards.DocumentationWizard;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.attributes.AlignValues;
 import net.ramso.doc.dita.attributes.FrameValues;
@@ -31,6 +33,9 @@ import net.ramso.doc.dita.elements.table.THead;
 import net.ramso.doc.dita.elements.table.Table;
 import net.ramso.doc.dita.elements.topic.Section;
 import net.ramso.doc.dita.elements.topic.Topic;
+import net.ramso.doc.dita.utils.ResourceUtils;
+import net.ramso.doc.svg.er.ERDiagram;
+import net.ramso.doc.svg.er.TableData;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.connectivity.sqm.core.containment.ContainmentServiceImpl;
@@ -66,10 +71,13 @@ import org.jdom.Element;
  * @author ramso
  */
 public class ProcessTable {
-	private TopicRef		topicRef;
-	private PersistentTable	persistentTable;
-	private String			path;
-	private String			prefix	= "";		//$NON-NLS-1$
+	private TopicRef					topicRef;
+	private PersistentTable				persistentTable;
+	private String						path;
+	private String						prefix	= "";		//$NON-NLS-1$
+	private ArrayList<TableData>		ts;
+	private ArrayList<PersistentTable>	pts;
+	private int							tsi;
 
 	public ProcessTable(PersistentTable persistentTable, String path) {
 		this.persistentTable = persistentTable;
@@ -81,6 +89,7 @@ public class ProcessTable {
 	 * @param constraints
 	 * @param topic
 	 */
+	@SuppressWarnings("unchecked")
 	private void addCK(List<TableConstraint> constraints, Topic topic) {
 		ArrayList<CheckConstraint> checks = new ArrayList<CheckConstraint>();
 		for (TableConstraint constraint : constraints) {
@@ -90,9 +99,9 @@ public class ProcessTable {
 		}
 		if (!checks.isEmpty()) {
 			for (CheckConstraint check : checks) {
-				topic.appendSection(Messages.ProcessTable_check
-						+ check.getName(), "ck_" //$NON-NLS-2$
-						+ check.getName());
+				topic.appendSection(
+						Messages.ProcessTable_check + check.getName(), "ck_" //$NON-NLS-2$
+								+ check.getName());
 				Section section = topic.getSection("ck_" + check.getName()); //$NON-NLS-1$
 				if (check.getDescription() != null) {
 					section.appendP(check.getDescription());
@@ -115,7 +124,8 @@ public class ProcessTable {
 	 * @param columns
 	 * @param topic
 	 */
-	private void addColumns(List<Column> columns, Topic topic) {
+	@SuppressWarnings("unchecked")
+	private void addColumns(List<Column> columns, Topic topic, String name) {
 		String[] heads = { Messages.ProcessTable_colums_headers_name,
 				Messages.ProcessTable_colums_headers_type,
 				Messages.ProcessTable_colums_headers_defvalue,
@@ -135,7 +145,7 @@ public class ProcessTable {
 		table.setPGWide(true);
 		table.setScale(ScaleValues._80);
 		table.setID("table_columns"); //$NON-NLS-1$
-		table.setTitle(Messages.ProcessTable_colums_table_title);
+		table.setTitle(Messages.ProcessTable_colums_table_title + name);
 		table.setTGroup(new TGroup());
 		table.getTGroup().setCols(heads.length);
 		for (int i = 0; i < heads.length; i++) {
@@ -200,8 +210,8 @@ public class ProcessTable {
 			}
 			List<Comment> comments = column.getComments();
 			for (Comment comment : comments) {
-				Element p = DitaFactory.createElement(BodyTypes.P, comment
-						.getDescription());
+				Element p = DitaFactory.createElement(BodyTypes.P,
+						comment.getDescription());
 				entry.addContent(p);
 			}
 			entry.setColName("DES"); //$NON-NLS-1$
@@ -227,8 +237,8 @@ public class ProcessTable {
 		}
 		if (database != null) {
 			DatabaseDefinition databaseDefinition = RDBCorePlugin.getDefault()
-					.getDatabaseDefinitionRegistry().getDefinition(
-							database.getVendor(), database.getVersion());
+					.getDatabaseDefinitionRegistry()
+					.getDefinition(database.getVendor(), database.getVersion());
 			DDLGenerator feProvider = databaseDefinition.getDDLGenerator();
 			@SuppressWarnings("unused")
 			EngineeringOption[] opts = feProvider
@@ -254,8 +264,9 @@ public class ProcessTable {
 	private void addFK(List<ForeignKey> foreignKeys, Topic topic) {
 		if (!foreignKeys.isEmpty()) {
 			for (ForeignKey foreignKey : foreignKeys) {
-				topic.appendSection(Messages.ProcessTable_fk
-						+ foreignKey.getName(), "fk_" + foreignKey.getName()); //$NON-NLS-1$
+				topic.appendSection(
+						Messages.ProcessTable_fk + foreignKey.getName(),
+						"fk_" + foreignKey.getName()); //$NON-NLS-1$
 				Section section = topic
 						.getSection("fk_" + foreignKey.getName()); //$NON-NLS-1$
 				if (foreignKey.getDescription() != null) {
@@ -294,10 +305,8 @@ public class ProcessTable {
 				if (parentTable != null && !relColumns.isEmpty()) {
 					Element sl = DitaFactory.createElement(BodyTypes.SL);
 					for (Column column : relColumns) {
-						sl
-								.addContent(DitaFactory.createElement(
-										BodyTypes.SLI, parentTable.getName()
-												+ "." + column.getName())); //$NON-NLS-1$
+						sl.addContent(DitaFactory.createElement(BodyTypes.SLI,
+								parentTable.getName() + "." + column.getName())); //$NON-NLS-1$
 					}
 					dl.addItem(Messages.ProcessTable_ref_columns, sl);
 				}
@@ -344,8 +353,8 @@ public class ProcessTable {
 					}
 					dl.addItem(Messages.ProcessTable_columns, sl);
 				}
-				dl.addItem(Messages.ProcessTable_unique, String.valueOf(idx
-						.isUnique()));
+				dl.addItem(Messages.ProcessTable_unique,
+						String.valueOf(idx.isUnique()));
 			}
 		}
 	}
@@ -392,9 +401,10 @@ public class ProcessTable {
 	private void addTrigers(List<Trigger> triggers, Topic topic) {
 		if (!triggers.isEmpty()) {
 			for (Trigger trigger : triggers) {
-				topic.appendSection(Messages.ProcessTable_trigger
-						+ trigger.getName(), "trg_" //$NON-NLS-2$
-						+ trigger.getName());
+				topic.appendSection(
+						Messages.ProcessTable_trigger + trigger.getName(),
+						"trg_" //$NON-NLS-2$
+								+ trigger.getName());
 				Section section = topic.getSection("trg_" + trigger.getName()); //$NON-NLS-1$
 				if (trigger.getDescription() != null) {
 					section.appendP(trigger.getDescription());
@@ -415,23 +425,23 @@ public class ProcessTable {
 						getEventType(trigger));
 				if (trigger.getOldTable() != null
 						&& !trigger.getOldTable().isEmpty()) {
-					dl.addItem(Messages.ProcessTable_oldtable, trigger
-							.getOldTable());
+					dl.addItem(Messages.ProcessTable_oldtable,
+							trigger.getOldTable());
 				}
 				if (trigger.getOldRow() != null
 						&& !trigger.getOldRow().isEmpty()) {
-					dl.addItem(Messages.ProcessTable_oldrow, trigger
-							.getOldRow());
+					dl.addItem(Messages.ProcessTable_oldrow,
+							trigger.getOldRow());
 				}
 				if (trigger.getNewTable() != null
 						&& !trigger.getNewTable().isEmpty()) {
-					dl.addItem(Messages.ProcessTable_newtable, trigger
-							.getNewTable());
+					dl.addItem(Messages.ProcessTable_newtable,
+							trigger.getNewTable());
 				}
 				if (trigger.getNewRow() != null
 						&& !trigger.getNewRow().isEmpty()) {
-					dl.addItem(Messages.ProcessTable_newrow, trigger
-							.getNewRow());
+					dl.addItem(Messages.ProcessTable_newrow,
+							trigger.getNewRow());
 				}
 				dl.addItem(Messages.ProcessTable_when, DitaFactory
 						.createElement(ProgrammingTypes.CODEBLOCK, trigger
@@ -441,10 +451,8 @@ public class ProcessTable {
 				for (SQLStatement sqlStatement : body) {
 					triggerBody += sqlStatement.getSQL() + "\n"; //$NON-NLS-1$
 				}
-				dl
-						.addItem(Messages.ProcessTable_body, DitaFactory
-								.createElement(ProgrammingTypes.CODEBLOCK,
-										triggerBody));
+				dl.addItem(Messages.ProcessTable_body, DitaFactory
+						.createElement(ProgrammingTypes.CODEBLOCK, triggerBody));
 			}
 		}
 	}
@@ -457,9 +465,10 @@ public class ProcessTable {
 	private void addUQ(List<UniqueConstraint> uniqueConstraints, Topic topic) {
 		if (!uniqueConstraints.isEmpty()) {
 			for (UniqueConstraint uniqueConstraint : uniqueConstraints) {
-				topic.appendSection(Messages.ProcessTable_uq
-						+ uniqueConstraint.getName(), "uq_" //$NON-NLS-2$
-						+ uniqueConstraint.getName());
+				topic.appendSection(
+						Messages.ProcessTable_uq + uniqueConstraint.getName(),
+						"uq_" //$NON-NLS-2$
+								+ uniqueConstraint.getName());
 				Section section = topic.getSection("uq_" //$NON-NLS-1$
 						+ uniqueConstraint.getName());
 				if (uniqueConstraint.getDescription() != null) {
@@ -615,16 +624,17 @@ public class ProcessTable {
 		topic.setTitle(title);
 		if (persistentTable.getDescription() != null) {
 			topic.getBody().addContent(
-					DitaFactory.createElement(BodyTypes.P, persistentTable
-							.getDescription()));
+					DitaFactory.createElement(BodyTypes.P,
+							persistentTable.getDescription()));
 		}
 		List<Comment> comments = persistentTable.getComments();
 		for (Comment comment : comments) {
 			topic.getBody().addContent(
-					DitaFactory.createElement(BodyTypes.P, comment
-							.getDescription()));
+					DitaFactory.createElement(BodyTypes.P,
+							comment.getDescription()));
 		}
-		addColumns(persistentTable.getColumns(), topic);
+		addDiagram(topic);
+		addColumns(persistentTable.getColumns(), topic, persistentTable.getName());
 		addPK(persistentTable.getPrimaryKey(), topic);
 		addFK(persistentTable.getForeignKeys(), topic);
 		addUQ(persistentTable.getUniqueConstraints(), topic);
@@ -636,6 +646,87 @@ public class ProcessTable {
 		ResourceUtils.getInstance().saveDitaFileAsResource(
 				topicDocument.getDocumentContent(), path);
 		return null;
+	}
+
+	/**
+	 * @param topic
+	 * @return
+	 */
+	private void addDiagram(Topic topic) {
+		ts = new ArrayList<net.ramso.doc.svg.er.TableData>();
+		pts = new ArrayList<PersistentTable>();
+		pts.add(persistentTable);
+		ts = new ArrayList<TableData>(1);
+		ts.add(0, createDiagramTable(persistentTable));
+		tsi = 1;
+		ERDiagram diagram = new ERDiagram(ts);
+		diagram.run();
+		String pathi = path + File.separator + DocumentationWizard.IMGFOLDER
+				+ File.separator + diagram.getFileName();
+		try {
+			net.ramso.doc.svg.utils.ResourceUtils.getInstance()
+					.saveSVGFileAsResource(diagram.getDocumentContent(), pathi);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String url = "." + File.separator + DocumentationWizard.IMGFOLDER
+				+ File.separator + diagram.getFileName() + "."
+				+ net.ramso.doc.svg.utils.ResourceUtils.SVG_FILE_EXTENSION;
+		topic.appendSection(Messages.ProcessTable_section_er, "erd"); 
+		Section section = topic.getSection("erd"); //$NON-NLS-1$
+		section.appendFigure(diagram.getFileName(), Messages.ProcessTable_er_title
+				+ diagram.getFileName(), url);
+	}
+
+	/**
+	 * @param parentTable
+	 * @return
+	 */
+	private TableData createDiagramTable(PersistentTable table) {
+		TableData t = new TableData();
+		t.setName(table.getName());
+		t.setSchema(table.getSchema().getName());
+		List<Column> columns = table.getPrimaryKey().getMembers();
+		if (!columns.isEmpty()) {
+			int i = 0;
+			for (Column column : columns) {
+				t.addPrimaryKey(column.getName()+" (PK)");
+				i++;
+			}
+		}
+		List<ForeignKey> foreignKeys = persistentTable.getForeignKeys();
+		if (!foreignKeys.isEmpty()) {
+			for (ForeignKey foreignKey : foreignKeys) {
+				UniqueConstraint uniqueConstraint = foreignKey
+						.getUniqueConstraint();
+				Index index = foreignKey.getUniqueIndex();
+				PersistentTable parentTable = null;
+				if (uniqueConstraint != null) {
+					parentTable = (PersistentTable) uniqueConstraint
+							.getBaseTable();
+				}
+				else if (index != null) {
+					parentTable = (PersistentTable) index.getTable();
+				}
+				if (parentTable != null
+						&& !parentTable.getName().equals(table.getName())) {
+					t.addRelation(TableData.ONETOMANY, parentTable.getName());
+					if (!pts.contains(parentTable)) {
+						pts.add(parentTable);
+						TableData tp = createDiagramTable((PersistentTable) parentTable);
+						ts.ensureCapacity(1);
+						ts.add(tsi++, tp);
+					}
+				}
+			}
+		}
+		return t;
 	}
 
 	/**

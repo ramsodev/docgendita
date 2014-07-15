@@ -6,6 +6,7 @@ import net.ramso.doc.datatools.generator.ProcessGenerator;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -18,7 +19,9 @@ public class DocumentationWizard extends Wizard {
 	private DocumentationWizardPage	page;
 	private ISelection				selection;
 	private List<SQLObject>			sqlobjects;
+	public static String IMGFOLDER = "images";
 
+	@SuppressWarnings("unchecked")
 	public DocumentationWizard(List list) {
 		super();
 		sqlobjects = list;
@@ -41,6 +44,16 @@ public class DocumentationWizard extends Wizard {
 		IPath thePath = new Path(page.getContainerName());
 		IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(
 				thePath);
+		IFolder imgf = folder.getFolder(IMGFOLDER);
+		if(!imgf.exists()){
+			try {
+				imgf.create(false, true, monitor);
+			}
+			catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		ProcessGenerator generator = new ProcessGenerator(sqlobjects, folder);
 		generator.setTitle(page.getTitle());
 		generator.setDes(page.getDescription());

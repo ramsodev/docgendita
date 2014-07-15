@@ -40,12 +40,14 @@ public class DocumentationAction extends Action {
 		this.setToolTipText(TEXT);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addSQLObject(List linkedList, Object selected) {
 		if (selected instanceof SQLObject) {
 			linkedList.add(selected);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected List getMultipleSelection() {
 		List linkedList = new LinkedList();
 		if (event.getSelection() instanceof IStructuredSelection) {
@@ -67,6 +69,7 @@ public class DocumentationAction extends Action {
 		return linkedList;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
 		try {

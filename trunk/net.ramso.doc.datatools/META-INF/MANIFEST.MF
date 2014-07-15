@@ -14,7 +14,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.datatools.connectivity.ui.dse,
  org.eclipse.datatools.modelbase.sql;bundle-version="1.0.3",
  net.ramso.doc.dita;bundle-version="1.0.0",
- org.eclipse.datatools.connectivity.sqm.core;bundle-version="1.1.1"
+ org.eclipse.datatools.connectivity.sqm.core;bundle-version="1.1.1",
+ net.ramso.doc.svg
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Import-Package: net.ramso.doc.svg.er
 

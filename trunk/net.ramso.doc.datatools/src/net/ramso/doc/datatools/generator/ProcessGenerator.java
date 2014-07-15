@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
-import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.BookMapDocument;
 import net.ramso.doc.dita.elements.bookmap.BackMatter;
 import net.ramso.doc.dita.elements.bookmap.BookLists;
 import net.ramso.doc.dita.elements.bookmap.FrontMatter;
+import net.ramso.doc.dita.utils.ResourceUtils;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;

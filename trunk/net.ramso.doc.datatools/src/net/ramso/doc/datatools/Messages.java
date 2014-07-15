@@ -4,7 +4,6 @@
 package net.ramso.doc.datatools;
 
 import org.eclipse.osgi.util.NLS;
-import org.jdom.Element;
 
 /**
  * @author ramso
@@ -76,6 +75,8 @@ public class Messages extends NLS {
 	public static String	ProcessTable_colums_table_title;
 	public static String	ProcessTable_ddl;
 	public static String	ProcessTable_delete;
+	public static String	ProcessTable_er_title;
+
 	public static String	ProcessTable_eventtype;
 	public static String	ProcessTable_false;
 	public static String	ProcessTable_fk;
@@ -91,6 +92,8 @@ public class Messages extends NLS {
 	public static String	ProcessTable_onupdate;
 	public static String	ProcessTable_pk;
 	public static String	ProcessTable_ref_columns;
+	public static String	ProcessTable_section_er;
+
 	public static String	ProcessTable_start;
 	public static String	ProcessTable_title;
 	public static String	ProcessTable_trigger;

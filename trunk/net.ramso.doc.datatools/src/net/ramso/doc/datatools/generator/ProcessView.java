@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
-import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.attributes.AlignValues;
 import net.ramso.doc.dita.attributes.FrameValues;
@@ -27,6 +26,7 @@ import net.ramso.doc.dita.elements.table.THead;
 import net.ramso.doc.dita.elements.table.Table;
 import net.ramso.doc.dita.elements.topic.Section;
 import net.ramso.doc.dita.elements.topic.Topic;
+import net.ramso.doc.dita.utils.ResourceUtils;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.connectivity.sqm.core.containment.ContainmentServiceImpl;

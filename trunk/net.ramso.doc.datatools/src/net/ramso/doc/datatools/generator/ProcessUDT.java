@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.ramso.doc.datatools.Messages;
-import net.ramso.doc.datatools.utils.ResourceUtils;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
@@ -19,6 +18,7 @@ import net.ramso.doc.dita.elements.bookmap.Chapter;
 import net.ramso.doc.dita.elements.map.TopicRef;
 import net.ramso.doc.dita.elements.topic.Section;
 import net.ramso.doc.dita.elements.topic.Topic;
+import net.ramso.doc.dita.utils.ResourceUtils;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.datatools.connectivity.sqm.core.containment.ContainmentServiceImpl;
@@ -31,6 +31,7 @@ import org.eclipse.datatools.modelbase.sql.datatypes.ArrayDataType;
 import org.eclipse.datatools.modelbase.sql.datatypes.AttributeDefinition;
 import org.eclipse.datatools.modelbase.sql.datatypes.DataType;
 import org.eclipse.datatools.modelbase.sql.datatypes.DistinctUserDefinedType;
+import org.eclipse.datatools.modelbase.sql.datatypes.ElementType;
 import org.eclipse.datatools.modelbase.sql.datatypes.Field;
 import org.eclipse.datatools.modelbase.sql.datatypes.PredefinedDataType;
 import org.eclipse.datatools.modelbase.sql.datatypes.RowDataType;
@@ -74,8 +75,8 @@ public class ProcessUDT {
 		}
 		if (database != null) {
 			DatabaseDefinition databaseDefinition = RDBCorePlugin.getDefault()
-					.getDatabaseDefinitionRegistry().getDefinition(
-							database.getVendor(), database.getVersion());
+					.getDatabaseDefinitionRegistry()
+					.getDefinition(database.getVendor(), database.getVersion());
 			DDLGenerator feProvider = databaseDefinition.getDDLGenerator();
 			@SuppressWarnings("unused")
 			EngineeringOption[] opts = feProvider
@@ -117,24 +118,23 @@ public class ProcessUDT {
 		topic.getBody().addContent(dl);
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<Element> addType(ArrayDataType udt) {
 		List<Element> entrys = new ArrayList<Element>(3);
 		entrys.add(Dl.getEntry(Messages.ProcessUDT_type_udt,
 				Messages.ProcessUDT_array));
-		entrys.add(Dl.getEntry(Messages.ProcessUDT_max_cardinality, String
-				.valueOf(udt.getMaxCardinality())));
+		entrys.add(Dl.getEntry(Messages.ProcessUDT_max_cardinality,
+				String.valueOf(udt.getMaxCardinality())));
 		// Para Eclipse 3.5
-		List<DataType> types = udt.getElement();
-		if (!types.isEmpty()) {
-			for (DataType dataType : types) {
-				entrys.add(Dl.getEntry(Messages.ProcessUDT_type,
-						getType(dataType)));
-			}
-		}
+		// List<DataType> types = udt.getElement();
+		// if (!types.isEmpty()) {
+		// for (DataType dataType : types) {
+		// entrys.add(Dl.getEntry(Messages.ProcessUDT_type,
+		// getType(dataType)));
+		// }
+		// }
 		// Para Eclipse 3.6 Helios y IBM Data Studio 2.2
-		// ElementType type = udt.getElementType();
-		// entrys.add(Dl.getEntry("Tipo", getType(type, this.udt.getSchema())));
+		ElementType type = udt.getElementType();
+		entrys.add(Dl.getEntry("Tipo", getType(type, this.udt.getSchema())));
 		return entrys;
 	}
 
@@ -146,8 +146,8 @@ public class ProcessUDT {
 		List<Element> entrys = new ArrayList<Element>(2);
 		entrys.add(Dl.getEntry(Messages.ProcessUDT_type_udt,
 				Messages.ProcessUDT_distinct));
-		entrys.add(Dl.getEntry(Messages.ProcessUDT_type, getType(udt
-				.getPredefinedRepresentation())));
+		entrys.add(Dl.getEntry(Messages.ProcessUDT_type,
+				getType(udt.getPredefinedRepresentation())));
 		return entrys;
 	}
 
@@ -160,9 +160,10 @@ public class ProcessUDT {
 		if (!fields.isEmpty()) {
 			Element sl = DitaFactory.createElement(BodyTypes.SL);
 			for (Field field : fields) {
-				sl.addContent(DitaFactory.createElement(BodyTypes.SLI, field
-						.getName()
-						+ " (" + getType(field, this.udt.getSchema()) + ")")); //$NON-NLS-1$ //$NON-NLS-2$
+				sl.addContent(DitaFactory.createElement(
+						BodyTypes.SLI,
+						field.getName()
+								+ " (" + getType(field, this.udt.getSchema()) + ")")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			entrys.add(Dl.getEntry(Messages.ProcessUDT_fields, sl));
 		}
@@ -182,11 +183,12 @@ public class ProcessUDT {
 		if (!atrs.isEmpty()) {
 			Element sl = DitaFactory.createElement(BodyTypes.SL);
 			for (AttributeDefinition attributeDefinition : atrs) {
-				sl.addContent(DitaFactory.createElement(BodyTypes.SLI,
+				sl.addContent(DitaFactory.createElement(
+						BodyTypes.SLI,
 						attributeDefinition.getName()
 								+ " (" //$NON-NLS-1$
-								+ getType(attributeDefinition, this.udt
-										.getSchema()) + ")")); //$NON-NLS-1$
+								+ getType(attributeDefinition,
+										this.udt.getSchema()) + ")")); //$NON-NLS-1$
 			}
 			entrys.add(Dl.getEntry(Messages.ProcessUDT_attibutes, sl));
 		}
@@ -274,14 +276,13 @@ public class ProcessUDT {
 			title += " - " + udt.getDescription(); //$NON-NLS-1$
 		}
 		topic.setTitle(title);
-		
 		topic.getBody().addContent(
 				DitaFactory.createElement(BodyTypes.P, udt.getDescription()));
 		List<Comment> comments = udt.getComments();
 		for (Comment comment : comments) {
 			topic.getBody().addContent(
-					DitaFactory.createElement(BodyTypes.P, comment
-							.getDescription()));
+					DitaFactory.createElement(BodyTypes.P,
+							comment.getDescription()));
 		}
 		addInfo(topic, monitor);
 		addDDL(topic, monitor);
