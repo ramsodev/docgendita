@@ -14,6 +14,7 @@ import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.bookmap.Chapter;
 import net.ramso.doc.dita.elements.bookmap.Part;
 import net.ramso.doc.dita.elements.map.TopicRef;
+import net.ramso.doc.dita.elements.table.Table;
 import net.ramso.doc.dita.elements.topic.Section;
 import net.ramso.doc.dita.elements.topic.Topic;
 import net.ramso.doc.xsd.utils.ResourceUtils;
@@ -22,6 +23,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDTypeDefinition;
 import org.w3c.dom.Element;
 
 /**
@@ -67,6 +70,7 @@ public class ProcessElements {
 				topicDocument.getDocumentContent(),
 				path + File.separator + topicDocument.getFileName());
 		for (XSDElementDeclaration element : elements) {
+			System.out.println(element.getName());
 			chapter.appendTopicRef(createElement(element));
 		}
 		ResourceUtils.getInstance().saveDitaFileAsResource(
@@ -78,33 +82,66 @@ public class ProcessElements {
 	/**
 	 * @param element
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	private TopicRef createElement(XSDElementDeclaration element) throws IOException {
+	private TopicRef createElement(XSDElementDeclaration element)
+			throws IOException {
 		TopicRef topicRef = DitaFactory.createTopicRef();
 		String id = getPrefix() + element.getName();
 		topicRef.setHref(id + ".dita"); //$NON-NLS-1$
 		TopicDocument topicDocument = new TopicDocument();
 		Topic topic = topicDocument.getTopic();
 		topic.setID(id);
-		String title = "Element " + element.getQName();
-		
+		String title = "Element " + element.getName();
 		topic.setTitle(title);
-		
+		createGeneral(element.getTypeDefinition(), topic);
 		topic.appendSection("Annotations", "des"); //$NON-NLS-2$
 		Section section = topic.getSection("des"); //$NON-NLS-1$
-//		EList<Element> appInfo = element.getAnnotation().getApplicationInformation();
-//		for (Element appinfo : appInfo) {
-//			section.appendP(appinfo.getTextContent());
-//		}
-		EList<Element> userInfo = element.getAnnotation().getUserInformation();
-		for (Element userinfo : userInfo) {
-			section.appendP(userinfo.getTextContent());
+		// EList<Element> appInfo =
+		// element.getAnnotation().getApplicationInformation();
+		// for (Element appinfo : appInfo) {
+		// section.appendP(appinfo.getTextContent());
+		// }
+		try {
+			EList<Element> userInfo = element.getAnnotation()
+					.getUserInformation();
+			for (Element userinfo : userInfo) {
+				section.appendP(userinfo.getTextContent());
+			}
+		}
+		catch (Exception e) {
+		}
+		topic.appendSection("Type", "type"); //$NON-NLS-2$
+		section = topic.getSection("type"); //$NON-NLS-1$
+		XSDTypeDefinition t = element.getType();
+		XSDParticle tc = t.getComplexType();
+		System.out.println(tc);
+		section.appendP(element.getType().getQName());
+		section.appendP(element.getType().getBaseType().getName());
+		try {
+			EList<Element> userInfo = t.getAnnotation()
+					.getUserInformation();
+			for (Element userinfo : userInfo) {
+				section.appendP(userinfo.getTextContent());
+			}
+		}
+		catch (Exception e) {
 		}
 		ResourceUtils.getInstance().saveDitaFileAsResource(
 				topicDocument.getDocumentContent(),
 				path + File.separator + topicDocument.getFileName());
 		return topicRef;
+	}
+
+	/**
+	 * @param typeDefinition
+	 * @param topic 
+	 * @return
+	 */
+	private Section createGeneral(XSDTypeDefinition typeDefinition, Topic topic) {
+		topic.appendSection("General", "gen");
+		Section section = topic.getSection("gen");
+		return section;
 	}
 
 	/**
