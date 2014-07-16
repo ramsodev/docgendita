@@ -15,7 +15,7 @@ public enum BodyTypes implements IDitaTypes {
 			3, "DLENTRY", "dlentry"), DD(4, "DD", "dd"), DT(5, "DT", "dt"), DDHD(
 			6, "DDHD", "ddhd"), DTHD(7, "DTHD", "dthd"), XREF(9, "XREF", "xref"), DESC(
 			9, "DESC", "desc"), UL(10, "UL", "ul"), OL(11, "OL", "ol"), LI(12,
-			"LI", "li"), SL(13, "SL", "sl"), SLI(14, "SLI", "sli");
+			"LI", "li"), SL(13, "SL", "sl"), SLI(14, "SLI", "sli"), NOTE(15, "NOTE", "note");
 	public static final int				P_VALUE			= 0;
 	public static final int				DL_VALUE		= 1;
 	public static final int				DLHEAD_VALUE	= 2;
@@ -31,8 +31,9 @@ public enum BodyTypes implements IDitaTypes {
 	public static final int				LI_VALUE		= 12;
 	public static final int				SL_VALUE		= 13;
 	public static final int				SLI_VALUE		= 14;
+	public static final int				NOTE_VALUE		= 15;
 	private static final BodyTypes[]	VALUES_ARRAY	= new BodyTypes[] { P,
-			DL, DLHEAD, DLENTRY, DD, DT, DDHD, DTHD, XREF, UL, OL, LI, SL, SLI };
+			DL, DLHEAD, DLENTRY, DD, DT, DDHD, DTHD, XREF, UL, OL, LI, SL, SLI, NOTE };
 	public static final List<BodyTypes>	VALUES			= Collections
 																.unmodifiableList(Arrays
 																		.asList(VALUES_ARRAY));
@@ -69,6 +70,8 @@ public enum BodyTypes implements IDitaTypes {
 				return SL;
 			case SLI_VALUE:
 				return SLI;
+			case NOTE_VALUE:
+				return NOTE;
 		}
 		return null;
 	}

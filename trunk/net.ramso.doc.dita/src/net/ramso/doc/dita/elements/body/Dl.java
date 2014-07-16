@@ -100,4 +100,11 @@ public class Dl extends BaseDitaElement {
 		dlHead.addContent(DitaFactory.createElement(BodyTypes.DDHD, dd));
 		addContent(dlHead);
 	}
+
+	public void setHeaders(String dt) {
+		Element dlHead = DitaFactory.createElement(BodyTypes.DLHEAD);
+		dlHead.addContent(DitaFactory.createElement(BodyTypes.DTHD, dt));
+		addContent(dlHead);
+		
+	}
 }
