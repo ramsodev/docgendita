@@ -26,7 +26,7 @@ public class AS400Diagram extends BaseDiagram {
 	}
 
 	public void run() {
-		setFileName(getObjs().get(0).getName()+EXT);
+		setFileName(getObjs().get(0).getName());
 		AS400TreeForTreeLayout as400Tree = new AS400TreeForTreeLayout(
 				getObjs(), getDocument());
 		layout(as400Tree);

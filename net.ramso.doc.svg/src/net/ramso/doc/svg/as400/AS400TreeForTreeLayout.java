@@ -40,17 +40,17 @@ public class AS400TreeForTreeLayout implements IShapeTreeForTreeLayout {
 					| (obj.getAttribute().compareTo("*SRVPGM") == 0)) {
 				shape = new PGMShape(obj, getDocument());
 			}
-			else if ((obj.getType().compareTo("PF-DTA") == 0)
+			else if ((obj.getAttribute().compareTo("PF-DTA") == 0)
 					| (obj.getAttribute().compareTo("LF") == 0)) {
 				shape = new FileShape(obj, getDocument());
 			}
-			else if (obj.getType().compareTo("DSPF") == 0) {
+			else if (obj.getAttribute().compareTo("DSPF") == 0) {
 				shape = new DisplayShape(obj, getDocument());
 			}
-			else if (obj.getType().compareTo("PRTF") == 0) {
+			else if (obj.getAttribute().compareTo("PRTF") == 0) {
 				shape = new ReportShape(obj, getDocument());
 			}
-			else if (obj.getAttribute().compareTo("*FILE") == 0) {
+			else if (obj.getType().compareTo("*FILE") == 0) {
 				shape = new FileShape(obj, getDocument());
 			}
 			else {
