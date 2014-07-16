@@ -22,7 +22,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_CSRES() throws SQLException {
-		return getValue(1);
+		return getValue(1-1);
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHCSTN() throws SQLException {
-		return getValue(2);
+		return getValue(2-1);
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHCSTL() throws SQLException {
-		return getValue(3);
+		return getValue(3-1);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHCSTT() throws SQLException {
-		return getValue(4);
+		return getValue(4-1);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHCCKP() throws SQLException {
-		return getValue(5);
+		return getValue(5-1);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHCSTS() throws SQLException {
-		return getValue(6);
+		return getValue(6-1);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHNMKY() throws SQLException {
-		return getValue(7);
+		return getValue(7-1);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHKEYL() throws SQLException {
-		return getValue(8);
+		return getValue(8-1);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHCPFN() throws SQLException {
-		return getValue(9);
+		return getValue(9-1);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHCPLN() throws SQLException {
-		return getValue(10);
+		return getValue(10-1);
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHPRKY() throws SQLException {
-		return getValue(11);
+		return getValue(11-1);
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHFRKY() throws SQLException {
-		return getValue(12);
+		return getValue(12-1);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHDLTR() throws SQLException {
-		return getValue(13);
+		return getValue(13-1);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHULTR() throws SQLException {
-		return getValue(14);
+		return getValue(14-1);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHTRUN() throws SQLException {
-		return getValue(15);
+		return getValue(15-1);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPFDCST_PHCKXP() throws SQLException {
-		return getValue(16);
+		return getValue(16-1);
 	}
 
 	/*

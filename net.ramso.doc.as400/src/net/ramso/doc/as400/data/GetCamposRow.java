@@ -21,7 +21,7 @@ public class GetCamposRow extends RecordOperations {
 	 * Construye un objeto que representa una fila a partir de DBSelect.
 	 */
 	public GetCamposRow() {
-		super(RunExtractors.DSPFFILE);
+		super(RunExtractors.DSPFFDFILE);
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFFD_WHFLDI() throws SQLException {
-		return (String) getValue(1);
+		return (String) getValue(1-1);
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public BigDecimal getDSPFFD_WHFLDD() throws SQLException {
-		return (BigDecimal) getValue(2);
+		return (BigDecimal) getValue(2-1);
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public BigDecimal getDSPFFD_WHFLDP() throws SQLException {
-		return (BigDecimal) getValue(3);
+		return (BigDecimal) getValue(3-1);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFFD_WHFTXT() throws SQLException {
-		return (String) getValue(4);
+		return (String) getValue(4-1);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public BigDecimal getDSPFFD_WHFLDB() throws SQLException {
-		return (BigDecimal) getValue(5);
+		return (BigDecimal) getValue(5-1);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFFD_WHCHD1() throws SQLException {
-		return (String) getValue(6);
+		return (String) getValue(6-1);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFFD_WHCHD2() throws SQLException {
-		return (String) getValue(7);
+		return (String) getValue(7-1);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFFD_WHCHD3() throws SQLException {
-		return (String) getValue(8);
+		return (String) getValue(8-1);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFFD_WHFLDT() throws SQLException {
-		return (String) getValue(9);
+		return (String) getValue(9-1);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFFD_WHNAME() throws SQLException {
-		return (String) getValue(10);
+		return (String) getValue(10-1);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class GetCamposRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFFD_WHTEXT() throws SQLException {
-		return (String) getValue(11);
+		return (String) getValue(11-1);
 	}
 
 	@Override

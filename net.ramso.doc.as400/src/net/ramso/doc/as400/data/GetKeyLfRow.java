@@ -23,7 +23,7 @@ public class GetKeyLfRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public String getDSPFDACC_APFATR() throws SQLException {
-		return (String) getValue(1);
+		return (String) getValue(1-1);
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class GetKeyLfRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public String getDSPFDACC_APKEYF() throws SQLException {
-		return (String) getValue(2);
+		return (String) getValue(2-1);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class GetKeyLfRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public String getDSPFDACC_APKSEQ() throws SQLException {
-		return (String) getValue(3);
+		return (String) getValue(3-1);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class GetKeyLfRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public BigDecimal getDSPFDACC_APKEYN() throws SQLException {
-		return (BigDecimal) getValue(4);
+		return (BigDecimal) getValue(4-1);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class GetKeyLfRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public String getDSPFDACC_APBOF() throws SQLException {
-		return (String) getValue(5);
+		return (String) getValue(5-1);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class GetKeyLfRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public String getDSPFDACC_APFILE() throws SQLException {
-		return (String) getValue(6);
+		return (String) getValue(6-1);
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class GetKeyLfRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public BigDecimal getDSPFDACC_APNKYF() throws SQLException {
-		return (BigDecimal) getValue(7);
+		return (BigDecimal) getValue(7-1);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class GetKeyLfRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public String getDSPOBJD_ODOBTX() throws SQLException {
-		return (String) getValue(8);
+		return (String) getValue(8-1);
 	}
 
 	/*

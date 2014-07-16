@@ -17,7 +17,7 @@ public class getObjRelRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPGMREF_WHFNAM() throws SQLException {
-		return getValue(1);
+		return getValue(1-1);
 	}
 
 	/**
@@ -25,7 +25,7 @@ public class getObjRelRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPGMREF_WHLNAM() throws SQLException {
-		return getValue(2);
+		return getValue(2-1);
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class getObjRelRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPGMREF_WHOTYP() throws SQLException {
-		return getValue(3);
+		return getValue(3-1);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class getObjRelRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODOBAT() throws SQLException {
-		return getValue(4);
+		return getValue(4-1);
 	}
 
 	/*

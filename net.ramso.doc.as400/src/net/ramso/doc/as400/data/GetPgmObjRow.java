@@ -27,7 +27,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODLBNM() throws SQLException {
-		return getValue(1);
+		return getValue(1-1);
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODOBNM() throws SQLException {
-		return getValue(2);
+		return getValue(2-1);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODOBTP() throws SQLException {
-		return getValue(3);
+		return getValue(3-1);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODOBAT() throws SQLException {
-		return getValue(4);
+		return getValue(4-1);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODOBSZ() throws SQLException {
-		return getValue(5);
+		return getValue(5-1);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODOBTX() throws SQLException {
-		return getValue(6);
+		return getValue(6-1);
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODCDAT() throws SQLException {
-		return getValue(7);
+		return getValue(7-1);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODCTIM() throws SQLException {
-		return getValue(8);
+		return getValue(8-1);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODOBOW() throws SQLException {
-		return getValue(9);
+		return getValue(9-1);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODSRCF() throws SQLException {
-		return getValue(10);
+		return getValue(10-1);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODSRCL() throws SQLException {
-		return getValue(11);
+		return getValue(11-1);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODSRCM() throws SQLException {
-		return getValue(12);
+		return getValue(12-1);
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODCMNM() throws SQLException {
-		return getValue(13);
+		return getValue(13-1);
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class GetPgmObjRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPOBJD_ODCMVR() throws SQLException {
-		return getValue(14);
+		return getValue(14-1);
 	}
 
 	/*

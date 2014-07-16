@@ -17,14 +17,14 @@ public class GetKeyLf extends TableOperations {
 	public GetKeyLfRow[] read(String file) throws CriteriaException,
 			TableOperationException {
 		Criteria on = new Criteria();
-		on.add("APFILE", "ODOBNM");
+		on.add("APFILE = ODOBNM");
 		Join join = new Join();
 		join.createJoin("DSPFDACC", "DSPOBJD", Join.LEFT, on);
 		Criteria criteria = new Criteria();
 		criteria.add("ODOBNM", file);
 		Order order = new Order();
 		order.add("APFILE", Order.ASC);
-		order.add("APEKEYN", Order.ASC);
+		order.add("APKEYN", Order.ASC);
 		return (GetKeyLfRow[]) read(getRecord().getLabels(), criteria, order, new From(join));
 	}
 

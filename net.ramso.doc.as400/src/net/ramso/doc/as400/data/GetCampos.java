@@ -12,7 +12,7 @@ public class GetCampos extends TableOperations {
 
 	
 	public GetCampos() {
-		super(RunExtractors.DSPFFILE);
+		super(RunExtractors.DSPFFDFILE);
 	}
 
 	

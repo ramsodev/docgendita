@@ -25,51 +25,51 @@ public class Criteria {
 	/**
 	 * Los criterios que componen la clausula WHERE
 	 */
-	private ArrayList			criterios		= new ArrayList();
+	private ArrayList criterios = new ArrayList();
 	/**
 	 * <code>AND</code> operandor and
 	 */
-	public static final String	AND				= "AND";			//$NON-NLS-1$
+	public static final String AND = "AND"; //$NON-NLS-1$
 	/**
 	 * <code>OR</code> operador or
 	 */
-	public static final String	OR				= "OR";			//$NON-NLS-1$
+	public static final String OR = "OR"; //$NON-NLS-1$
 	/**
 	 * <code>EQUAL</code> operador =
 	 */
-	public static final String	EQUAL			= " = ?";			//$NON-NLS-1$
+	public static final String EQUAL = " = ?"; //$NON-NLS-1$
 	/**
 	 * <code>NOTEQUAL</code> operador <>
 	 */
-	public static final String	NOTEQUAL		= " <> ?";			//$NON-NLS-1$
+	public static final String NOTEQUAL = " <> ?"; //$NON-NLS-1$
 	/**
 	 * <code>GREATER</code> operador >
 	 */
-	public static final String	GREATER			= " > ?";			//$NON-NLS-1$
+	public static final String GREATER = " > ?"; //$NON-NLS-1$
 	/**
 	 * <code>LESS</code> operador <
 	 */
-	public static final String	LESS			= " < ?";			//$NON-NLS-1$
+	public static final String LESS = " < ?"; //$NON-NLS-1$
 	/**
 	 * <code>GREATEREQUAL</code> operador >=
 	 */
-	public static final String	GREATEREQUAL	= " >= ?";			//$NON-NLS-1$
+	public static final String GREATEREQUAL = " >= ?"; //$NON-NLS-1$
 	/**
 	 * <code>LESSEQUAL</code> operador <=
 	 */
-	public static final String	LESSEQUAL		= " <= ?";			//$NON-NLS-1$
+	public static final String LESSEQUAL = " <= ?"; //$NON-NLS-1$
 	/**
 	 * <code>LIKEANY</code> operador like
 	 */
-	public static final String	LIKEANY			= "LIKE ?";		//$NON-NLS-1$
+	public static final String LIKEANY = "LIKE ?"; //$NON-NLS-1$
 	/**
 	 * <code>LIKELEFT</code> operador like
 	 */
-	public static final String	LIKELEFT		= "LIKE ?";		//$NON-NLS-1$
+	public static final String LIKELEFT = "LIKE ?"; //$NON-NLS-1$
 	/**
 	 * <code>LIKERIGHT</code> operador like
 	 */
-	public static final String	LIKERIGHT		= "LIKE ?";		//$NON-NLS-1$
+	public static final String LIKERIGHT = "LIKE ?"; //$NON-NLS-1$
 
 	/**
 	 * Constructor por defecto
@@ -155,26 +155,21 @@ public class Criteria {
 		if (operator.equals(LIKEANY)) {
 			if (value instanceof String) {
 				value = "%" + value + "%"; //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			else {
+			} else {
 				throw new CriteriaException(
 						"La Clusula Like solo se aplica a campos alfanumericos"); //$NON-NLS-1$
 			}
-		}
-		else if (operator.equals(LIKELEFT)) {
+		} else if (operator.equals(LIKELEFT)) {
 			if (value instanceof String) {
 				value = "%" + value; //$NON-NLS-1$
-			}
-			else {
+			} else {
 				throw new CriteriaException(
 						"La Clausula LIKE solo se aplica a campos alfanumericos"); //$NON-NLS-1$
 			}
-		}
-		else if (operator.equals(LIKERIGHT)) {
+		} else if (operator.equals(LIKERIGHT)) {
 			if (value instanceof String) {
 				value = value + "%"; //$NON-NLS-1$
-			}
-			else {
+			} else {
 				throw new CriteriaException(
 						"La Clusula Like solo se aplica a campos alfanumericos"); //$NON-NLS-1$
 			}
@@ -206,26 +201,33 @@ public class Criteria {
 		if (criterios.size() == 0) {
 			return "";
 		}
-		String sentence = "ON ("; //$NON-NLS-1$
+		String sentence = " ON ("; //$NON-NLS-1$
 		sentence += getFilterClause();
 		sentence = sentence.trim() + ")"; //$NON-NLS-1$
 		return sentence;
 	}
 
+	// TODO: Preparar un tipo de criterio estatic para poder igualar campos
 	public String getFilterClause() {
 		String sentence = "";
 		Iterator iterator = criterios.iterator();
 		int i = 0;
 		while (iterator.hasNext()) {
 			Object[] criterio = (Object[]) iterator.next();
-			if (criterio[1] != null) {
+//			if (criterio[1] != null) {
 				if (i > 0) {
+
 					sentence = (((String) criterio[3]).equals(OR)) ? sentence
 							.trim() + ") " + OR + "( " : sentence.trim() + " " + AND + " "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
 				}
 				i++;
-				sentence = sentence + criterio[0] + criterio[2];
-			}
+				if (criterio[1] != null) {
+					sentence = sentence + criterio[0] + criterio[2];
+				} else {
+					sentence = sentence + criterio[0];
+				}
+//			}
 		}
 		if (i == 0) {
 			return "";
@@ -252,9 +254,15 @@ public class Criteria {
 
 	/*
 	 * (sin Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
 		return getClause();
+	}
+
+	public void add(String clause) throws CriteriaException {
+		add(clause, null, EQUAL, AND);
+
 	}
 }

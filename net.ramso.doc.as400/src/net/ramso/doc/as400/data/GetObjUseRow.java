@@ -18,7 +18,7 @@ public class GetObjUseRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPPGMREF_WHPNAM() throws SQLException {
-		return getValue(1);
+		return getValue(1-1);
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class GetObjUseRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPPGMREF_WHLIB() throws SQLException {
-		return getValue(2);
+		return getValue(2-1);
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class GetObjUseRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public Object getDSPPGMREF_WHTEXT() throws SQLException {
-		return getValue(3);
+		return getValue(3-1);
 	}
 
 	/*

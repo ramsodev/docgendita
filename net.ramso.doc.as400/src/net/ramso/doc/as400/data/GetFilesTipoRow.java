@@ -7,9 +7,9 @@ import net.ramso.doc.as400.data.tools.ITableOperations;
 import net.ramso.doc.as400.data.tools.RecordOperations;
 
 public class GetFilesTipoRow extends RecordOperations {
-	private static String[]	LABELS	= { "ATFILE", ".DSPFD.ATLIB",
-			".DSPFD.ATFILA", ".DSPFD.ATFATR", ".DSPFD.ATTXT", ".DSPFD.ATFCDT",
-			".DSPFD.ATFCTM"		};
+	private static String[]	LABELS	= { "ATFILE", "ATLIB",
+			"ATFILA", "ATFATR", "ATTXT", "ATFCDT",
+			"ATFCTM"		};
 
 	/**
 	 * Construye un objeto que representa una fila a partir de DBSelect.
@@ -23,7 +23,7 @@ public class GetFilesTipoRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFD_ATFILE() throws SQLException {
-		return (String) getValue(1);
+		return (String) getValue(1-1);
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class GetFilesTipoRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFD_ATLIB() throws SQLException {
-		return (String) getValue(2);
+		return (String) getValue(2-1);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class GetFilesTipoRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFD_ATFILA() throws SQLException {
-		return (String) getValue(3);
+		return (String) getValue(3-1);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class GetFilesTipoRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFD_ATFATR() throws SQLException {
-		return (String) getValue(4);
+		return (String) getValue(4-1);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class GetFilesTipoRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFD_ATTXT() throws SQLException {
-		return (String) getValue(5);
+		return (String) getValue(5-1);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class GetFilesTipoRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFD_ATFCDT() throws SQLException {
-		return (String) getValue(6);
+		return (String) getValue(6-1);
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class GetFilesTipoRow extends RecordOperations {
 	 * este objeto.
 	 */
 	public String getDSPFD_ATFCTM() throws SQLException {
-		return (String) getValue(7);
+		return (String) getValue(7-1);
 	}
 
 	/*

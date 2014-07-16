@@ -94,7 +94,7 @@ public class Join {
 	 */
 	@Override
 	public String toString() {
-		String sentence = getLeftTable() + " " + getJoinType() + " " +getRightTable() + getCriteria().getONClause(); 
+		String sentence = getLeftTable() + " " + getJoinType() + " " +getRightTable() +" " +  getCriteria().getONClause(); 
 		return sentence;
 	}
 	

@@ -17,7 +17,7 @@ public class GetFilesTipo extends TableOperations {
 	public GetFilesTipoRow[] read(String file) throws CriteriaException,
 			TableOperationException {
 		Criteria criteria = new Criteria();
-		criteria.add("WHFILE", file);
+		criteria.add("ATFATR", file);
 		return (GetFilesTipoRow[]) read(getRecord().getLabels(), criteria, null);
 	}
 
