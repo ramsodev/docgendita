@@ -3,9 +3,12 @@
  */
 package net.ramso.doc.dita.elements.topic;
 
+import org.jdom.Element;
+
 import net.ramso.doc.dita.elements.BaseDitaElement;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
+import net.ramso.doc.dita.elements.ProgrammingTypes;
 import net.ramso.doc.dita.elements.TableTypes;
 import net.ramso.doc.dita.elements.TopicTypes;
 import net.ramso.doc.dita.elements.body.Dl;
@@ -68,9 +71,15 @@ public class Section extends BaseDitaElement {
 	public void setTitle(String title) {
 		addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
 	}
-
-	public void appendFigure(String fileName, String string, String url) {
-		// TODO Auto-generated method stub
-		
+	public void appendFigure(String id, String title, String url){
+		Element fig = DitaFactory.createElement(
+				BodyTypes.FIG);
+		fig.addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
+		Element img = DitaFactory.createElement(
+				BodyTypes.IMAGE);
+		img.setAttribute("href", url);
+		img.setAttribute("align", "center");
+		fig.addContent(img);
+		addContent(fig);
 	}
 }
