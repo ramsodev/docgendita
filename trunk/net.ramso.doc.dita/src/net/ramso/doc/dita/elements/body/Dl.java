@@ -101,10 +101,15 @@ public class Dl extends BaseDitaElement {
 		addContent(dlHead);
 	}
 
+	/**
+	 * @param des
+	 */
 	public void setHeaders(String dt) {
 		Element dlHead = DitaFactory.createElement(BodyTypes.DLHEAD);
 		dlHead.addContent(DitaFactory.createElement(BodyTypes.DTHD, dt));
 		addContent(dlHead);
 		
 	}
+
+	
 }
