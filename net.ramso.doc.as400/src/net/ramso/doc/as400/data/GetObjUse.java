@@ -17,6 +17,7 @@ public class GetObjUse extends TableOperations {
 			TableOperationException {
 		Criteria criteria = new Criteria();
 		criteria.add("WHFNAM", file);
+//		criteria.add("WHFNAM", lib);
 		Order order = new Order();
 		order.add("WHPNAM", Order.ASC);
 		return (GetObjUseRow[]) read(getRecord().getLabels(), criteria, order);

@@ -4,6 +4,7 @@ import net.ramso.doc.as400.commands.RunExtractors;
 import net.ramso.doc.as400.data.tools.Criteria;
 import net.ramso.doc.as400.data.tools.CriteriaException;
 import net.ramso.doc.as400.data.tools.IRecordOperations;
+import net.ramso.doc.as400.data.tools.Order;
 import net.ramso.doc.as400.data.tools.TableOperationException;
 import net.ramso.doc.as400.data.tools.TableOperations;
 
@@ -12,11 +13,14 @@ public class GetPgmObj extends TableOperations {
 		super(RunExtractors.DSPOBJDFILE);
 	}
 
-	protected void read() throws CriteriaException, TableOperationException {
+	public GetPgmObjRow[] read(String lib) throws CriteriaException, TableOperationException {
 		Criteria criteria = new Criteria();
-		criteria.add("ODOBTP", "*PGM", Criteria.EQUAL, Criteria.OR);
-		criteria.add("ODOBTP", "*MODULE", Criteria.EQUAL, Criteria.OR);
-		read(getRecord().getLabels(), criteria, null);
+		criteria.add("ODLBNM", lib);
+		criteria.add("(ODOBTP = '*PGM' OR ODOBTP = '*MODULE')" , null,Criteria.EQUAL);	
+//				OR ODOBTP = '*MODULE')"
+		Order order = new Order();
+		order.add("ODOBNM");
+		return (GetPgmObjRow[]) read(getRecord().getLabels(), criteria, order);
 	}
 
 	/*

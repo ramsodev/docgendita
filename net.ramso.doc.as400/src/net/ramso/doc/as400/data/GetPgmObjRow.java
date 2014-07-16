@@ -1,5 +1,6 @@
 package net.ramso.doc.as400.data;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 import net.ramso.doc.as400.commands.RunExtractors;
@@ -26,112 +27,112 @@ public class GetPgmObjRow extends RecordOperations {
 	 * Devuelve el valor de la columna DSPOBJD_ODLBNM en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODLBNM() throws SQLException {
-		return getValue(1-1);
+	public String getDSPOBJD_ODLBNM() throws SQLException {
+		return (String) getValue(1-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODOBNM en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODOBNM() throws SQLException {
-		return getValue(2-1);
+	public String getDSPOBJD_ODOBNM() throws SQLException {
+		return (String) getValue(2-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODOBTP en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODOBTP() throws SQLException {
-		return getValue(3-1);
+	public String getDSPOBJD_ODOBTP() throws SQLException {
+		return (String) getValue(3-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODOBAT en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODOBAT() throws SQLException {
-		return getValue(4-1);
+	public String getDSPOBJD_ODOBAT() throws SQLException {
+		return (String) getValue(4-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODOBSZ en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODOBSZ() throws SQLException {
-		return getValue(5-1);
+	public BigDecimal getDSPOBJD_ODOBSZ() throws SQLException {
+		return (BigDecimal) getValue(5-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODOBTX en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODOBTX() throws SQLException {
-		return getValue(6-1);
+	public String getDSPOBJD_ODOBTX() throws SQLException {
+		return (String) getValue(6-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODCDAT en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODCDAT() throws SQLException {
-		return getValue(7-1);
+	public String getDSPOBJD_ODCDAT() throws SQLException {
+		return (String) getValue(7-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODCTIM en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODCTIM() throws SQLException {
-		return getValue(8-1);
+	public String getDSPOBJD_ODCTIM() throws SQLException {
+		return (String) getValue(8-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODOBOW en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODOBOW() throws SQLException {
-		return getValue(9-1);
+	public String getDSPOBJD_ODOBOW() throws SQLException {
+		return (String) getValue(9-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODSRCF en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODSRCF() throws SQLException {
-		return getValue(10-1);
+	public String getDSPOBJD_ODSRCF() throws SQLException {
+		return (String) getValue(10-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODSRCL en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODSRCL() throws SQLException {
-		return getValue(11-1);
+	public String getDSPOBJD_ODSRCL() throws SQLException {
+		return (String) getValue(11-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODSRCM en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODSRCM() throws SQLException {
-		return getValue(12-1);
+	public String getDSPOBJD_ODSRCM() throws SQLException {
+		return (String) getValue(12-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODCMNM en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODCMNM() throws SQLException {
-		return getValue(13-1);
+	public String getDSPOBJD_ODCMNM() throws SQLException {
+		return (String) getValue(13-1);
 	}
 
 	/**
 	 * Devuelve el valor de la columna DSPOBJD_ODCMVR en la fila representada
 	 * por este objeto.
 	 */
-	public Object getDSPOBJD_ODCMVR() throws SQLException {
-		return getValue(14-1);
+	public String getDSPOBJD_ODCMVR() throws SQLException {
+		return (String) getValue(14-1);
 	}
 
 	/*

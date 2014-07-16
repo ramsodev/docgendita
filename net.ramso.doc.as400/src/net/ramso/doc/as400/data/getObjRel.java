@@ -16,16 +16,16 @@ public class getObjRel extends TableOperations {
 		super("JOIN");
 	}
 
-	public void read(String file) throws CriteriaException,
+	public getObjRelRow[] read(String file) throws CriteriaException,
 			TableOperationException {
 		Criteria on = new Criteria();
-		on.add("WHFNAM", "ODOBNM");
+		on.add("WHFNAM = ODOBNM",null,Criteria.EQUAL);
 		Join join = new Join();
 		join.createJoin("DSPPGMREF", "DSPOBJD", Join.LEFT, on);
 		Criteria criteria = new Criteria();
 		criteria.add("WHPNAM", file);
-		criteria.add("WHFNAM", "''", Criteria.NOTEQUAL);
-		read(getRecord().getLabels(), criteria, null, new From(join));
+		criteria.add("WHFNAM <> ''", null,Criteria.NOTEQUAL);
+		return (getObjRelRow[]) read(getRecord().getLabels(), criteria, null, new From(join));
 	}
 
 	/*

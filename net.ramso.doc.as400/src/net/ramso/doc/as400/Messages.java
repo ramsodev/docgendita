@@ -9,7 +9,7 @@ import org.eclipse.osgi.util.NLS;
  * @author ramso
  */
 public class Messages extends NLS {
-	private static final String	BUNDLE_NAME	= "net.ramso.doc.as400.messages";	//$NON-NLS-1$
+	private static final String	BUNDLE_NAME	= "net.ramso.doc.as400.messages";			//$NON-NLS-1$
 	public static String		DocumentationAction_title;
 	public static String		DocumentationWizardPage_browse;
 	public static String		DocumentationWizardPage_doc_autor;
@@ -97,7 +97,109 @@ public class Messages extends NLS {
 	public static String		prtf_use;
 	public static String		prtf_use_des;
 	public static String		prtf_use_att;
-	public static String	file_table;
+	public static String		file_table;
+	public static String		DocumentationWizardPageiSeries_btnCheckButton_text;
+	public static String		DocumentationWizardPageiSeries_btnCheckButton_1_text;
+	public static String		DocumentationWizardPageiSeries_libText_toolTipText;
+	public static String		pgm_chap;												// Programas
+																						// de
+																						// iSeries
+	public static String		pgm_chap_des;											// En
+																						// este
+																						// capitulo
+																						// de
+																						// la
+																						// documentaci\u00F3n
+																						// presentaremos
+																						// cada
+																						// uno
+																						// de
+																						// los
+																						// programas
+																						// generados
+	public static String		pgm_dig;												// Relaciones
+																						// del
+																						// programa
+	public static String		pgm_dig_att;											// Este
+																						// programa
+																						// no
+																						// tiene
+																						// relaci\u00F3n
+																						// con
+																						// otros
+																						// objetos_
+	public static String		pgm_dig_des;											// En
+																						// este
+																						// apartado
+																						// se
+																						// muestran
+																						// los
+																						// objetos
+																						// con
+																						// los
+																						// que
+																						// tiene
+																						// relaci\u00F3n
+																						// el
+																						// programa_
+	public static String		pgm_dig_tit;											// Diagrama
+																						// de
+																						// Relaciones
+																						// del
+																						// Objeto
+	public static String		pgm_obj_atr;											// Atributo
+																						// de
+																						// objeto\:
+	public static String		pgm_obj_comp;											// Nombre
+																						// del
+																						// compilador\:
+	public static String		pgm_obj_dcr;											// Fecha
+																						// de
+																						// creaci\u00F3n\:
+	public static String		pgm_obj_des;											// Atributos
+																						// del
+																						// Programa
+	public static String		pgm_obj_level;											// Nivel
+																						// del
+																						// compilador\:
+	public static String		pgm_obj_lib;											// Biblioteca\:
+	public static String		pgm_obj_own;											// Propietario
+																						// objeto\:
+	public static String		pgm_obj_size;											// Tama\u00F1o
+																						// de
+																						// objeto\:
+	public static String		pgm_obj_src_file;										// Nombre
+																						// archivo
+																						// fuente\:
+	public static String		pgm_obj_src_lib;										// Biblioteca
+																						// archivo
+																						// fuente\:
+	public static String		pgm_obj_src_mbr;										// Miebro
+																						// archivo
+																						// fuente\:
+	public static String		pgm_obj_tcr;											// Hora
+																						// de
+																						// creaci\u00F3n\:
+	public static String		pgm_obj_txt;											// Descripci\u00F3n
+																						// de
+																						// objeto\:
+	public static String		pgm_obj_type;											// Tipo
+																						// de
+																						// objeto\:
+	public static String		pgm_use;												// Programas
+																						// iSeries
+																						// que
+																						// usan
+																						// el
+																						// Objeto
+	public static String		pgm_use_att;											// Este
+																						// objeto
+																						// no
+																						// es
+																						// usado
+																						// por
+																						// nadie
+	public static String		pgm_use_des;											//
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

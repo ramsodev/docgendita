@@ -6,6 +6,8 @@ import java.io.IOException;
 import net.ramso.doc.as400.Messages;
 import net.ramso.doc.as400.data.GetFilesTipo;
 import net.ramso.doc.as400.data.GetFilesTipoRow;
+import net.ramso.doc.as400.data.GetPgmObj;
+import net.ramso.doc.as400.data.GetPgmObjRow;
 import net.ramso.doc.as400.data.tools.CriteriaException;
 import net.ramso.doc.as400.data.tools.TableOperationException;
 import net.ramso.doc.dita.Documents.TopicDocument;
@@ -35,7 +37,7 @@ public class ProcessLib {
 		GetFilesTipo _PF = new GetFilesTipo();
 		GetFilesTipoRow[] pfs;
 		try {
-			pfs = _PF.read("PF");
+			pfs = _PF.read("PF", lib.toUpperCase());
 			if (pfs.length > 0) {
 				Chapter chapter = new Chapter();
 				String id = getPrefix() + lib + "_tables_chapter"; //$NON-NLS-1$
@@ -80,7 +82,56 @@ public class ProcessLib {
 		pSchema.process(monitor);
 		return pSchema.getTopicRef();
 	}
+	private void addPGM(String lib, IProgressMonitor monitor)
+			throws IOException {
+		GetPgmObj obj = new GetPgmObj();
+		GetPgmObjRow[] pgms;
+		try {
+			pgms = obj.read( lib.toUpperCase());
+			if (pgms.length > 0) {
+				Chapter chapter = new Chapter();
+				String id = getPrefix() + lib + "_pgms_chapter"; //$NON-NLS-1$
+				chapter.setHref(id + ".dita"); //$NON-NLS-1$
+				TopicDocument topicDocument = new TopicDocument();
+				Topic topic = topicDocument.getTopic();
+				topic.setID(id);
+				String title = Messages.pgm_chap + lib;
+				topic.setTitle(title);
+				topic.appendSection(Messages.pgm_chap_des, "des"); //$NON-NLS-2$
+				@SuppressWarnings("unused")
+				Section section = topic.getSection("des"); //$NON-NLS-1$
+				ResourceUtils.getInstance().saveDitaFileAsResource(
+						topicDocument.getDocumentContent(),
+						path + File.separator + topicDocument.getFileName());
+				for (GetPgmObjRow pgm : pgms) {
+					chapter.appendTopicRef(createPGM(pgm, monitor));
+				}
+				getPart().addChapter(chapter);
+			}
+		}
+		catch (CriteriaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (TableOperationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	/**
+	 * @param pgm
+	 * @param monitor
+	 * @return
+	 * @throws IOException
+	 */
+	private TopicRef createPGM(GetPgmObjRow pgm, IProgressMonitor monitor)
+			throws IOException {
+		ProcessPGM pSchema = new ProcessPGM(pgm, path);
+		pSchema.setPrefix(prefix + lib + "_"); //$NON-NLS-1$
+		pSchema.process(monitor);
+		return pSchema.getTopicRef();
+	}
 	public Part getPart() {
 		return part;
 	}
@@ -105,7 +156,8 @@ public class ProcessLib {
 		topic.appendSection("Biblioteca", "lib"); //$NON-NLS-2$
 		Section section = topic.getSection("lib"); //$NON-NLS-1$
 		section.appendP(lib);
-		addTables(lib, monitor);
+//		addTables(lib, monitor);
+		addPGM(lib, monitor);
 		ResourceUtils.getInstance().saveDitaFileAsResource(
 				topicDocument.getDocumentContent(),
 				path + File.separator + topicDocument.getFileName());

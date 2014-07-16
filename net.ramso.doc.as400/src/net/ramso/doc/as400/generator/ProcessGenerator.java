@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.List;
 
 import net.ramso.doc.as400.Messages;
+import net.ramso.doc.as400.commands.RunExtractors;
+import net.ramso.doc.as400.utils.ConnectionManager;
+import net.ramso.doc.as400.utils.ConnectionTools;
 import net.ramso.doc.dita.Documents.BookMapDocument;
 import net.ramso.doc.dita.elements.bookmap.BackMatter;
 import net.ramso.doc.dita.elements.bookmap.BookLists;
@@ -13,7 +16,6 @@ import net.ramso.doc.dita.utils.ResourceUtils;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -25,6 +27,12 @@ public class ProcessGenerator {
 	private String		des;
 	private String		autor;
 	private String		lang;
+	private String		system;
+	private String		user;
+	private String		password;
+	private String		lib;
+	private boolean	create = false;
+	private boolean	delete = false;
 
 	public ProcessGenerator(String[] libs, IFolder folder) {
 		this.libs = libs;
@@ -64,7 +72,23 @@ public class ProcessGenerator {
 	}
 
 	public void process(IProgressMonitor monitor) {
+		String libl = "";
+		for (String lib : libs) {
+			libl += lib + " ";
+		}
+		try {
+			ConnectionManager.createConnection(system, user, password, libl);
+			RunExtractors.run(lib, create, delete);
+		}
+		catch (Exception e) {
+			MessageBox box = new MessageBox(Display.getCurrent()
+					.getActiveShell(), SWT.OK | SWT.ICON_ERROR);
+			box.setMessage("Error al acceder al host"); //$NON-NLS-1
+			box.open();
+			return;
+		}
 		String path = folder.getFullPath().toOSString();
+//		String path = "";
 		BookMapDocument map = new BookMapDocument();
 		map.getMap().setTitle(getTitle(), getDes());
 		map.getMap().setID("DBDoc"); //$NON-NLS-1$
@@ -137,5 +161,47 @@ public class ProcessGenerator {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	/**
+	 * @param system
+	 */
+	public void setSystem(String system) {
+		this.system = system;
+	}
+
+	/**
+	 * @param user
+	 */
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	/**
+	 * @param password
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * @param password
+	 */
+	public void setLib(String lib) {
+		this.lib = lib;
+	}
+
+	/**
+	 * @param create
+	 */
+	public void setCreate(boolean create) {
+		this.create = create;
+	}
+
+	/**
+	 * @param delete
+	 */
+	public void setDelete(boolean delete) {
+		this.delete = delete;
 	}
 }

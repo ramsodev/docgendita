@@ -14,10 +14,11 @@ public class GetFilesTipo extends TableOperations {
 	}
 
 	
-	public GetFilesTipoRow[] read(String file) throws CriteriaException,
+	public GetFilesTipoRow[] read(String file, String lib) throws CriteriaException,
 			TableOperationException {
 		Criteria criteria = new Criteria();
 		criteria.add("ATFATR", file);
+		criteria.add("ATLIB", lib.toUpperCase());
 		return (GetFilesTipoRow[]) read(getRecord().getLabels(), criteria, null);
 	}
 
