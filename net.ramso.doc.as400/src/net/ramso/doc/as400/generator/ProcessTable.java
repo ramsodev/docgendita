@@ -21,11 +21,13 @@ import net.ramso.doc.as400.data.tools.TableOperationException;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.attributes.AlignValues;
 import net.ramso.doc.dita.attributes.FrameValues;
+import net.ramso.doc.dita.attributes.NoteTypeValues;
 import net.ramso.doc.dita.attributes.ScaleValues;
 import net.ramso.doc.dita.attributes.VerticalAlignValues;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.body.Dl;
+import net.ramso.doc.dita.elements.body.Note;
 import net.ramso.doc.dita.elements.bookmap.Chapter;
 import net.ramso.doc.dita.elements.map.TopicRef;
 import net.ramso.doc.dita.elements.table.ColSpec;
@@ -46,11 +48,11 @@ import org.jdom.Element;
  * @author ramso
  */
 public class ProcessTable {
-	private TopicRef		topicRef;
-	private GetFilesTipoRow	as400File;
-	private String			path;
-	private String			prefix	= "";	//$NON-NLS-1$
-	private String[]		tablas;
+	private TopicRef topicRef;
+	private GetFilesTipoRow as400File;
+	private String path;
+	private String prefix = ""; //$NON-NLS-1$
+	private String[] tablas;
 
 	public ProcessTable(GetFilesTipoRow file, String path) {
 		this.as400File = file;
@@ -85,29 +87,30 @@ public class ProcessTable {
 	public String process(IProgressMonitor monitor) throws IOException {
 		topicRef = DitaFactory.createTopicRef();
 		try {
-			String id = getPrefix() + as400File.getDSPFD_ATFILE();
+			String id = getPrefix() + as400File.getDSPFD_ATFILE().trim();
 			topicRef.setHref(id + ".dita"); //$NON-NLS-1$
 			TopicDocument topicDocument = new TopicDocument();
 			Topic topic = topicDocument.getTopic();
 			topic.setID(id);
 			String title = Messages.file_table + " "
 					+ as400File.getDSPFD_ATFILE();
-			title += " - " + as400File.getDSPFD_ATTXT(); //$NON-NLS-1$
+//			title += " - " + ; //$NON-NLS-1$
 			topic.setTitle(title);
-			if (as400File.getDSPFD_ATTXT() != null) {
-				topic.getBody().addContent(
-						DitaFactory.createElement(BodyTypes.P,
-								as400File.getDSPFD_ATTXT()));
-			}
+			topic.setShortDescription(as400File.getDSPFD_ATTXT());
+//			if (as400File.getDSPFD_ATTXT() != null) {
+//				topic.getBody().addContent(
+//						DitaFactory.createElement(BodyTypes.P,
+//								as400File.getDSPFD_ATTXT()));
+//			}
 			addAttributes(as400File, topic);
 			addColumns(as400File.getDSPFD_ATFILE(), topic);
 			addLogicalFile(as400File.getDSPFD_ATFILE(), topic);
 			addRelated(getTablas(), topic);
 			path += File.separator + topicDocument.getFileName();
+//			topicDocument.save(path);
 			ResourceUtils.getInstance().saveDitaFileAsResource(
 					topicDocument.getDocumentContent(), path);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 		}
 		return null;
 	}
@@ -121,12 +124,12 @@ public class ProcessTable {
 	 */
 	private void addAttributes(GetFilesTipoRow _Pfs, Topic topic) {
 		try {
-			topic.appendSection(Messages.file_obj_des + _Pfs.getDSPFD_ATFILE(),
+			topic.appendSection(Messages.file_obj_des ,
 					"pf_" + _Pfs.getDSPFD_ATFILE()); //$NON-NLS-1$
 			Section section = topic.getSection("pf_" + _Pfs.getDSPFD_ATFILE()); //$NON-NLS-1$
-			if (_Pfs.getDSPFD_ATTXT() != null) {
-				section.appendP(_Pfs.getDSPFD_ATTXT());
-			}
+//			if (_Pfs.getDSPFD_ATTXT() != null) {
+//				section.appendP(_Pfs.getDSPFD_ATTXT());
+//			}
 			Dl dl = section.getDL("pf_dl_" + _Pfs.getDSPFD_ATFILE(), true); //$NON-NLS-1$
 			String trim = _Pfs.getDSPFD_ATLIB();
 			String des = Messages.file_obj_lib + " ";
@@ -137,14 +140,15 @@ public class ProcessTable {
 			trim = (String) _Pfs.getDSPFD_ATTXT();
 			des = Messages.file_obj_txt + " ";
 			dl.addItem(des, trim.trim());
+			//TODO:Formatear la fecha
 			trim = (String) _Pfs.getDSPFD_ATFCDT();
 			des = Messages.file_obj_dat + " ";
 			dl.addItem(des, trim.trim());
+			//TODO:Formatear la hora
 			trim = (String) _Pfs.getDSPFD_ATFCTM();
 			des = Messages.file_obj_tim + " ";
 			dl.addItem(des, trim.trim());
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			// TODO: handle exception
 		}
 	}
@@ -153,19 +157,19 @@ public class ProcessTable {
 		try {
 			GetCampos reg = new GetCampos();
 			GetCamposRow[] regs = (GetCamposRow[]) reg.read(objeto);
-			String des = Messages.file_reg_tti + " " + objeto;
-			String[] heads = new String[7];
-			heads[0] = Messages.file_reg_cab1;
-			heads[1] = Messages.file_reg_cab2;
-			heads[2] = Messages.file_reg_cab3;
-			heads[3] = Messages.file_reg_cab4;
-			heads[4] = Messages.file_reg_cab5;
-			heads[5] = Messages.file_reg_cab6;
-			heads[6] = Messages.file_reg_cab7;
-			String[] sizes = { "2*", "2*", "3*", "1*", "1*", "1*", "1*" };
-			AlignValues[] aligns = { AlignValues.LEFT, AlignValues.LEFT,
-					AlignValues.LEFT, AlignValues.CENTER, AlignValues.CENTER,
-					AlignValues.CENTER, AlignValues.CENTER };
+			String des = Messages.file_reg_tti + " " + objeto.trim();
+			String[] heads = new String[6];
+			heads[0] = Messages.file_reg_cab1.trim();
+//			heads[1] = Messages.file_reg_cab2;
+			heads[1] = Messages.file_reg_cab3;
+			heads[2] = Messages.file_reg_cab4;
+			heads[3] = Messages.file_reg_cab5;
+			heads[4] = Messages.file_reg_cab6;
+			heads[5] = Messages.file_reg_cab7;
+			String[] sizes = { "2*",  "1*", "1*", "2*", "2*", "2*" };
+			AlignValues[] aligns = { AlignValues.LEFT, AlignValues.RIGHT,
+					AlignValues.CENTER, AlignValues.CENTER, AlignValues.CENTER,
+					AlignValues.CENTER  };
 			Table table = new Table();
 			table.setFrame(FrameValues.ALL);
 			table.setColSep(true);
@@ -179,7 +183,7 @@ public class ProcessTable {
 			for (int i = 0; i < heads.length; i++) {
 				ColSpec colSpec = new ColSpec();
 				colSpec.setAlign(aligns[i]);
-				colSpec.setColName(heads[i]);
+				colSpec.setColName(heads[i].replace(" ", "_"));
 				colSpec.setColNum(i + 1);
 				colSpec.setColWidth(sizes[i]);
 				table.getTGroup().appendColSpec(colSpec);
@@ -196,70 +200,62 @@ public class ProcessTable {
 			table.getTGroup().getTHead().appendRow(row);
 			table.getTGroup().setTBody(new TBody());
 			for (int i = 0; i < regs.length; i++) {
-				heads[0] = (String) regs[i].getDSPFFD_WHFLDI();
-				heads[1] = (String) regs[i].getDSPFFD_WHFTXT();
-				heads[3] = (String) regs[i].getDSPFFD_WHFLDT();
-				heads[4] = (String) regs[i].getDSPFFD_WHCHD1();
-				heads[5] = (String) regs[i].getDSPFFD_WHCHD2();
-				heads[6] = (String) regs[i].getDSPFFD_WHCHD3();
+				String[] values = new String[6];
+				values[0] = (String) regs[i].getDSPFFD_WHFLDI();
+//				heads[1] = (String) regs[i].getDSPFFD_WHFTXT();
+				values[2] = (String) regs[i].getDSPFFD_WHFLDT();
+				values[3] = (String) regs[i].getDSPFFD_WHCHD1();
+				values[4] = (String) regs[i].getDSPFFD_WHCHD2();
+				values[5] = (String) regs[i].getDSPFFD_WHCHD3();
 				BigDecimal num = (BigDecimal) regs[i].getDSPFFD_WHFLDD();
 				if (num.intValue() == 0) {
 					num = regs[i].getDSPFFD_WHFLDB();
-					heads[2] = num.toString();
-				}
-				else {
-					heads[2] = num.toString();
+					values[1] = num.toString();
+				} else {
+					values[2] = num.toString();
 					num = regs[i].getDSPFFD_WHFLDP();
-					heads[2] = heads[2] + "," + num.toString();
+					values[1] = values[1] + "," + num.toString();
 				}
 				row = new Row();
 				row.setVAlign(VerticalAlignValues.MIDDLE);
 				Entry entry = new Entry();
 				entry.setMoreRows(1);
-				entry.setText(heads[0]);
+				entry.setText(values[0]);
 				row.appendEntry(entry);
 				entry = new Entry();
-				entry.setText(heads[1]);
+				entry.setText(values[1]);
 				row.appendEntry(entry);
 				entry = new Entry();
-				entry.setText(heads[2]);
+				entry.setText(values[2]);
 				row.appendEntry(entry);
 				entry = new Entry();
-				entry.setText(heads[3]);
+				entry.setText(values[3]);
 				row.appendEntry(entry);
 				entry = new Entry();
-				entry.setText(heads[4]);
+				entry.setText(values[4]);
 				row.appendEntry(entry);
 				entry = new Entry();
-				entry.setText(heads[5]);
-				row.appendEntry(entry);
-				entry = new Entry();
-				entry.setText(heads[6]);
-				row.appendEntry(entry);
-				entry = new Entry();
-				entry.setText(heads[7]);
+				entry.setText(values[5]);
 				row.appendEntry(entry);
 				table.getTGroup().getTBody().appendRow(row);
 				row = new Row();
 				entry = new Entry();
 				des = regs[i].getDSPFFD_WHFTXT();
 				entry.setText(des);
+				entry.setAlign(AlignValues.LEFT);
 				entry.setColName("DES"); //$NON-NLS-1$
-				entry.setNamest(heads[1]);
-				entry.setNameEnd(heads[7]);
+				entry.setNamest(heads[1].replace(" ", "_"));
+				entry.setNameEnd(heads[5].replace(" ", "_"));
 				row.appendEntry(entry);
 				table.getTGroup().getTBody().appendRow(row);
 			}
 			topic.getBody().addContent(table);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		catch (CriteriaException e) {
+		} catch (CriteriaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (TableOperationException e) {
+		} catch (TableOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -270,7 +266,7 @@ public class ProcessTable {
 		try {
 			GetKeyLf reg = new GetKeyLf();
 			GetKeyLfRow[] regs = reg.read(objeto);
-			topic.appendSection(Messages.file_lf + objeto, "lf_" + objeto); //$NON-NLS-1$
+			topic.appendSection(Messages.file_lf , "lf_" + objeto); //$NON-NLS-1$
 			Section section = topic.getSection("lf_" + objeto); //$NON-NLS-1$
 			section.appendP(Messages.file_lf_des);
 			int nObj = 0;
@@ -288,7 +284,7 @@ public class ProcessTable {
 						trim = (String) regs[i].getDSPOBJD_ODOBTX();
 						des = des + " - " + trim.trim();
 						dl = section.getDL(
-								"pf_dl_" + regs[i].getDSPFDACC_APFILE(), true);
+								"lf_dl_" + regs[i].getDSPFDACC_APFILE(), true);
 						dl.setHeaders(des);
 						nObj = nObj + 1;
 						nuevo = false;
@@ -309,21 +305,17 @@ public class ProcessTable {
 					ojb[i] = objs[i];
 				}
 				setTablas(ojb);
-			}
-			else {
+			} else {
 				String[] ojb = new String[1];
 				ojb[0] = objeto;
 				setTablas(ojb);
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println("Error de SQL:" + e);
-		}
-		catch (CriteriaException e) {
+		} catch (CriteriaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (TableOperationException e) {
+		} catch (TableOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -334,32 +326,43 @@ public class ProcessTable {
 		Section section = topic.getSection("use"); //$NON-NLS-1$
 		section.appendP(Messages.file_use_des);
 		GetObjUse objUse = new GetObjUse();
-		Dl dl = section.getDL("use_dl_", true);
+		Dl dl = null;
 		boolean vacio = true;
 		for (int j = 0; j < objeto.length; j++) {
 			try {
-				GetObjUseRow[] _ObjUse = objUse.read(objeto[j]);
-				if (_ObjUse.length > 0) {
-					vacio = false;
-					for (int i = 0; i < _ObjUse.length; i++) {
-						String obj = (String) _ObjUse[i].getDSPPGMREF_WHPNAM();
-						String lib = (String) _ObjUse[i].getDSPPGMREF_WHLIB();
-						String text = (String) _ObjUse[i].getDSPPGMREF_WHTEXT();
-						dl.addItem(lib.trim() + "/" + obj.trim(), text.trim());
+				if (objeto[j] != null) {
+					GetObjUseRow[] _ObjUse = objUse.read(objeto[j]);
+					if (_ObjUse.length > 0) {
+						vacio = false;
+						if(dl == null){
+							dl = section.getDL("use_dl_", true);
+						}
+						for (int i = 0; i < _ObjUse.length; i++) {
+							String obj = (String) _ObjUse[i]
+									.getDSPPGMREF_WHPNAM();
+							String lib = (String) _ObjUse[i]
+									.getDSPPGMREF_WHLIB();
+							String text = (String) _ObjUse[i]
+									.getDSPPGMREF_WHTEXT();
+							dl.addItem(lib.trim() + "/" + obj.trim(),
+									text.trim());
+						}
 					}
 				}
-			}
-			catch (SQLException e) {
+			} catch (SQLException e) {
 				System.out.println("Error de SQL " + e);
-			}
-			catch (CriteriaException e) {
+			} catch (CriteriaException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TableOperationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			catch (TableOperationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		}
+		if(vacio){
+			Note note = new Note();
+			note.creteNote("use_note", "No hay Nada", NoteTypeValues.NOTICE);
+			section.addContent(note);
 		}
 	}
 
