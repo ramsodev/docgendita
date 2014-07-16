@@ -63,4 +63,8 @@ public class Topic extends BaseDitaElement {
 	public void setTitle(String title) {
 		addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
 	}
+	
+	public void setShortDescription(String description) {
+		addContent(DitaFactory.createElement(TopicTypes.SHORTDES, description));
+	}
 }

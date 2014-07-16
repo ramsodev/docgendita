@@ -68,4 +68,9 @@ public class Section extends BaseDitaElement {
 	public void setTitle(String title) {
 		addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
 	}
+
+	public void appendFigure(String fileName, String string, String url) {
+		// TODO Auto-generated method stub
+		
+	}
 }
