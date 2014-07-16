@@ -9,7 +9,7 @@ import org.eclipse.osgi.util.NLS;
  * @author ramso
  */
 public class Messages extends NLS {
-	private static final String	BUNDLE_NAME	= "net.ramso.doc.datatools.messages";	//$NON-NLS-1$
+	private static final String	BUNDLE_NAME	= "net.ramso.doc.as400.messages";	//$NON-NLS-1$
 	public static String		DocumentationAction_title;
 	public static String		DocumentationWizardPage_browse;
 	public static String		DocumentationWizardPage_doc_autor;
