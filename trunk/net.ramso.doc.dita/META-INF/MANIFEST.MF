@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dita
 Bundle-SymbolicName: net.ramso.doc.dita
-Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.jdom;bundle-version="1.0.0";visibility:=reexport,
+Bundle-Version: 1.0.1.qualifier
+Require-Bundle: org.jdom;bundle-version="1.1.1";visibility:=reexport,
  org.eclipse.core.resources;bundle-version="3.8.101",
  org.eclipse.core.runtime;bundle-version="3.9.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -26,3 +26,4 @@ Export-Package: net.ramso.doc.dita.Documents;
  net.ramso.doc.dita.elements.table;uses:="net.ramso.doc.dita.attributes,net.ramso.doc.dita.elements",
  net.ramso.doc.dita.elements.topic;uses:="net.ramso.doc.dita.elements.table,net.ramso.doc.dita.elements.body,net.ramso.doc.dita.elements",
  net.ramso.doc.dita.utils
+Bundle-Vendor: ramso.net
