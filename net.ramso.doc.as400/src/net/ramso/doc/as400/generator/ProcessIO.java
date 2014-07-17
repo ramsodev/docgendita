@@ -96,8 +96,8 @@ public class ProcessIO {
 	public String process(IProgressMonitor monitor) throws IOException {
 		topicRef = DitaFactory.createTopicRef();
 		try {
-			String id = TextUtils.clean(getPrefix()
-					+ as400File.getDSPFD_ATFILE().trim());
+			String id = TextUtils.clean(TextUtils.clean(getPrefix()
+					+ as400File.getDSPFD_ATFILE().trim()));
 			topicRef.setHref(id + ".dita"); //$NON-NLS-1$
 			TopicDocument topicDocument = new TopicDocument();
 			Topic topic = topicDocument.getTopic();

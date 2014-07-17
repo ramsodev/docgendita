@@ -77,7 +77,7 @@ public abstract class RecordOperations implements IRecordOperations {
 		Object[] values = getValues();
 		String[] labels = getLabels();
 		for (int i = 0; i < values.length; i++) {
-			value.append(labels[i] + " = " + values[i].toString() + ", "); //$NON-NLS-1$ //$NON-NLS-2$
+			value.append("["+i +"] " + labels[i] + " = " + values[i].toString() + ", "); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return value.toString();
 	}

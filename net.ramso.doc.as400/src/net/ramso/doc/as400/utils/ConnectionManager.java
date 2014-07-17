@@ -78,7 +78,10 @@ public class ConnectionManager {
 		return condb;
 	}
 
-	public static void disconnect() {
+	public static void disconnect() throws SQLException {
+		getJDBCConnection().close();
+		condb=null;
 		getConnection().disconnectAllServices();
+		con=null;
 	}
 }

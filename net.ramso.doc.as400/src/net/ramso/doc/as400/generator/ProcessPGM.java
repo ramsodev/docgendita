@@ -92,7 +92,7 @@ public class ProcessPGM {
 			Topic topic = topicDocument.getTopic();
 			
 			topic.setID(id);
-			String title = Messages.file_table + " "
+			String title = Messages.pgm_chap + " "
 					+ as400PGM.getDSPOBJD_ODOBNM().trim();
 			topic.setTitle(title);
 			topic.setShortDescription(as400PGM.getDSPOBJD_ODOBTX());

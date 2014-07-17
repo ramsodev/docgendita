@@ -45,7 +45,7 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public String getDSPFDCST_PHCPFN() throws SQLException {
-		return (String) getValue(5);
+		return (String) getValue(4);
 	}
 
 	/**
@@ -53,21 +53,21 @@ public class GetConstrainRow extends RecordOperations {
 	 * por este objeto.
 	 */
 	public String getDSPFDCST_PHCPLN() throws SQLException {
-		return (String) getValue(6);
+		return (String) getValue(5);
 	}
 	
 	/**
 	 * Claves padre
 	 */
 	public String getDSPFDCST_PHPRKY() throws SQLException {
-		return (String) getValue(7);
+		return (String) getValue(6);
 	}
 	
 	/**
 	 * Claves Hijo
 	 */
 	public String getDSPFDCST_PHFRKY() throws SQLException {
-		return (String) getValue(8);
+		return (String) getValue(7);
 	}
 
 	/**

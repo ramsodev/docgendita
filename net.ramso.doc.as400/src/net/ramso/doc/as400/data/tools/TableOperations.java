@@ -72,7 +72,6 @@ public abstract class TableOperations implements ITableOperations {
 		if (order != null) {
 			sentence = sentence + " " + order.getClause().trim(); //$NON-NLS-1$
 		}
-		System.err.println(sentence);
 		PreparedStatement ps;
 		try {
 			ps = ConnectionManager.getJDBCConnection().prepareStatement(

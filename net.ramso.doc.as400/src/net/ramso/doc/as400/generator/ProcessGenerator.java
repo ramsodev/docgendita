@@ -2,6 +2,7 @@ package net.ramso.doc.as400.generator;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,6 +132,13 @@ public class ProcessGenerator {
 			e.printStackTrace();
 		}
 		finally {
+			try {
+				ConnectionManager.disconnect();
+			}
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			MessageBox box = new MessageBox(Display.getCurrent()
 					.getActiveShell(), SWT.OK | SWT.ICON_INFORMATION);
 			box.setMessage("Generation of documentation is finished"); //$NON-NLS-1

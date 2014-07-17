@@ -79,7 +79,7 @@ public class ProcessLib {
 	private TopicRef createTable(GetFilesTipoRow table, IProgressMonitor monitor)
 			throws IOException {
 		ProcessTable pSchema = new ProcessTable(table, path);
-		pSchema.setPrefix(prefix + lib + "_"); //$NON-NLS-1$
+		pSchema.setPrefix(prefix + lib + "_FILE_"); //$NON-NLS-1$
 		pSchema.process(monitor);
 		return pSchema.getTopicRef();
 	}
@@ -128,7 +128,7 @@ public class ProcessLib {
 	private TopicRef createPGM(GetPgmObjRow pgm, IProgressMonitor monitor)
 			throws IOException {
 		ProcessPGM pSchema = new ProcessPGM(pgm, path);
-		pSchema.setPrefix(prefix + lib + "_"); //$NON-NLS-1$
+		pSchema.setPrefix(prefix + lib + "_PGM_"); //$NON-NLS-1$
 		pSchema.process(monitor);
 		return pSchema.getTopicRef();
 	}
@@ -181,7 +181,7 @@ public class ProcessLib {
 	private TopicRef createIO(GetFilesTipoRow table, String type, String text, IProgressMonitor monitor)
 			throws IOException {
 		ProcessIO pSchema = new ProcessIO(table,type, text, path);
-		pSchema.setPrefix(prefix + lib + "_"); //$NON-NLS-1$
+		pSchema.setPrefix(prefix + lib + "_" + type.trim().toUpperCase()+"_"); //$NON-NLS-1$
 		pSchema.process(monitor);
 		return pSchema.getTopicRef();
 	}
