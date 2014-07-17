@@ -13,6 +13,7 @@ import net.ramso.doc.dita.elements.TableTypes;
 import net.ramso.doc.dita.elements.TopicTypes;
 import net.ramso.doc.dita.elements.body.Dl;
 import net.ramso.doc.dita.elements.table.SimpleTable;
+import net.ramso.doc.dita.utils.TextUtils;
 
 /**
  * @author ramso
@@ -40,6 +41,7 @@ public class Section extends BaseDitaElement {
 	 * @param sizes
 	 */
 	public void appendSimpleTable(String id, String[] heads, int[] sizes) {
+		id = TextUtils.clean(id);
 		SimpleTable table = DitaFactory.createSimpleTable();
 		table.setID(id);
 		table.setHeaders(heads);
@@ -55,6 +57,7 @@ public class Section extends BaseDitaElement {
 	 * @param string
 	 */
 	public Dl getDL(String id, boolean create) {
+		id = TextUtils.clean(id);
 		Dl dl = (Dl) getContent(BodyTypes.DL, id);
 		if (create && dl == null) {
 			dl = DitaFactory.createDl();
@@ -65,6 +68,7 @@ public class Section extends BaseDitaElement {
 	}
 
 	public SimpleTable getSimpleTable(String id) {
+		id = TextUtils.clean(id);
 		return (SimpleTable) getContent(TableTypes.SIMPLETABLE, id);
 	}
 
@@ -72,13 +76,18 @@ public class Section extends BaseDitaElement {
 		addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
 	}
 	public void appendFigure(String id, String title, String url){
+		id = TextUtils.clean(id);
 		Element fig = DitaFactory.createElement(
 				BodyTypes.FIG);
+		fig.setAttribute("expanse","page");
+		fig.setAttribute("scale","100");
 		fig.addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
 		Element img = DitaFactory.createElement(
 				BodyTypes.IMAGE);
 		img.setAttribute("href", url);
 		img.setAttribute("align", "center");
+		img.setAttribute("scalefit","yes");
+		img.setAttribute("width","16cm");
 		fig.addContent(img);
 		addContent(fig);
 	}

@@ -7,6 +7,7 @@ import net.ramso.doc.dita.elements.BaseDitaElement;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.TextTypes;
+import net.ramso.doc.dita.utils.TextUtils;
 
 import org.jdom.Element;
 
@@ -33,6 +34,7 @@ public class Ul extends BaseDitaElement {
 	}
 
 	public Element getLi(String id, boolean create ){
+		id= TextUtils.clean(id);
 		 Element il = getContent(BodyTypes.LI, id);
 		if (create && il == null) {
 			il = DitaFactory.createElement(BodyTypes.LI);

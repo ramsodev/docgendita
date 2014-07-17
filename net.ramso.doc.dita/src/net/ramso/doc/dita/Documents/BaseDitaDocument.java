@@ -34,6 +34,7 @@ public class BaseDitaDocument extends Document {
 	 * @return
 	 */
 	public String getFileName() {
+		System.out.println(getElementRoot().getID());
 		return getElementRoot().getID() + EXT;
 	}
 

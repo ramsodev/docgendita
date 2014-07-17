@@ -5,6 +5,8 @@ package net.ramso.doc.dita.elements;
 
 import java.util.List;
 
+import net.ramso.doc.dita.utils.TextUtils;
+
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -59,6 +61,7 @@ public class BaseDitaElement extends Element {
 	}
 
 	public void setID(String id) {
+		id=TextUtils.clean(id);
 		setAttribute("id", id);
 	}
 

@@ -8,6 +8,7 @@ import net.ramso.doc.dita.attributes.NoteTypeValues;
 import net.ramso.doc.dita.elements.BaseDitaElement;
 import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
+import net.ramso.doc.dita.utils.TextUtils;
 
 import org.jdom.Element;
 
@@ -35,6 +36,7 @@ public class Note extends BaseDitaElement {
 	 */
 	public void creteNote(String id, String text, NoteTypeValues type) {
 //		Element note = DitaFactory.createElement(BodyTypes.NOTE);
+		id=TextUtils.clean(id);
 		setAttribute("id", id);
 		setAttribute("type", type.getLiteral());
 		
