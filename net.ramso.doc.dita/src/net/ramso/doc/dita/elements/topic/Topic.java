@@ -39,6 +39,7 @@ public class Topic extends BaseDitaElement {
 	public void appendSection(String title, String id) {
 		
 		Body body = getBody();
+		id=TextUtils.clean(id);
 		body.appendSection(title, id);
 	}
 

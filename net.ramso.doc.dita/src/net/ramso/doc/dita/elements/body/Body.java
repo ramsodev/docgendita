@@ -25,7 +25,6 @@ public class Body extends BaseDitaElement {
 	 * @param title
 	 */
 	public void appendSection(String title, String id) {
-		id=TextUtils.clean(id);
 		Section section = DitaFactory.createSection();
 		section.setID(id);
 		section.setTitle(title);
