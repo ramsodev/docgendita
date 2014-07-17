@@ -36,7 +36,6 @@ public class ERTreeForTreeLayout implements IShapeTreeForTreeLayout {
 		DefaultTreeForTreeLayout<IShape> tree = null;
 		TableShape root = null;
 		for (TableData table : getTables()) {
-			System.out.println("Table " + table.getName());
 			TableShape shape = new TableShape(table, document);
 			if (tree == null) {
 				root = shape;
@@ -48,9 +47,7 @@ public class ERTreeForTreeLayout implements IShapeTreeForTreeLayout {
 					if (parent == null) {
 						parent = root;
 					}
-					System.out.println(relation[1]+ "<->" + table.getName());
 					tree.addChild(parent, shape);
-//					break;
 				}
 				if(table.getRelations().isEmpty()){
 					tree.addChild(root, shape);

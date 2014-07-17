@@ -7,10 +7,8 @@ public class TextUtils {
 	
 
 	public static String clean(String input) {
-
-		
 		String output = input;
-		for (int i = 0; i < output.length(); i++) {
+		for (int i = 0; i < SEARCH.length(); i++) {
 			output = output.replace(SEARCH.charAt(i), "_".toCharArray()[0]);
 		}
 		return output;

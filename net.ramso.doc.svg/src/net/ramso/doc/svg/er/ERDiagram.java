@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import net.ramso.doc.svg.diagrams.BaseDiagram;
 import net.ramso.doc.svg.shapes.IShape;
 import net.ramso.doc.svg.shapes.SVGFactory;
+import net.ramso.doc.svg.utils.TextUtils;
 
 import org.abego.treelayout.TreeLayout;
 import org.w3c.dom.Element;
