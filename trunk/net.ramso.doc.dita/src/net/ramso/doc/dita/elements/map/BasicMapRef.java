@@ -13,6 +13,7 @@ import net.ramso.doc.dita.elements.IDitaTypes;
 import net.ramso.doc.dita.elements.MapTypes;
 import net.ramso.doc.dita.elements.PrologTypes;
 import net.ramso.doc.dita.elements.TopicTypes;
+import net.ramso.doc.dita.utils.TextUtils;
 
 import org.jdom.Element;
 
@@ -70,6 +71,7 @@ public abstract class BasicMapRef extends BaseDitaElement {
 	}
 
 	public void setHref(String value) {
+		value = TextUtils.clean(value);
 		setAttribute("href", value);
 	}
 

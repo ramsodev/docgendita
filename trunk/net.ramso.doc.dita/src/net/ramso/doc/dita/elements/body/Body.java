@@ -5,6 +5,7 @@ import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.TopicTypes;
 import net.ramso.doc.dita.elements.topic.Section;
+import net.ramso.doc.dita.utils.TextUtils;
 
 public class Body extends BaseDitaElement {
 	/**
@@ -24,6 +25,7 @@ public class Body extends BaseDitaElement {
 	 * @param title
 	 */
 	public void appendSection(String title, String id) {
+		id=TextUtils.clean(id);
 		Section section = DitaFactory.createSection();
 		section.setID(id);
 		section.setTitle(title);
@@ -31,6 +33,7 @@ public class Body extends BaseDitaElement {
 	}
 
 	public Section getSection(String id) {
+		id = TextUtils.clean(id);
 		return (Section) getContent(TopicTypes.SECTION, id);
 	}
 }

@@ -19,12 +19,15 @@ import net.ramso.doc.dita.elements.topic.Topic;
 import net.ramso.doc.dita.utils.ResourceUtils;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.osgi.util.NLS;
 
 public class ProcessLib {
-	private Part	part;
-	private String	lib;
-	private String	path;
-	private String	prefix	= "";	//$NON-NLS-1$
+	private Part part;
+	private String lib;
+	private String path;
+	private String prefix = ""; //$NON-NLS-1$
+	private String textValuePrtf = "Informes (PRTF)";
+	private String textValueDspf = "Pantallas (DSPF)";
 
 	public ProcessLib(String lib, String path) {
 		this.lib = lib;
@@ -58,12 +61,10 @@ public class ProcessLib {
 				}
 				getPart().addChapter(chapter);
 			}
-		}
-		catch (CriteriaException e) {
+		} catch (CriteriaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (TableOperationException e) {
+		} catch (TableOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -82,12 +83,13 @@ public class ProcessLib {
 		pSchema.process(monitor);
 		return pSchema.getTopicRef();
 	}
+
 	private void addPGM(String lib, IProgressMonitor monitor)
 			throws IOException {
 		GetPgmObj obj = new GetPgmObj();
 		GetPgmObjRow[] pgms;
 		try {
-			pgms = obj.read( lib.toUpperCase());
+			pgms = obj.read(lib.toUpperCase());
 			if (pgms.length > 0) {
 				Chapter chapter = new Chapter();
 				String id = getPrefix() + lib + "_pgms_chapter"; //$NON-NLS-1$
@@ -108,12 +110,10 @@ public class ProcessLib {
 				}
 				getPart().addChapter(chapter);
 			}
-		}
-		catch (CriteriaException e) {
+		} catch (CriteriaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (TableOperationException e) {
+		} catch (TableOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -132,6 +132,60 @@ public class ProcessLib {
 		pSchema.process(monitor);
 		return pSchema.getTopicRef();
 	}
+
+	private void addIO(String type, String lib, String text, IProgressMonitor monitor)
+			throws IOException {
+		GetFilesTipo _PF = new GetFilesTipo();
+		GetFilesTipoRow[] pfs;
+		try {
+			pfs = _PF.read(type, lib.toUpperCase());
+			if (pfs.length > 0) {
+				Chapter chapter = new Chapter();
+				String id = getPrefix() + lib
+						+ "_" + type.toLowerCase() + "_chapter"; //$NON-NLS-1$
+				chapter.setHref(id + ".dita"); //$NON-NLS-1$
+				TopicDocument topicDocument = new TopicDocument();
+				Topic topic = topicDocument.getTopic();
+				topic.setID(id);
+				
+				String title = NLS.bind(Messages.io_chap, text) + lib;
+				topic.setTitle(title);
+				topic.appendSection(NLS.bind(Messages.file_chap_des,text), "des"); //$NON-NLS-2$
+				@SuppressWarnings("unused")
+				Section section = topic.getSection("des"); //$NON-NLS-1$
+				ResourceUtils.getInstance().saveDitaFileAsResource(
+						topicDocument.getDocumentContent(),
+						path + File.separator + topicDocument.getFileName());
+				for (GetFilesTipoRow pf : pfs) {
+					chapter.appendTopicRef(createIO(pf, type, text, monitor));
+				}
+				getPart().addChapter(chapter);
+			}
+		} catch (CriteriaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TableOperationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @param table
+	 * @param text 
+	 * @param type 
+	 * @param monitor
+	 * @return
+	 * @throws IOException
+	 */
+	private TopicRef createIO(GetFilesTipoRow table, String type, String text, IProgressMonitor monitor)
+			throws IOException {
+		ProcessIO pSchema = new ProcessIO(table,type, text, path);
+		pSchema.setPrefix(prefix + lib + "_"); //$NON-NLS-1$
+		pSchema.process(monitor);
+		return pSchema.getTopicRef();
+	}
+
 	public Part getPart() {
 		return part;
 	}
@@ -156,8 +210,10 @@ public class ProcessLib {
 		topic.appendSection("Biblioteca", "lib"); //$NON-NLS-2$
 		Section section = topic.getSection("lib"); //$NON-NLS-1$
 		section.appendP(lib);
-//		addTables(lib, monitor);
+		addTables(lib, monitor);
 		addPGM(lib, monitor);
+		addIO("PRTF", lib, textValuePrtf, monitor);
+		addIO("DSPF", lib, textValueDspf, monitor);
 		ResourceUtils.getInstance().saveDitaFileAsResource(
 				topicDocument.getDocumentContent(),
 				path + File.separator + topicDocument.getFileName());

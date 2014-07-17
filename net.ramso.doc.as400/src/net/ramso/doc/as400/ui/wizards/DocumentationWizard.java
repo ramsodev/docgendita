@@ -53,7 +53,7 @@ public class DocumentationWizard extends Wizard {
 				e.printStackTrace();
 			}
 		}
-		String[] libs = page1.getLibl().split(",");
+		String[] libs = page1.getLibl().toUpperCase().split(",");
 		ProcessGenerator generator = new ProcessGenerator(libs, folder);
 		generator.setTitle(page.getTitle());
 		generator.setDes(page.getDescription());
@@ -62,7 +62,7 @@ public class DocumentationWizard extends Wizard {
 		generator.setSystem(page1.getSystem());
 		generator.setUser(page1.getUser());
 		generator.setPassword(page1.getPassword());
-		generator.setLib(page1.getLib());
+		generator.setLib(page1.getLib().toUpperCase());
 		generator.setCreate(page1.isCreate());
 		generator.setDelete(page1.isDelete());
 		generator.process(monitor);

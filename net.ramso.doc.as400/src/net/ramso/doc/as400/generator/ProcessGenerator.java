@@ -2,6 +2,7 @@ package net.ramso.doc.as400.generator;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.ramso.doc.as400.Messages;
@@ -21,7 +22,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 
 public class ProcessGenerator {
-	private String[]	libs;
+	private ArrayList<String>	libs;
 	private IFolder		folder;
 	private String		title;
 	private String		des;
@@ -35,7 +36,13 @@ public class ProcessGenerator {
 	private boolean	delete = false;
 
 	public ProcessGenerator(String[] libs, IFolder folder) {
-		this.libs = libs;
+		ArrayList<String> temp = new ArrayList<String>();
+		for (String lib : libs) {
+			if(!lib.trim().isEmpty()){
+				temp.add(lib.trim().toUpperCase());
+			}
+		}
+		this.libs = temp;
 		this.folder = folder;
 		title = "Documentación de Aplicaciones Legacy de OS/400";
 		des = ""; //$NON-NLS-1$
@@ -74,7 +81,7 @@ public class ProcessGenerator {
 	public void process(IProgressMonitor monitor) {
 		String libl = "";
 		for (String lib : libs) {
-			libl += lib + " ";
+			libl += lib.trim() + " ";
 		}
 		try {
 			ConnectionManager.createConnection(system, user, password, libl);
@@ -100,7 +107,7 @@ public class ProcessGenerator {
 		map.getMap().addFrontMatter(fromMatter);
 		for (String object : libs) {
 			try {
-				ProcessLib process = new ProcessLib(object, path);
+				ProcessLib process = new ProcessLib(object.trim(), path);
 				process.process(monitor);
 				map.getMap().addPart(process.getPart());
 			}

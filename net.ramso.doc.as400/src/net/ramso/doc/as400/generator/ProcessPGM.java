@@ -30,6 +30,7 @@ import net.ramso.doc.dita.elements.map.TopicRef;
 import net.ramso.doc.dita.elements.topic.Section;
 import net.ramso.doc.dita.elements.topic.Topic;
 import net.ramso.doc.dita.utils.ResourceUtils;
+import net.ramso.doc.dita.utils.TextUtils;
 import net.ramso.doc.svg.as400.AS400Diagram;
 import net.ramso.doc.svg.as400.AS400Object;
 
@@ -85,10 +86,11 @@ public class ProcessPGM {
 	public String process(IProgressMonitor monitor) throws IOException {
 		topicRef = DitaFactory.createTopicRef();
 		try {
-			String id = getPrefix() + as400PGM.getDSPOBJD_ODOBNM().trim();
+			String id = TextUtils.clean(getPrefix() + as400PGM.getDSPOBJD_ODOBNM().trim());
 			topicRef.setHref(id + ".dita"); //$NON-NLS-1$
 			TopicDocument topicDocument = new TopicDocument();
 			Topic topic = topicDocument.getTopic();
+			
 			topic.setID(id);
 			String title = Messages.file_table + " "
 					+ as400PGM.getDSPOBJD_ODOBNM().trim();
@@ -129,7 +131,11 @@ public class ProcessPGM {
 				objSvg = new AS400Object();
 				objSvg.setName(((String) row.getDSPGMREF_WHFNAM()).trim());
 				objSvg.setLib(((String) row.getDSPGMREF_WHLNAM()).trim());
-				objSvg.setAttribute(((String) row.getDSPOBJD_ODOBAT()).trim());
+				String des = (String) row.getDSPOBJD_ODOBAT();
+				if(des == null){
+					des=(String) row.getDSPGMREF_WHOTYP();
+				}
+				objSvg.setAttribute((des).trim());
 				objSvg.setType(((String) row.getDSPGMREF_WHOTYP()).trim());
 				objSvg.setParent(obj);
 				objsSVG.add(objSvg);

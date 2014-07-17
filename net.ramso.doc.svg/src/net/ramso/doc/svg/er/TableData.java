@@ -9,12 +9,12 @@ import java.util.ArrayList;
  * @author ramso
  */
 public class TableData {
-	public static final int		ONETOONE	= 0;
-	public static final int		ONETOMANY	= 1;
-	private String				schema;
-	private String				name;
-	private ArrayList<String>	primaryKeys	= new ArrayList<String>();
-	private ArrayList<Object[]>	relations	= new ArrayList<Object[]>();
+	public static final int ONETOONE = 0;
+	public static final int ONETOMANY = 1;
+	private String schema;
+	private String name;
+	private ArrayList<String> primaryKeys = new ArrayList<String>();
+	private ArrayList<Object[]> relations = new ArrayList<Object[]>();
 
 	/**
 	 * @return the name
@@ -64,25 +64,37 @@ public class TableData {
 	}
 
 	/**
-	 * @param schema the schema to set
+	 * @param schema
+	 *            the schema to set
 	 */
 	public void setSchema(String schema) {
 		this.schema = schema;
 	}
 
-	
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof TableData){
-			if(getName().equals(((TableData)obj).getName()) && getSchema().equals(((TableData)obj).getSchema())){
+		if (obj instanceof TableData) {
+			if (getName().equals(((TableData) obj).getName())
+					&& getSchema().equals(((TableData) obj).getSchema())) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
+	public void addPrimaryKey(ArrayList<String> primaryKey) {
+		this.primaryKeys = primaryKey;
+
+	}
+
+	public void addRelations(ArrayList<Object[]> relations) {
+		this.relations = relations;
+
+	}
+
 }

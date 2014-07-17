@@ -1,4 +1,5 @@
 package net.ramso.doc.as400.data;
+
 import net.ramso.doc.as400.commands.RunExtractors;
 import net.ramso.doc.as400.data.tools.Criteria;
 import net.ramso.doc.as400.data.tools.CriteriaException;
@@ -6,10 +7,7 @@ import net.ramso.doc.as400.data.tools.IRecordOperations;
 import net.ramso.doc.as400.data.tools.TableOperationException;
 import net.ramso.doc.as400.data.tools.TableOperations;
 
-
-
-public class GetConstrain extends TableOperations{
-	
+public class GetConstrain extends TableOperations {
 
 	/**
 	 * Constructor para una clase DBSelect.
@@ -18,14 +16,18 @@ public class GetConstrain extends TableOperations{
 		super(RunExtractors.DSPFCSTFILE);
 	}
 
-	
-	public void read(String file) throws CriteriaException, TableOperationException {
+	public GetConstrainRow[] read(String file, String lib, String type)
+			throws CriteriaException, TableOperationException {
 		Criteria criteria = new Criteria();
-		criteria.add("CSFILE",file);
-		read(getRecord().getLabels(), criteria, null);
+		criteria.add("CSFILE", file);
+		criteria.add("CSLIB", lib);
+		criteria.add("PHCSTT", type);
+		return (GetConstrainRow[]) read(getRecord().getLabels(), criteria, null);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.ramso.doc.as400.data.tools.TableOperations#getRecord()
 	 */
 	@Override
@@ -33,14 +35,14 @@ public class GetConstrain extends TableOperations{
 		return new GetConstrainRow();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see net.ramso.doc.as400.data.tools.TableOperations#getArrayRecord(int)
 	 */
 	@Override
 	public IRecordOperations[] getArrayRecord(int length) {
 		return new GetConstrainRow[length];
 	}
-
-	
 
 }

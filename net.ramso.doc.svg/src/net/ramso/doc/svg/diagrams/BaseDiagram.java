@@ -24,6 +24,7 @@ import net.ramso.doc.svg.layout.ShapesNodeExtendProvider;
 import net.ramso.doc.svg.shapes.IShape;
 import net.ramso.doc.svg.shapes.SVGException;
 import net.ramso.doc.svg.shapes.SVGFactory;
+import net.ramso.doc.svg.utils.TextUtils;
 
 import org.abego.treelayout.TreeLayout;
 import org.abego.treelayout.util.DefaultConfiguration;
@@ -153,7 +154,7 @@ public abstract class BaseDiagram {
 	 *            the fileName to set
 	 */
 	public void setFileName(String fileName) {
-		this.fileName = fileName;
+		this.fileName = TextUtils.clean(fileName);
 	}
 
 	/**

@@ -105,13 +105,13 @@ public class ERDiagram extends BaseDiagram {
 					pos[2] = new Double(childPosition.getMinX()).intValue();
 				}
 				con = SVGFactory.createConnectorPath(id,
-						SVGFactory.HOROZONTALDIR, pos, getDocument());
+						SVGFactory.HOROZONTALDIR, pos, getDocument(), SVGFactory.CONNECTOR_ER_ONETOMANY);
 				break;
 			default:
 				pos[0] = new Double(parentPosition.getCenterX()).intValue();
 				pos[2] = new Double(childPosition.getCenterX()).intValue();
 				con = SVGFactory.createConnectorPath(id,
-						SVGFactory.VERTICALDIR, pos, getDocument());
+						SVGFactory.VERTICALDIR, pos, getDocument(), SVGFactory.CONNECTOR_ER_ONETOMANY);
 				break;
 		}
 		getGroup().appendChild(con);

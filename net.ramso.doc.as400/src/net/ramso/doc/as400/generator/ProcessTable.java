@@ -7,10 +7,15 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.xml.transform.TransformerException;
 
 import net.ramso.doc.as400.Messages;
 import net.ramso.doc.as400.data.GetCampos;
 import net.ramso.doc.as400.data.GetCamposRow;
+import net.ramso.doc.as400.data.GetConstrain;
+import net.ramso.doc.as400.data.GetConstrainRow;
 import net.ramso.doc.as400.data.GetFilesTipoRow;
 import net.ramso.doc.as400.data.GetKeyLf;
 import net.ramso.doc.as400.data.GetKeyLfRow;
@@ -18,13 +23,13 @@ import net.ramso.doc.as400.data.GetObjUse;
 import net.ramso.doc.as400.data.GetObjUseRow;
 import net.ramso.doc.as400.data.tools.CriteriaException;
 import net.ramso.doc.as400.data.tools.TableOperationException;
+import net.ramso.doc.as400.ui.wizards.DocumentationWizard;
 import net.ramso.doc.dita.Documents.TopicDocument;
 import net.ramso.doc.dita.attributes.AlignValues;
 import net.ramso.doc.dita.attributes.FrameValues;
 import net.ramso.doc.dita.attributes.NoteTypeValues;
 import net.ramso.doc.dita.attributes.ScaleValues;
 import net.ramso.doc.dita.attributes.VerticalAlignValues;
-import net.ramso.doc.dita.elements.BodyTypes;
 import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.body.Dl;
 import net.ramso.doc.dita.elements.body.Note;
@@ -41,6 +46,9 @@ import net.ramso.doc.dita.elements.table.Table;
 import net.ramso.doc.dita.elements.topic.Section;
 import net.ramso.doc.dita.elements.topic.Topic;
 import net.ramso.doc.dita.utils.ResourceUtils;
+import net.ramso.doc.dita.utils.TextUtils;
+import net.ramso.doc.svg.er.ERDiagram;
+import net.ramso.doc.svg.er.TableData;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.jdom.Element;
@@ -49,19 +57,18 @@ import org.jdom.Element;
  * @author ramso
  */
 public class ProcessTable {
-	private TopicRef		topicRef;
-	private GetFilesTipoRow	as400File;
-	private String			path;
-	private String			prefix	= "";	//$NON-NLS-1$
-	private String[]		tablas;
-	private String			lib;
+	private TopicRef topicRef;
+	private GetFilesTipoRow as400File;
+	private String path;
+	private String prefix = ""; //$NON-NLS-1$
+	private String[] tablas;
+	private String lib;
 
 	public ProcessTable(GetFilesTipoRow file, String path) {
 		this.as400File = file;
 		try {
 			this.lib = file.getDSPFD_ATLIB().trim();
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		this.path = path;
@@ -95,7 +102,7 @@ public class ProcessTable {
 	public String process(IProgressMonitor monitor) throws IOException {
 		topicRef = DitaFactory.createTopicRef();
 		try {
-			String id = getPrefix() + as400File.getDSPFD_ATFILE().trim();
+			String id = TextUtils.clean(getPrefix() + as400File.getDSPFD_ATFILE().trim());
 			topicRef.setHref(id + ".dita"); //$NON-NLS-1$
 			TopicDocument topicDocument = new TopicDocument();
 			Topic topic = topicDocument.getTopic();
@@ -111,17 +118,130 @@ public class ProcessTable {
 			// as400File.getDSPFD_ATTXT()));
 			// }
 			addAttributes(as400File, topic);
-			addColumns(as400File.getDSPFD_ATFILE(), topic);
-			addLogicalFile(as400File.getDSPFD_ATFILE(), topic);
+			addColumns(as400File.getDSPFD_ATFILE().trim(), topic);
+			addLogicalFile(as400File.getDSPFD_ATFILE().trim(), topic);
+			addDiagram(as400File.getDSPFD_ATFILE().trim(), topic);
 			addRelated(getTablas(), topic);
 			path += File.separator + topicDocument.getFileName();
 			// topicDocument.save(path);
 			ResourceUtils.getInstance().saveDitaFileAsResource(
 					topicDocument.getDocumentContent(), path);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 		}
 		return null;
+	}
+
+	private void addDiagram(String file, Topic topic) {
+		ArrayList<TableData> ts = new ArrayList<net.ramso.doc.svg.er.TableData>();
+		TableData t = new TableData();
+		t.setName(file);
+		t.setSchema(lib);
+		t.addPrimaryKey(getPrimaryKey(file));
+		ts.add(t);
+		t.addRelations(getRelations(file, ts));
+
+		ERDiagram diagram = new ERDiagram(ts);
+		diagram.run();
+		String pathi = path + File.separator + DocumentationWizard.IMGFOLDER
+				+ File.separator + diagram.getFileName();
+		try {
+			net.ramso.doc.svg.utils.ResourceUtils.getInstance()
+					.saveSVGFileAsResource(diagram.getDocumentContent(), pathi);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String url = "." + File.separator
+				+ net.ramso.doc.as400.ui.wizards.DocumentationWizard.IMGFOLDER
+				+ File.separator + diagram.getFileName() + "."
+				+ net.ramso.doc.svg.utils.ResourceUtils.SVG_FILE_EXTENSION;
+		topic.appendSection(Messages.file_dig, "erd");
+		Section section = topic.getSection("erd"); //$NON-NLS-1$
+		section.appendFigure(diagram.getFileName(), Messages.file_dig_tit + " "
+				+ diagram.getFileName(), url);
+
+	}
+
+	private ArrayList<String> getPrimaryKey(String file) {
+		ArrayList<String> pks = new ArrayList<String>();
+		GetConstrain cstq = new GetConstrain();
+		try {
+			GetConstrainRow[] csts = cstq.read(file, lib, "P");
+			if (csts.length > 0) {
+				for (GetConstrainRow cst : csts) {
+					String[] csta = cst.getDSPFDCST_PHPRKY().split(" ");
+					for (String pk : csta) {
+						if (!pk.trim().isEmpty()) {
+							pks.add(pk.trim() + " (PK)");
+						}
+					}
+				}
+			}
+		} catch (CriteriaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TableOperationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pks;
+	}
+
+	private ArrayList<Object[]> getRelations(String file,
+			ArrayList<TableData> ts) {
+		ArrayList<Object[]> relations = new ArrayList<Object[]>();
+		GetConstrain cstq = new GetConstrain();
+		try {
+			GetConstrainRow[] csts = cstq.read(file, lib, "R");
+			if (csts.length > 0) {
+				for (GetConstrainRow cst : csts) {
+					String[] csta = cst.getDSPFDCST_PHPRKY().split(" ");
+					for (String pk : csta) {
+						Object[] r = new Object[2];
+						r[1] = cst.getDSPFDCST_PHCPFN().trim();
+						r[0] = TableData.ONETOMANY;
+						addRelationTable(file, cst, ts);
+					}
+				}
+			}
+		} catch (CriteriaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TableOperationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return relations;
+	}
+
+	private void addRelationTable(String parent, GetConstrainRow cst,
+			ArrayList<TableData> ts) throws SQLException {
+		if (!findTable(cst.getDSPFDCST_CSFILE().trim(), ts)) {
+			TableData t = new TableData();
+			t.setName(cst.getDSPFDCST_CSFILE().trim());
+			t.setSchema(cst.getDSPFDCST_CSLIB().trim());
+			t.addPrimaryKey(getPrimaryKey(t.getName()));
+			ts.add(t);
+			t.addRelations(getRelations(t.getName(), ts));
+		}
+
+	}
+
+	private boolean findTable(String table, ArrayList<TableData> ts) {
+		for (TableData t : ts) {
+			if (t.getName().trim().equalsIgnoreCase(table))
+				return true;
+		}
+		return false;
 	}
 
 	/**
@@ -157,8 +277,7 @@ public class ProcessTable {
 			trim = (String) _Pfs.getDSPFD_ATFCTM();
 			des = Messages.file_obj_tim + " ";
 			dl.addItem(des, trim.trim());
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			// TODO: handle exception
 		}
 	}
@@ -221,8 +340,7 @@ public class ProcessTable {
 				if (num.intValue() == 0) {
 					num = regs[i].getDSPFFD_WHFLDB();
 					values[1] = num.toString();
-				}
-				else {
+				} else {
 					values[1] = num.toString();
 					num = regs[i].getDSPFFD_WHFLDP();
 					values[1] = values[1] + "," + num.toString();
@@ -261,15 +379,12 @@ public class ProcessTable {
 				table.getTGroup().getTBody().appendRow(row);
 			}
 			topic.getBody().addContent(table);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		catch (CriteriaException e) {
+		} catch (CriteriaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (TableOperationException e) {
+		} catch (TableOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -324,21 +439,17 @@ public class ProcessTable {
 					ojb[i] = objs[i];
 				}
 				setTablas(ojb);
-			}
-			else {
+			} else {
 				String[] ojb = new String[1];
 				ojb[0] = objeto;
 				setTablas(ojb);
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println("Error de SQL:" + e);
-		}
-		catch (CriteriaException e) {
+		} catch (CriteriaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (TableOperationException e) {
+		} catch (TableOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -372,15 +483,12 @@ public class ProcessTable {
 						}
 					}
 				}
-			}
-			catch (SQLException e) {
+			} catch (SQLException e) {
 				System.out.println("Error de SQL " + e);
-			}
-			catch (CriteriaException e) {
+			} catch (CriteriaException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			catch (TableOperationException e) {
+			} catch (TableOperationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

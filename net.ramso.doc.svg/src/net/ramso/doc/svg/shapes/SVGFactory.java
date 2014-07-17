@@ -17,19 +17,22 @@ import org.w3c.dom.Text;
  * @author ramso
  */
 public class SVGFactory {
-	public static final String	SVGNS				= "http://www.w3.org/2000/svg";
-	public static final String	ROOTNAME			= "svg";
-	public static final String	PUBLICID			= "-//W3C//DTD SVG 1.0//EN";
-	public static final String	SYSTEMID			= "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd";
-	public static final int		VERTICAL			= 50;
-	public static final int		HORIZONTAL			= 50;
-	public static final int		VERTICALDIR			= 0;
-	public static final int		HOROZONTALDIR		= 1;
-	private static final String	groupStyle			= "fill:none;stroke:#b0b0b0;stroke-width:1.08270001;stroke-linecap:butt;stroke-dasharray:none";
-	private static final String	connectorStyle		= "fill:none;stroke:#b0b0b0;stroke-width:1.08270001;stroke-linecap:butt;stroke-dasharray:none";
-	private static final String	connectorDashStyle	= "fill:none;stroke:#b0b0b0;stroke-width:1.08270001;stroke-linecap:butt;stroke-dasharray:6.4961, 3.248";
-	private static final String	textStyle			= "fill:#000000;stroke:none;text-anchor:middle";
-	public static final String	GROUP				= "group_principal";
+	public static final String SVGNS = "http://www.w3.org/2000/svg";
+	public static final String ROOTNAME = "svg";
+	public static final String PUBLICID = "-//W3C//DTD SVG 1.0//EN";
+	public static final String SYSTEMID = "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd";
+	public static final int VERTICAL = 50;
+	public static final int HORIZONTAL = 50;
+	public static final int VERTICALDIR = 0;
+	public static final int HOROZONTALDIR = 1;
+	private static final String groupStyle = "fill:none;stroke:#b0b0b0;stroke-width:1.08270001;stroke-linecap:butt;stroke-dasharray:none";
+	private static final String connectorStyle = "fill:none;stroke:#b0b0b0;stroke-width:1.08270001;stroke-linecap:butt;stroke-dasharray:none";
+	private static final String connectorDashStyle = "fill:none;stroke:#b0b0b0;stroke-width:1.08270001;stroke-linecap:butt;stroke-dasharray:6.4961, 3.248";
+	private static final String textStyle = "fill:#000000;stroke:none;text-anchor:middle";
+	public static final String GROUP = "group_principal";
+	public static final int CONNECTOR_ER_ONETOMANY = 0;
+	public static final int CONNECTOR_ER_ONETOONE = 1;
+	public static final int CONNECTOR_BASIC = 2;
 
 	public static Element createPath(String d, Document doc) {
 		Element elemento = doc.createElementNS(SVGNS, "path");
@@ -37,7 +40,8 @@ public class SVGFactory {
 		return elemento;
 	}
 
-	public static Node createPathWithStyle(String d, Document doc, String connector) {
+	public static Node createPathWithStyle(String d, Document doc,
+			String connector) {
 		Element elemento = createPath(d, doc);
 		elemento.setAttributeNS(null, "style", connector);
 		// "fill:none;stroke:#000000;");
@@ -216,10 +220,12 @@ public class SVGFactory {
 		elemento.setAttributeNS(null, "y2", String.valueOf(pos[3]));
 		return elemento;
 	}
-	
+
 	/**
 	 * Create a circle
-	 * @param pos x,y,r
+	 * 
+	 * @param pos
+	 *            x,y,r
 	 * @param doc
 	 * @return
 	 */
@@ -233,14 +239,23 @@ public class SVGFactory {
 
 	public static Element createConnectorPath(String id, int direction,
 			int[] pos, Document doc) {
+		return createConnectorPath(id, direction, pos, doc, CONNECTOR_BASIC);
+	}
+
+	public static Element createConnectorPath(String id, int direction,
+			int[] pos, Document doc, int type) {
 		int alt = pos[1];
 		switch (direction) {
-			case VERTICALDIR:
-				alt = pos[1] + SVGFactory.VERTICAL / 2;
-				break;
-			default:
-				alt = pos[1];
-				break;
+		case VERTICALDIR:
+			alt = pos[1] + SVGFactory.VERTICAL / 2;
+			break;
+		default:
+			alt = pos[1];
+			break;
+		}
+		String style = connectorDashStyle;
+		if(type == CONNECTOR_BASIC){
+			style = connectorStyle;
 		}
 		Element g = createG(id, doc);
 		String d = "M " + String.valueOf(pos[0]) + ", "
@@ -248,9 +263,21 @@ public class SVGFactory {
 				+ String.valueOf(alt) + " " + String.valueOf(pos[2]) + ", "
 				+ String.valueOf(alt) + " " + String.valueOf(pos[2]) + ", "
 				+ String.valueOf(pos[3]);
-		g.appendChild(SVGFactory.createPathWithStyle(d, doc, connectorDashStyle));
-		g.appendChild(createOneConnector(id, direction, pos, doc));
-		g.appendChild(createManyConnector(id, direction, pos, doc));
+		g.appendChild(SVGFactory
+				.createPathWithStyle(d, doc, connectorDashStyle));
+		switch (type) {
+		case CONNECTOR_ER_ONETOMANY:
+			g.appendChild(createOneConnector(id, direction, pos, doc));
+			g.appendChild(createManyConnector(id, direction, pos, doc));	
+			break;
+		case CONNECTOR_ER_ONETOONE:
+			g.appendChild(createOneConnector(id, direction, pos, doc));
+			g.appendChild(createOneConnector(id, direction, pos, doc));	
+			break;
+		default:
+			break;
+		}
+		
 		return g;
 	}
 
@@ -260,24 +287,20 @@ public class SVGFactory {
 		int[] pos2;
 		Element g = createG("one_" + id, doc);
 		switch (direction) {
-			case VERTICALDIR:
-				pos1 = new int[] { pos[0] - 5, pos[1] + 5, pos[0] + 5,
-						pos[1] + 5 };
-				pos2 = new int[] { pos[0] - 5, pos[1] + 10, pos[0] + 5,
-						pos[1] + 10 };
-				break;
-			default:
-				pos1 = new int[] { pos[0] + 5, pos[1] - 5, pos[0] + 5,
-						pos[1] + 5 };
-				pos2 = new int[] { pos[0] + 10, pos[1] + 5, pos[0] + 10,
-						pos[1] - 5 };
-				break;
+		case VERTICALDIR:
+			pos1 = new int[] { pos[0] - 5, pos[1] + 5, pos[0] + 5, pos[1] + 5 };
+			pos2 = new int[] { pos[0] - 5, pos[1] + 10, pos[0] + 5, pos[1] + 10 };
+			break;
+		default:
+			pos1 = new int[] { pos[0] + 5, pos[1] - 5, pos[0] + 5, pos[1] + 5 };
+			pos2 = new int[] { pos[0] + 10, pos[1] + 5, pos[0] + 10, pos[1] - 5 };
+			break;
 		}
 		g.appendChild(createLine(pos1, doc));
 		g.appendChild(createLine(pos2, doc));
 		return g;
 	}
-	
+
 	private static Element createManyConnector(String id, int direction,
 			int[] pos, Document doc) {
 		int[] pos1;
@@ -285,20 +308,16 @@ public class SVGFactory {
 		int[] pos3;
 		Element g = createG("many_" + id, doc);
 		switch (direction) {
-			case VERTICALDIR:
-				pos1 = new int[] { pos[2], pos[3] - 10, pos[2] + 5,
-						pos[3]};
-				pos2 = new int[] { pos[2], pos[3] - 10, pos[2] - 5,
-						pos[3]};
-				pos3 = new int[] { pos[2], pos[3]- 12, 2};
-				break;
-			default:
-				pos1 = new int[] { pos[2]-10, pos[3], pos[2],
-						pos[3]+5};
-				pos2 = new int[] { pos[2]-10, pos[3], pos[2],
-						pos[3]-5};
-				pos3 = new int[] { pos[2] - 12, pos[3], 2};
-				break;
+		case VERTICALDIR:
+			pos1 = new int[] { pos[2], pos[3] - 10, pos[2] + 5, pos[3] };
+			pos2 = new int[] { pos[2], pos[3] - 10, pos[2] - 5, pos[3] };
+			pos3 = new int[] { pos[2], pos[3] - 12, 2 };
+			break;
+		default:
+			pos1 = new int[] { pos[2] - 10, pos[3], pos[2], pos[3] + 5 };
+			pos2 = new int[] { pos[2] - 10, pos[3], pos[2], pos[3] - 5 };
+			pos3 = new int[] { pos[2] - 12, pos[3], 2 };
+			break;
 		}
 		g.appendChild(createLine(pos1, doc));
 		g.appendChild(createLine(pos2, doc));
@@ -323,8 +342,7 @@ public class SVGFactory {
 			DocumentType svgDOCTYPE = impl.createDocumentType(ROOTNAME,
 					PUBLICID, SYSTEMID);
 			svgDoc = impl.createDocument(SVGNS, ROOTNAME, svgDOCTYPE);
-		}
-		catch (ParserConfigurationException e) {
+		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		}
 		return svgDoc;

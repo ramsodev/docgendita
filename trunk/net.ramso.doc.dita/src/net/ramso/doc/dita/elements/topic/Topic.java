@@ -7,6 +7,7 @@ import net.ramso.doc.dita.elements.BaseDitaElement;
 import net.ramso.doc.dita.elements.DitaFactory;
 import net.ramso.doc.dita.elements.TopicTypes;
 import net.ramso.doc.dita.elements.body.Body;
+import net.ramso.doc.dita.utils.TextUtils;
 
 import org.jdom.Element;
 
@@ -36,6 +37,7 @@ public class Topic extends BaseDitaElement {
 	 * @return
 	 */
 	public void appendSection(String title, String id) {
+		
 		Body body = getBody();
 		body.appendSection(title, id);
 	}
@@ -57,6 +59,7 @@ public class Topic extends BaseDitaElement {
 	 * @param set
 	 */
 	public Section getSection(String id) {
+		id=TextUtils.clean(id);
 		return getBody().getSection(id);
 	}
 
