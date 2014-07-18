@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import net.ramso.doc.as400.data.tools.ITableOperations;
 import net.ramso.doc.as400.data.tools.RecordOperations;
 
-public class getObjRelRow extends RecordOperations {
+public class GetObjRelRow extends RecordOperations {
 	private static String[]	LABELS	= { "WHFNAM", "WHLNAM", "WHOTYP", "ODOBAT" };
 
-	public getObjRelRow() {
+	public GetObjRelRow() {
 		super("JOIN");
 	}
 
@@ -50,7 +50,7 @@ public class getObjRelRow extends RecordOperations {
 	 */
 	@Override
 	protected ITableOperations getTableOperations() {
-		return new getObjRel();
+		return new GetObjRel();
 	}
 
 	/*

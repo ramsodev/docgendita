@@ -8,15 +8,15 @@ import net.ramso.doc.as400.data.tools.Join;
 import net.ramso.doc.as400.data.tools.TableOperationException;
 import net.ramso.doc.as400.data.tools.TableOperations;
 
-public class getObjRel extends TableOperations {
+public class GetObjRel extends TableOperations {
 	/**
 	 * Constructor para una clase DBSelect.
 	 */
-	public getObjRel() {
+	public GetObjRel() {
 		super("JOIN");
 	}
 
-	public getObjRelRow[] read(String file) throws CriteriaException,
+	public GetObjRelRow[] read(String file) throws CriteriaException,
 			TableOperationException {
 		Criteria on = new Criteria();
 		on.add("WHFNAM = ODOBNM",null,Criteria.EQUAL);
@@ -25,7 +25,7 @@ public class getObjRel extends TableOperations {
 		Criteria criteria = new Criteria();
 		criteria.add("WHPNAM", file);
 		criteria.add("WHFNAM <> ''", null,Criteria.NOTEQUAL);
-		return (getObjRelRow[]) read(getRecord().getLabels(), criteria, null, new From(join));
+		return (GetObjRelRow[]) read(getRecord().getLabels(), criteria, null, new From(join));
 	}
 
 	/*
@@ -34,7 +34,7 @@ public class getObjRel extends TableOperations {
 	 */
 	@Override
 	public IRecordOperations getRecord() {
-		return new getObjRelRow();
+		return new GetObjRelRow();
 	}
 
 	/*
@@ -43,6 +43,6 @@ public class getObjRel extends TableOperations {
 	 */
 	@Override
 	public IRecordOperations[] getArrayRecord(int length) {
-		return new getObjRelRow[length];
+		return new GetObjRelRow[length];
 	}
 }

@@ -15,8 +15,8 @@ import net.ramso.doc.as400.Messages;
 import net.ramso.doc.as400.data.GetObjUse;
 import net.ramso.doc.as400.data.GetObjUseRow;
 import net.ramso.doc.as400.data.GetPgmObjRow;
-import net.ramso.doc.as400.data.getObjRel;
-import net.ramso.doc.as400.data.getObjRelRow;
+import net.ramso.doc.as400.data.GetObjRel;
+import net.ramso.doc.as400.data.GetObjRelRow;
 import net.ramso.doc.as400.data.tools.CriteriaException;
 import net.ramso.doc.as400.data.tools.TableOperationException;
 import net.ramso.doc.as400.ui.wizards.DocumentationWizard;
@@ -40,19 +40,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @author ramso
  */
 public class ProcessPGM {
-	private TopicRef		topicRef;
-	private GetPgmObjRow	as400PGM;
-	private String			path;
-	private String			prefix	= "";	//$NON-NLS-1$
-	private String[]		tablas;
-	private String			lib;
+	private TopicRef topicRef;
+	private GetPgmObjRow as400PGM;
+	private String path;
+	private String prefix = ""; //$NON-NLS-1$
+	private String[] tablas;
+	private String lib;
 
 	public ProcessPGM(GetPgmObjRow pgm, String path) {
 		this.as400PGM = pgm;
 		try {
 			this.lib = pgm.getDSPOBJD_ODLBNM();
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		this.path = path;
@@ -86,11 +85,12 @@ public class ProcessPGM {
 	public String process(IProgressMonitor monitor) throws IOException {
 		topicRef = DitaFactory.createTopicRef();
 		try {
-			String id = TextUtils.clean(getPrefix() + as400PGM.getDSPOBJD_ODOBNM().trim());
+			String id = TextUtils.clean(getPrefix()
+					+ as400PGM.getDSPOBJD_ODOBNM().trim());
 			topicRef.setHref(id + ".dita"); //$NON-NLS-1$
 			TopicDocument topicDocument = new TopicDocument();
 			Topic topic = topicDocument.getTopic();
-			
+
 			topic.setID(id);
 			String title = Messages.pgm_chap + " "
 					+ as400PGM.getDSPOBJD_ODOBNM().trim();
@@ -103,8 +103,7 @@ public class ProcessPGM {
 			// topicDocument.save(path);
 			ResourceUtils.getInstance().saveDitaFileAsResource(
 					topicDocument.getDocumentContent(), path);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 		}
 		return null;
 	}
@@ -125,31 +124,31 @@ public class ProcessPGM {
 			objSvg.setType(((String) as400pgm2.getDSPOBJD_ODOBTP()).trim());
 			objSvg.setParent(obj);
 			objsSVG.add(objSvg);
-			getObjRel objRel = new getObjRel();
-			getObjRelRow[] objs = objRel.read(obj);
-			for (getObjRelRow row : objs) {
+			GetObjRel objRel = new GetObjRel();
+			GetObjRelRow[] objs = objRel.read(obj);
+			for (GetObjRelRow row : objs) {
 				objSvg = new AS400Object();
 				objSvg.setName(((String) row.getDSPGMREF_WHFNAM()).trim());
 				objSvg.setLib(((String) row.getDSPGMREF_WHLNAM()).trim());
 				String des = (String) row.getDSPOBJD_ODOBAT();
-				if(des == null){
-					des=(String) row.getDSPGMREF_WHOTYP();
+				if (des == null) {
+					// des=(String) row.getDSPGMREF_WHOTYP();
+					des = "";
 				}
 				objSvg.setAttribute((des).trim());
 				objSvg.setType(((String) row.getDSPGMREF_WHOTYP()).trim());
 				objSvg.setParent(obj);
-				objsSVG.add(objSvg);
+				if (!exist(objsSVG, objSvg)) {
+					objsSVG.add(objSvg);
+				}
 			}
-		}
-		catch (CriteriaException e) {
+		} catch (CriteriaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (TableOperationException e) {
+		} catch (TableOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -160,22 +159,30 @@ public class ProcessPGM {
 		try {
 			net.ramso.doc.svg.utils.ResourceUtils.getInstance()
 					.saveSVGFileAsResource(diagram.getDocumentContent(), pathi);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (TransformerException e) {
+		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String url = "." + File.separator + DocumentationWizard.IMGFOLDER
 				+ File.separator + diagram.getFileName() + "."
 				+ net.ramso.doc.svg.utils.ResourceUtils.SVG_FILE_EXTENSION;
-		topic.appendSection(Messages.pgm_dig_tit, "erd"); 
+		topic.appendSection(Messages.pgm_dig_tit, "erd");
 		Section section = topic.getSection("erd"); //$NON-NLS-1$
-		section.appendFigure(diagram.getFileName(), Messages.pgm_dig
-				+ diagram.getFileName(), url);
+		section.appendFigure(diagram.getFileName(),
+				Messages.pgm_dig + diagram.getFileName(), url);
+	}
+
+	private boolean exist(ArrayList<AS400Object> list, AS400Object obj) {
+		for (AS400Object as400Object : list) {
+			if (as400Object.getName().trim()
+					.equalsIgnoreCase(obj.getName().trim())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -235,8 +242,7 @@ public class ProcessPGM {
 			trim = (String) pgm.getDSPOBJD_ODCMVR();
 			des = Messages.pgm_obj_level;
 			dl.addItem(des, trim.trim());
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			// TODO: handle exception
 		}
 	}
@@ -262,15 +268,12 @@ public class ProcessPGM {
 					dl.addItem(lib.trim() + "/" + obj.trim(), text.trim());
 				}
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println("Error de SQL " + e);
-		}
-		catch (CriteriaException e) {
+		} catch (CriteriaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (TableOperationException e) {
+		} catch (TableOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
