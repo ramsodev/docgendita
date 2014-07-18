@@ -3,6 +3,8 @@
  */
 package net.ramso.doc.svg.shapes;
 
+import java.util.ArrayList;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -17,6 +19,7 @@ public abstract class BasicShape implements IShape {
 	public  int x = 0;
 	public  int y = 0;
 	private String id;
+	private ArrayList<IShape> childs = new ArrayList<IShape>();
 	
 	
 	/**
@@ -138,5 +141,11 @@ public abstract class BasicShape implements IShape {
 		this.id = id;
 	}
 
+	public void addChild(IShape shape){
+		childs.add(shape);
+	}
 	
+	public ArrayList<IShape> getChilds(){
+		return childs;
+	}
 }

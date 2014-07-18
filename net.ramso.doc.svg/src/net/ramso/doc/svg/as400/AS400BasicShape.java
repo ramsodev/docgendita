@@ -24,7 +24,8 @@ public abstract class AS400BasicShape extends BasicShape {
 	
 	public AS400BasicShape(AS400Object obj, Document doc){
 		super(doc, 60, 100);
-		setAS400Object(obj);		
+		setAS400Object(obj);
+		setId(obj.getLib() + "/"+ obj.getName());
 	}
 	
 	

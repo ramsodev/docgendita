@@ -57,13 +57,13 @@ public class AS400Diagram extends BaseDiagram {
 	 */
 	@Override
 	public void addConnectors(TreeLayout<IShape> treeLayout, IShape parent) {
-		TreeForTreeLayout<IShape> tree = treeLayout.getTree();
-		if(!tree.isLeaf(parent)){
+//		TreeForTreeLayout<IShape> tree = treeLayout.getTree();
+//		if(!tree.isLeaf(parent)){
 			Rectangle2D.Double parentPosition = treeLayout.getNodeBounds().get(parent);
 			int[] pos = new int[4];
 			pos[0] = new Double(parentPosition.getCenterX()).intValue();
 			pos[1] = new Double(parentPosition.getCenterY()).intValue() + parent.getHeight()/2;
-			for(IShape shape: tree.getChildren(parent)){
+			for(IShape shape: parent.getChilds()){
 				Rectangle2D.Double childPosition = treeLayout.getNodeBounds().get(shape);
 				pos[2] = new Double(childPosition.getCenterX()).intValue();
 				pos[3] = new Double(childPosition.getCenterY()).intValue() - shape.getHeight()/2;
@@ -71,7 +71,7 @@ public class AS400Diagram extends BaseDiagram {
 				getGroup().appendChild(con);
 				addConnectors(treeLayout, shape);
 			}
-		}
+//		}
 		
 	}
 }

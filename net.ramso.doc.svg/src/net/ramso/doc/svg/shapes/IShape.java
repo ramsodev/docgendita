@@ -3,6 +3,8 @@
  */
 package net.ramso.doc.svg.shapes;
 
+import java.util.ArrayList;
+
 import org.w3c.dom.Document;
 
 /**
@@ -65,5 +67,8 @@ public interface IShape {
 	 * @throws SVGException
 	 */
 	void addShape() throws SVGException;
+
+	void addChild(IShape child);
+	ArrayList<IShape> getChilds();
 	
 }
