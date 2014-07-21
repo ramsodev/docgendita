@@ -165,4 +165,9 @@ public abstract class BaseDiagram {
 	 */
 	public abstract void addConnectors(TreeLayout<IShape> treeLayout,
 			IShape parent);
+	
+	public int getWidth(){
+		int w = new Double(getSvgRoot().getAttributeNS(null, "width")).intValue();
+		return w;
+	}
 }

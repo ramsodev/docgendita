@@ -166,13 +166,17 @@ public class ProcessPGM {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		boolean scale = false;
+		if(diagram.getWidth() > 500){
+			scale = true;
+		}
 		String url = "." + File.separator + DocumentationWizard.IMGFOLDER
 				+ File.separator + diagram.getFileName() + "."
 				+ net.ramso.doc.svg.utils.ResourceUtils.SVG_FILE_EXTENSION;
 		topic.appendSection(Messages.pgm_dig_tit, "erd");
 		Section section = topic.getSection("erd"); //$NON-NLS-1$
 		section.appendFigure(diagram.getFileName(),
-				Messages.pgm_dig + diagram.getFileName(), url);
+				Messages.pgm_dig + diagram.getFileName(), url, scale);
 	}
 
 	private boolean exist(ArrayList<AS400Object> list, AS400Object obj) {

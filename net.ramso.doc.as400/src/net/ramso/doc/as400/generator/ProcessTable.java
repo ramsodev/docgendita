@@ -159,6 +159,10 @@ public class ProcessTable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		boolean scale = false;
+		if(diagram.getWidth() > 500){
+			scale = true;
+		}
 		String url = "." + File.separator
 				+ net.ramso.doc.as400.ui.wizards.DocumentationWizard.IMGFOLDER
 				+ File.separator + diagram.getFileName() + "."
@@ -166,7 +170,7 @@ public class ProcessTable {
 		topic.appendSection(Messages.file_dig, "erd");
 		Section section = topic.getSection("erd"); //$NON-NLS-1$
 		section.appendFigure(diagram.getFileName(), Messages.file_dig_tit + " "
-				+ diagram.getFileName(), url);
+				+ diagram.getFileName(), url, scale);
 	}
 
 	private ArrayList<String> getPrimaryKey(String file) {

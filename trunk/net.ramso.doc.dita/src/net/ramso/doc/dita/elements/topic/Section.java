@@ -22,7 +22,7 @@ public class Section extends BaseDitaElement {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= -7432447945026467065L;
+	private static final long serialVersionUID = -7432447945026467065L;
 
 	/**
 	 * 
@@ -75,19 +75,20 @@ public class Section extends BaseDitaElement {
 	public void setTitle(String title) {
 		addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
 	}
-	public void appendFigure(String id, String title, String url){
+
+	public void appendFigure(String id, String title, String url, boolean scale) {
 		id = TextUtils.clean(id);
-		Element fig = DitaFactory.createElement(
-				BodyTypes.FIG);
-		fig.setAttribute("expanse","page");
-		fig.setAttribute("scale","100");
+		Element fig = DitaFactory.createElement(BodyTypes.FIG);
+		fig.setAttribute("expanse", "page");
+		// fig.setAttribute("scale","100");
 		fig.addContent(DitaFactory.createElement(TopicTypes.TITLE, title));
-		Element img = DitaFactory.createElement(
-				BodyTypes.IMAGE);
+		Element img = DitaFactory.createElement(BodyTypes.IMAGE);
 		img.setAttribute("href", url);
 		img.setAttribute("align", "center");
-		img.setAttribute("scalefit","yes");
-		img.setAttribute("width","16cm");
+		if (scale) {
+			img.setAttribute("scalefit", "yes");
+			img.setAttribute("width", "16cm");
+		}
 		fig.addContent(img);
 		addContent(fig);
 	}
