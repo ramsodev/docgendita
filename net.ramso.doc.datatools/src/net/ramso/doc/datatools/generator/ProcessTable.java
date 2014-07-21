@@ -678,10 +678,15 @@ public class ProcessTable {
 		String url = "." + File.separator + DocumentationWizard.IMGFOLDER
 				+ File.separator + diagram.getFileName() + "."
 				+ net.ramso.doc.svg.utils.ResourceUtils.SVG_FILE_EXTENSION;
+		boolean scale = false;
+		if(diagram.getWidth() > 500){
+			scale = true;
+		}
+		
 		topic.appendSection(Messages.ProcessTable_section_er, "erd"); 
 		Section section = topic.getSection("erd"); //$NON-NLS-1$
 		section.appendFigure(diagram.getFileName(), Messages.ProcessTable_er_title
-				+ diagram.getFileName(), url);
+				+ diagram.getFileName(), url, scale);
 	}
 
 	/**
