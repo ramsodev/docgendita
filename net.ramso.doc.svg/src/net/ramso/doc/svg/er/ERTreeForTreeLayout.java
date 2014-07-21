@@ -17,10 +17,10 @@ import org.w3c.dom.Document;
  * @author ramso
  */
 public class ERTreeForTreeLayout implements IShapeTreeForTreeLayout {
-	private ArrayList<TableData>	tables;
-	private Document				document;
-	private HashMap<String, IShape>	shapes		= new HashMap<String, IShape>();
-	private ArrayList<IShape[]>		connectors	= new ArrayList<IShape[]>();
+	private ArrayList<TableData> tables;
+	private Document document;
+	private HashMap<String, IShape> shapes = new HashMap<String, IShape>();
+	private ArrayList<IShape[]> connectors = new ArrayList<IShape[]>();
 
 	public ERTreeForTreeLayout(ArrayList<TableData> tables, Document document) {
 		this.tables = tables;
@@ -29,6 +29,7 @@ public class ERTreeForTreeLayout implements IShapeTreeForTreeLayout {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see net.ramso.doc.svg.layout.IShapeTreeForTreeLayout#getTree()
 	 */
 	@Override
@@ -36,30 +37,31 @@ public class ERTreeForTreeLayout implements IShapeTreeForTreeLayout {
 		DefaultTreeForTreeLayout<IShape> tree = null;
 		TableShape root = null;
 		for (TableData table : getTables()) {
-			TableShape shape = new TableShape(table, document);
-			if (tree == null) {
-				root = shape;
-				tree = new DefaultTreeForTreeLayout<IShape>(shape);
+			TableShape shape = (TableShape) getShapeByName(table.getName());
+			if (shape == null) {
+				shape = new TableShape(table, document);
+				shapes.put(table.getName(), shape);
 			}
-			else {
-				for (Object[] relation : table.getRelations()) {
-					IShape parent = getShapeByName((String) relation[1]);
-					if (parent == null) {
-						parent = root;
-					}
-					tree.addChild(parent, shape);
-				}
-				if(table.getRelations().isEmpty()){
-					tree.addChild(root, shape);
-				}
+			if (root == null) {
+				root = shape;	
 			}
-			shapes.put(table.getName(), shape);
 		}
+		tree = new DefaultTreeForTreeLayout<IShape>(root);
+		System.out.println(root.getId());
 		for (TableData table : getTables()) {
 			IShape parent = getShapeByName(table.getName());
-			for (Object[] relation : table.getRelations()) {
-				IShape child = getShapeByName((String) relation[1]);
-				addConnector(parent, child);
+			System.out.println(parent.getId());
+			if (tree.hasNode(parent)) {
+				System.out.println(" esta el padre");
+				for (Object[] relation : table.getRelations()) {
+					IShape child = getShapeByName((String) relation[1]);
+					addConnector(parent, child);
+					if (!tree.hasNode(child)) {
+						tree.addChild(parent, child);
+					}else{
+						System.out.println("Hijo ya esta");
+					}
+				}
 			}
 		}
 		return tree;
@@ -93,5 +95,5 @@ public class ERTreeForTreeLayout implements IShapeTreeForTreeLayout {
 	public ArrayList<IShape[]> getConnectors() {
 		return connectors;
 	}
-	
+
 }
