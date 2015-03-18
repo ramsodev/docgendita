@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Datatools Documentatator
+Bundle-SymbolicName: net.ramso.doc.as400;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: net.ramso.doc.as400.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.navigator,
+ org.eclipse.datatools.connectivity.sqm.core.ui,
+ org.eclipse.help.base,
+ org.eclipse.datatools.connectivity.ui.dse,
+ net.ramso.doc.dita;bundle-version="1.0.0",
+ org.eclipse.datatools.connectivity.sqm.core;bundle-version="1.1.1",
+ net.ramso.doc.svg;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: ramso.net
+Bundle-ClassPath: libs/jt400.jar,
+ .
+
