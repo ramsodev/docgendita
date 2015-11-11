@@ -2,7 +2,7 @@
 <feature
       id="net.ramso.doc"
       label="Ramso Documentator"
-      version="1.0.0.qualifier"
+      version="1.5.0.qualifier"
       provider-name="ramso.net">
 
    <description>
@@ -113,7 +113,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
          version="0.0.0"
          name="Dita library"
          search-location="both"/>
-         
 
    <requires>
       <import plugin="org.eclipse.ui"/>
@@ -133,7 +132,21 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="net.ramso.doc.datatools"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.1.0.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="net.ramso.doc.as400"
+         download-size="0"
+         install-size="0"
+         version="1.0.1.qualifier"
+         unpack="false"/>
+
+   <plugin
+         id="net.ramso.doc.svg"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.qualifier"
          unpack="false"/>
 
 </feature>

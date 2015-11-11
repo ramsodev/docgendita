@@ -2,7 +2,7 @@
 <feature
       id="net.ramso.dita"
       label="Dita library"
-      version="1.0.0.qualifier"
+      version="1.2.0.qualifier"
       provider-name="ramso.net">
 
    <description>
@@ -112,16 +112,14 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="net.ramso.doc.dita"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.2.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.jdom"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.1.1.v201101151400"
          unpack="false"/>
-
-   
 
 </feature>

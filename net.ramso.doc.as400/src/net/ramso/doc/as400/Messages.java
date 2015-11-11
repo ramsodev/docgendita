@@ -15,6 +15,7 @@ public class Messages extends NLS {
 	public static String		DocumentationWizardPage_doc_autor;
 	public static String		DocumentationWizardPage_doc_description;
 	public static String		DocumentationWizardPage_doc_lang;
+	public static String		DocumentationWizardPage_doc_libl;
 	public static String		DocumentationWizardPage_doc_title;
 	public static String		DocumentationWizardPage_error_no_autor;
 	public static String		DocumentationWizardPage_error_no_description;

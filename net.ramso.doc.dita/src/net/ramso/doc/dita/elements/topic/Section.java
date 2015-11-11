@@ -92,4 +92,9 @@ public class Section extends BaseDitaElement {
 		fig.addContent(img);
 		addContent(fig);
 	}
+
+	public void appendFigure(String id, String title, String url) {
+		appendFigure(id, title, url, true);
+		
+	}
 }

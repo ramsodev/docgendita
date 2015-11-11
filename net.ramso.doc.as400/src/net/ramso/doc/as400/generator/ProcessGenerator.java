@@ -95,8 +95,8 @@ public class ProcessGenerator {
 			box.open();
 			return;
 		}
-		String path = folder.getFullPath().toOSString();
-//		String path = "";
+//		String path = folder.getFullPath().toOSString();
+		String path = "";
 		BookMapDocument map = new BookMapDocument();
 		map.getMap().setTitle(getTitle(), getDes());
 		map.getMap().setID("DBDoc"); //$NON-NLS-1$

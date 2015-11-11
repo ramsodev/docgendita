@@ -103,7 +103,7 @@ public class DocumentationWizardPageiSeries extends WizardPage {
 		deleteCheck
 				.setText(Messages.DocumentationWizardPageiSeries_btnCheckButton_1_text);
 		label = new Label(container, SWT.NULL);
-		label.setText(Messages.DocumentationWizardPage_doc_lang);
+		label.setText(Messages.DocumentationWizardPage_doc_libl);
 		gd = new GridData(GridData.FILL_VERTICAL);
 		gd.verticalSpan = 3;
 		gd.horizontalAlignment = GridData.VERTICAL_ALIGN_CENTER;

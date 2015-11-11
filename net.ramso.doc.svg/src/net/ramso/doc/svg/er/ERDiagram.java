@@ -117,4 +117,9 @@ public class ERDiagram extends BaseDiagram {
 		}
 		getGroup().appendChild(con);
 	}
+
+	public int getWidth() {
+		
+		return 501;
+	}
 }
