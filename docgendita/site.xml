@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/net.ramso.dita_1.2.0.201511111257.jar" id="net.ramso.dita" version="1.2.0.201511111257">
+      <category name="dita"/>
+   </feature>
+   <feature url="features/net.ramso.doc_1.5.0.201511111257.jar" id="net.ramso.doc" version="1.5.0.201511111257">
+      <category name="dita"/>
+   </feature>
+   <category-def name="dita" label="DITA Documentaction Tools"/>
+</site>
