@@ -1,5 +1,11 @@
 package net.ramso.doc.as400.commands;
 
+import java.beans.PropertyVetoException;
+import java.io.IOException;
+
+import com.ibm.as400.access.AS400SecurityException;
+import com.ibm.as400.access.ErrorCompletingRequestException;
+
 import net.ramso.doc.as400.utils.ConnectionManager;
 
 public class RunExtractors {
@@ -20,20 +26,29 @@ public class RunExtractors {
 	public static String DSPPGMREFFILE = "DSPPGMREF";
 	public static String LIB = "GDTEMP";
 
-	public static boolean run(String lib, boolean create, boolean delete){
+	public static boolean run(String lib, boolean create, boolean delete)
+			throws AS400SecurityException, ErrorCompletingRequestException,
+			IOException, InterruptedException, PropertyVetoException {
 		LIB = lib;
 		boolean status = true;
-		if(create){
+		if (create) {
 			ConnectionManager.crtLib(lib);
 		}
-		status = ConnectionManager.runCmd(createCommand(DSPFCMD,DSPFFILE, lib));
-		status = ConnectionManager.runCmd(createCommand(DSPFCSTCMD,DSPFCSTFILE, lib));
-		status = ConnectionManager.runCmd(createCommand(DSPFACCCMD,DSPFACCFILE, lib));
-		status = ConnectionManager.runCmd(createCommand(DSPFFDCMD,DSPFFDFILE, lib));
-		status = ConnectionManager.runCmd(createCommand(DSPDBRCMD,DSPDBRFILE, lib));
-		status = ConnectionManager.runCmd(createCommand(DSPOBJDCMD,DSPOBJDFILE, lib));
-		status = ConnectionManager.runCmd(createCommand(DSPPGMREFCMD,DSPPGMREFFILE, lib));
-		if(delete){
+		status = ConnectionManager
+				.runCmd(createCommand(DSPFCMD, DSPFFILE, lib));
+		status = ConnectionManager.runCmd(createCommand(DSPFCSTCMD,
+				DSPFCSTFILE, lib));
+		status = ConnectionManager.runCmd(createCommand(DSPFACCCMD,
+				DSPFACCFILE, lib));
+		status = ConnectionManager.runCmd(createCommand(DSPFFDCMD, DSPFFDFILE,
+				lib));
+		status = ConnectionManager.runCmd(createCommand(DSPDBRCMD, DSPDBRFILE,
+				lib));
+		status = ConnectionManager.runCmd(createCommand(DSPOBJDCMD,
+				DSPOBJDFILE, lib));
+		status = ConnectionManager.runCmd(createCommand(DSPPGMREFCMD,
+				DSPPGMREFFILE, lib));
+		if (delete) {
 			ConnectionManager.dltLib(lib);
 		}
 		return status;

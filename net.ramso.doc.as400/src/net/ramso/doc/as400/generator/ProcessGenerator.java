@@ -23,23 +23,23 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 
 public class ProcessGenerator {
-	private ArrayList<String>	libs;
-	private IFolder		folder;
-	private String		title;
-	private String		des;
-	private String		autor;
-	private String		lang;
-	private String		system;
-	private String		user;
-	private String		password;
-	private String		lib;
-	private boolean	create = false;
-	private boolean	delete = false;
+	private ArrayList<String> libs;
+	private IFolder folder;
+	private String title;
+	private String des;
+	private String autor;
+	private String lang;
+	private String system;
+	private String user;
+	private String password;
+	private String lib;
+	private boolean create = false;
+	private boolean delete = false;
 
 	public ProcessGenerator(String[] libs, IFolder folder) {
 		ArrayList<String> temp = new ArrayList<String>();
 		for (String lib : libs) {
-			if(!lib.trim().isEmpty()){
+			if (!lib.trim().isEmpty()) {
 				temp.add(lib.trim().toUpperCase());
 			}
 		}
@@ -87,55 +87,61 @@ public class ProcessGenerator {
 		try {
 			ConnectionManager.createConnection(system, user, password, libl);
 			RunExtractors.run(lib, create, delete);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 			MessageBox box = new MessageBox(Display.getCurrent()
 					.getActiveShell(), SWT.OK | SWT.ICON_ERROR);
-			box.setMessage("Error al acceder al host"); //$NON-NLS-1
+			box.setMessage("Error al acceder al host\n" + e.getLocalizedMessage()); //$NON-NLS-1
 			box.open();
+			try {
+				ConnectionManager.disconnect();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			return;
 		}
-//		String path = folder.getFullPath().toOSString();
-		String path = "";
-		BookMapDocument map = new BookMapDocument();
-		map.getMap().setTitle(getTitle(), getDes());
-		map.getMap().setID("DBDoc"); //$NON-NLS-1$
-		map.getMap().setLang(lang);
-		FrontMatter fromMatter = new FrontMatter();
-		BookLists bookLists = new BookLists();
-		bookLists.setToc(true);
-		fromMatter.addBookLists(bookLists);
-		map.getMap().addFrontMatter(fromMatter);
-		for (String object : libs) {
-			try {
-				ProcessLib process = new ProcessLib(object.trim(), path);
-				process.process(monitor);
-				map.getMap().addPart(process.getPart());
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		BackMatter backMatter = new BackMatter();
-		bookLists = new BookLists();
-		bookLists.setFigureList(true);
-		bookLists.setTableList(true);
-		backMatter.addBookLists(bookLists);
-		map.getMap().addBackMatter(backMatter);
 		try {
+			// String path = folder.getFullPath().toOSString();
+			String path = "";
+			BookMapDocument map = new BookMapDocument();
+			map.getMap().setTitle(getTitle(), getDes());
+			map.getMap().setID("DBDoc"); //$NON-NLS-1$
+			map.getMap().setLang(lang);
+			FrontMatter fromMatter = new FrontMatter();
+			BookLists bookLists = new BookLists();
+			bookLists.setToc(true);
+			fromMatter.addBookLists(bookLists);
+			map.getMap().addFrontMatter(fromMatter);
+			for (String object : libs) {
+				try {
+					ProcessLib process = new ProcessLib(object.trim(), path);
+					process.process(monitor);
+					map.getMap().addPart(process.getPart());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			BackMatter backMatter = new BackMatter();
+			bookLists = new BookLists();
+			bookLists.setFigureList(true);
+			bookLists.setTableList(true);
+			backMatter.addBookLists(bookLists);
+			map.getMap().addBackMatter(backMatter);
+
 			path += File.separator + map.getFileName();
 			ResourceUtils.getInstance().saveDitaFileAsResource(
 					map.getDocumentContent(), path);
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
+			MessageBox box = new MessageBox(Display.getCurrent()
+					.getActiveShell(), SWT.OK | SWT.ICON_ERROR);
+			box.setMessage("Error al generar documentación\n" + e.getLocalizedMessage()); //$NON-NLS-1
+			box.open();
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			try {
 				ConnectionManager.disconnect();
-			}
-			catch (SQLException e) {
+			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Datatools Documentatator
 Bundle-SymbolicName: net.ramso.doc.as400;singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.0.2
 Bundle-Activator: net.ramso.doc.as400.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
