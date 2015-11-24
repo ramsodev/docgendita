@@ -71,13 +71,13 @@ import org.jdom.Element;
  * @author ramso
  */
 public class ProcessTable {
-	private TopicRef					topicRef;
-	private PersistentTable				persistentTable;
-	private String						path;
-	private String						prefix	= "";		//$NON-NLS-1$
-	private ArrayList<TableData>		ts;
-	private ArrayList<PersistentTable>	pts;
-	private int							tsi;
+	private TopicRef topicRef;
+	private PersistentTable persistentTable;
+	private String path;
+	private String prefix = ""; //$NON-NLS-1$
+	private ArrayList<TableData> ts;
+	private ArrayList<PersistentTable> pts;
+	private int tsi;
 
 	public ProcessTable(PersistentTable persistentTable, String path) {
 		this.persistentTable = persistentTable;
@@ -204,8 +204,7 @@ public class ProcessTable {
 			String des = column.getLabel();
 			if (des != null) {
 				entry.setText(des);
-			}
-			else {
+			} else {
 				entry.setText(column.getDescription());
 			}
 			List<Comment> comments = column.getComments();
@@ -231,8 +230,7 @@ public class ProcessTable {
 		Database database = null;
 		if (persistentTable.getSchema().getDatabase() != null) {
 			database = persistentTable.getSchema().getDatabase();
-		}
-		else if (persistentTable.getSchema().getCatalog() != null) {
+		} else if (persistentTable.getSchema().getCatalog() != null) {
 			database = persistentTable.getSchema().getCatalog().getDatabase();
 		}
 		if (database != null) {
@@ -297,8 +295,7 @@ public class ProcessTable {
 				if (uniqueConstraint != null) {
 					parentTable = uniqueConstraint.getBaseTable();
 					relColumns = uniqueConstraint.getMembers();
-				}
-				else if (index != null) {
+				} else if (index != null) {
 					parentTable = index.getTable();
 					relColumns = index.getMembers();
 				}
@@ -503,8 +500,7 @@ public class ProcessTable {
 	private String getBoleanChar(boolean b) {
 		if (b) {
 			return Messages.ProcessTable_true;
-		}
-		else {
+		} else {
 			return Messages.ProcessTable_false;
 		}
 	}
@@ -524,11 +520,9 @@ public class ProcessTable {
 		Element sl = null;
 		if (trigger.isDeleteType()) {
 			statement += Messages.ProcessTable_delete;
-		}
-		else if (trigger.isInsertType()) {
+		} else if (trigger.isInsertType()) {
 			statement += Messages.ProcessTable_insert;
-		}
-		else if (trigger.isUpdateType()) {
+		} else if (trigger.isUpdateType()) {
 			statement += Messages.ProcessTable_update;
 			Collection<Column> updateColumns = trigger.getTriggerColumn();
 			if (!updateColumns.isEmpty()) {
@@ -590,15 +584,13 @@ public class ProcessTable {
 							.getPredefinedDataTypeFormattedName((PredefinedDataType) containedType);
 				}
 			}
-		}
-		else {
+		} else {
 			UserDefinedType referencedType = typedElement.getReferencedType();
 			if (referencedType != null) {
 				if (referencedType.getSchema() != schema) {
 					return referencedType.getSchema().getName() + "." //$NON-NLS-1$
 							+ referencedType.getName();
-				}
-				else {
+				} else {
 					return referencedType.getName();
 				}
 			}
@@ -617,8 +609,7 @@ public class ProcessTable {
 		String title = Messages.ProcessTable_title + persistentTable.getName();
 		if (persistentTable.getLabel() != null) {
 			title += " - " + persistentTable.getLabel(); //$NON-NLS-1$
-		}
-		else if (persistentTable.getDescription() != null) {
+		} else if (persistentTable.getDescription() != null) {
 			title += " - " + persistentTable.getDescription(); //$NON-NLS-1$
 		}
 		topic.setTitle(title);
@@ -634,7 +625,8 @@ public class ProcessTable {
 							comment.getDescription()));
 		}
 		addDiagram(topic);
-		addColumns(persistentTable.getColumns(), topic, persistentTable.getName());
+		addColumns(persistentTable.getColumns(), topic,
+				persistentTable.getName());
 		addPK(persistentTable.getPrimaryKey(), topic);
 		addFK(persistentTable.getForeignKeys(), topic);
 		addUQ(persistentTable.getUniqueConstraints(), topic);
@@ -666,12 +658,10 @@ public class ProcessTable {
 		try {
 			net.ramso.doc.svg.utils.ResourceUtils.getInstance()
 					.saveSVGFileAsResource(diagram.getDocumentContent(), pathi);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (TransformerException e) {
+		} catch (TransformerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -679,14 +669,15 @@ public class ProcessTable {
 				+ File.separator + diagram.getFileName() + "."
 				+ net.ramso.doc.svg.utils.ResourceUtils.SVG_FILE_EXTENSION;
 		boolean scale = false;
-		if(diagram.getWidth() > 500){
+		if (diagram.getWidth() > 500) {
 			scale = true;
 		}
-		
-		topic.appendSection(Messages.ProcessTable_section_er, "erd"); 
+
+		topic.appendSection(Messages.ProcessTable_section_er, "erd");
 		Section section = topic.getSection("erd"); //$NON-NLS-1$
-		section.appendFigure(diagram.getFileName(), Messages.ProcessTable_er_title
-				+ diagram.getFileName(), url, scale);
+		section.appendFigure(diagram.getFileName(),
+				Messages.ProcessTable_er_title + diagram.getFileName(), url,
+				scale);
 	}
 
 	/**
@@ -697,12 +688,15 @@ public class ProcessTable {
 		TableData t = new TableData();
 		t.setName(table.getName());
 		t.setSchema(table.getSchema().getName());
-		List<Column> columns = table.getPrimaryKey().getMembers();
-		if (!columns.isEmpty()) {
-			int i = 0;
-			for (Column column : columns) {
-				t.addPrimaryKey(column.getName()+" (PK)");
-				i++;
+		PrimaryKey pk = table.getPrimaryKey();
+		if (pk != null) {
+			List<Column> columns = table.getPrimaryKey().getMembers();
+			if (!columns.isEmpty()) {
+				int i = 0;
+				for (Column column : columns) {
+					t.addPrimaryKey(column.getName() + " (PK)");
+					i++;
+				}
 			}
 		}
 		List<ForeignKey> foreignKeys = persistentTable.getForeignKeys();
@@ -715,8 +709,7 @@ public class ProcessTable {
 				if (uniqueConstraint != null) {
 					parentTable = (PersistentTable) uniqueConstraint
 							.getBaseTable();
-				}
-				else if (index != null) {
+				} else if (index != null) {
 					parentTable = (PersistentTable) index.getTable();
 				}
 				if (parentTable != null
