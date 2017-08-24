@@ -36,6 +36,10 @@ import net.ramso.tools.TextUtils;
 
 /**
  * @author ramso
+ * 
+ * Atencion: Necesita modificar jgraphx para poder funcionar en modo headless.
+ * Es necesario eliminar el contenido de  com.mxgraph.swing.handler.mxGraphHandler.installDragGestureHandler 
+ * 
  */
 public abstract class BaseDiagram {
 
@@ -46,6 +50,8 @@ public abstract class BaseDiagram {
 
 	public BaseDiagram() {
 		super();
+
+		System.setProperty("java.awt.headless", "true");
 	}
 
 	public void save(String path) throws IOException {
@@ -54,9 +60,9 @@ public abstract class BaseDiagram {
 
 	public void save(String path, String type) throws IOException {
 		File f = new File(path);
-		if(!f.exists()){
+		if (!f.exists()) {
 			f.mkdirs();
-		}else if (!f.isDirectory()){
+		} else if (!f.isDirectory()) {
 			throw new IOException(f.getAbsolutePath() + " not a directory");
 		}
 		if (type == DiagramConstants.EXPORT_PNG) {
@@ -151,8 +157,8 @@ public abstract class BaseDiagram {
 	}
 
 	protected void layout() {
-//		mxFastOrganicLayout layout = new mxFastOrganicLayout(getGraph());
-//		mxCircleLayout layout = new mxCircleLayout(getGraph());
+		// mxFastOrganicLayout layout = new mxFastOrganicLayout(getGraph());
+		// mxCircleLayout layout = new mxCircleLayout(getGraph());
 		mxOrganicLayout layout = new mxOrganicLayout(getGraph());
 		layout.setOptimizeEdgeCrossing(true);
 		layout.setOptimizeEdgeDistance(true);
@@ -187,8 +193,9 @@ public abstract class BaseDiagram {
 	public void setFileName(String fileName) {
 		this.fileName = TextUtils.clean(fileName);
 	}
-	
+
 	protected abstract void addConnectors();
+
 	protected abstract void addComponents();
 
 }
