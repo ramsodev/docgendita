@@ -15,4 +15,11 @@ public class DiagramConstants {
 	public static final double DEFAULT_POS_Y = 10;
 	public static final double DEFAULT_SIZE_WIDTH = 100;
 	public static final double DEFAULT_SIZE_HEIGHT = 80;
+	public static final String COMA=",";
+	public static final String TEMPLATE="template.csv";
+	public static final String LAYOUT_ORGANIC="organic";
+	public static final String LAYOUT_CIRCULAR="circular";
+	public static final String LAYOUT_TREE_H="tree_horizontal";
+	public static final String LAYOUT_TREE_V="tree_vertical";
+	
 }

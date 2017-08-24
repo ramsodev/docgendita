@@ -23,13 +23,14 @@ public class AS400Diagram extends BaseDiagram {
 
 	public AS400Diagram(ArrayList<AS400Object> objs) {
 		super();
+		
 		vertex = new HashMap<String, Object>();
 		edges = new HashMap<String, String>();
 		setObjs(objs);
+		setFileName(getObjs().get(0).getName());
 	}
 
 	public void run() {
-		setFileName(getObjs().get(0).getName());
 		addComponents();
 		addConnectors();
 		layout();
