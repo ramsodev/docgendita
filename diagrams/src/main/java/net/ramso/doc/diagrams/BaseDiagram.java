@@ -110,7 +110,6 @@ public abstract class BaseDiagram {
 			graphComponent = new mxGraphComponent(getGraph());
 			graphComponent.getCanvas().setImageBasePath(DiagramConstants.SHAPES_PATH);
 			graphComponent.setSize(graphComponent.getPreferredSize());
-			System.out.println(graphComponent.getPreferredSize());
 		}
 		graphComponent.updateComponents();
 		return graphComponent;
@@ -130,7 +129,6 @@ public abstract class BaseDiagram {
 		Object vertex;
 		String style = "shape=" + shape;
 		int x = getGraph().getModel().getChildCount(parent) * 100;
-		System.out.println("hijos " + x);
 		try {
 			vertex = getGraph().insertVertex(parent, null, title, DiagramConstants.DEFAULT_POS_X + x,
 					DiagramConstants.DEFAULT_POS_Y + x, DiagramConstants.DEFAULT_SIZE_WIDTH,
@@ -153,7 +151,14 @@ public abstract class BaseDiagram {
 	}
 
 	protected void layout() {
-		mxFastOrganicLayout layout = new mxFastOrganicLayout(getGraph());
+//		mxFastOrganicLayout layout = new mxFastOrganicLayout(getGraph());
+//		mxCircleLayout layout = new mxCircleLayout(getGraph());
+		mxOrganicLayout layout = new mxOrganicLayout(getGraph());
+		layout.setOptimizeEdgeCrossing(true);
+		layout.setOptimizeEdgeDistance(true);
+		layout.setOptimizeEdgeLength(true);
+		layout.setOptimizeNodeDistribution(true);
+		layout.setDisableEdgeStyle(false);
 		getGraph().getModel().beginUpdate();
 
 		try {
