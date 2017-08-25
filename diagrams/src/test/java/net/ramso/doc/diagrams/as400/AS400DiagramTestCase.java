@@ -85,9 +85,10 @@ public class AS400DiagramTestCase {
 	public void testRun() {
 		try {
 			diagram.run();
-			diagram.save(path);
+//			diagram.save(path);
 			diagram.save(path, "SVG");
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail("Fallo con excepcion: " + e.getMessage());
 		}
 	}

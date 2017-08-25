@@ -41,7 +41,7 @@ public class AS400Diagram extends BaseDiagram {
 			Object shape;
 			String title = TextUtils.createMultilineString(
 					new String[] { obj.getName(), obj.getLib(), obj.getAttribute() + "/" + obj.getType() });
-			if ((obj.getAttribute().compareTo("*PGM") == 0) | (obj.getAttribute().compareTo("*SRVPGM") == 0)) {
+			if ((obj.getType().compareTo("*PGM") == 0) | (obj.getType().compareTo("*SRVPGM") == 0)) {
 				shape = addVertex(title, DiagramConstants.SHAPE_PROCESS);
 
 			} else if ((obj.getAttribute().compareTo("PF-DTA") == 0) | (obj.getAttribute().compareTo("LF") == 0)) {

@@ -14,6 +14,9 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxStylesheet;
 
+import net.ramso.doc.diagrams.jgrapx.mxStencilShapeExtended;
+import net.ramso.doc.diagrams.jgrapx.mxSvgCanvasExtended;
+
 public class DiagramTools {
 
 	private static mxStylesheet stylesheet;
@@ -73,10 +76,12 @@ public class DiagramTools {
 
 		int lessthanIndex = nodeXml.indexOf("<");
 		nodeXml = nodeXml.substring(lessthanIndex);
-		mxStencilShape newShape = new mxStencilShape(nodeXml);
+		mxStencilShapeExtended newShape = new mxStencilShapeExtended(nodeXml);
+		System.out.println(newShape.getSvg());
 		String name = newShape.getName();
 		ImageIcon icon = null;
 		mxGraphics2DCanvas.putShape(name, newShape);
+		mxSvgCanvasExtended.putShape(name, newShape);
 		return name;
 	}
 }

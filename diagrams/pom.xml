@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.ramso.doc</groupId>
 	<artifactId>diagrams</artifactId>
-	<version>0.5.0</version>
+	<version>0.5.1</version>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -25,7 +25,7 @@
 						</descriptorRefs>
 						<archive>
 							<manifest>
-								<mainClass>com.ontimebt.tools.Generate</mainClass>
+								<mainClass>net.ramso.doc.diagrams.GenerateDiagram</mainClass>
 							</manifest>
 						</archive>
 					</configuration>

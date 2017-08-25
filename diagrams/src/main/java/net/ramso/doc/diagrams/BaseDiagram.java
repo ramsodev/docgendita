@@ -28,6 +28,7 @@ import com.mxgraph.util.png.mxPngImageEncoder;
 import com.mxgraph.view.mxGraph;
 
 import net.ramso.doc.diagrams.jgrapx.MymxGraphComponent;
+import net.ramso.doc.diagrams.jgrapx.mxSvgCanvasExtended;
 import net.ramso.doc.diagrams.tools.DiagramConstants;
 import net.ramso.doc.diagrams.tools.DiagramTools;
 import net.ramso.tools.TextUtils;
@@ -75,9 +76,9 @@ public abstract class BaseDiagram {
 
 	private void saveSvg(String path) throws IOException {
 		String file_name = path.trim() + File.separator + getFileName() + DiagramConstants.EXTENSION_SVG;
-		mxSvgCanvas canvas = (mxSvgCanvas) mxCellRenderer.drawCells(getGraph(), null, 1, null, new CanvasFactory() {
+		mxSvgCanvasExtended canvas = (mxSvgCanvasExtended) mxCellRenderer.drawCells(getGraph(), null, 1, null, new CanvasFactory() {
 			public mxICanvas createCanvas(int width, int height) {
-				mxSvgCanvas canvas = new mxSvgCanvas(mxDomUtils.createSvgDocument(width, height));
+				mxSvgCanvasExtended canvas = new mxSvgCanvasExtended(mxDomUtils.createSvgDocument(width, height));
 				canvas.setEmbedded(true);
 				return canvas;
 			}
@@ -90,7 +91,7 @@ public abstract class BaseDiagram {
 		mxGraphComponent graphComponent = getGraphComponent();
 		graphComponent.getCanvas().setImageBasePath(DiagramConstants.SHAPES_PATH);
 		graphComponent.setSize(graphComponent.getPreferredSize());
-
+		
 		graphComponent.updateComponents();
 		mxGraph graph = graphComponent.getGraph();
 		BufferedImage image = mxCellRenderer.createBufferedImage(graph, null, 1, Color.WHITE,
