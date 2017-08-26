@@ -22,8 +22,8 @@ public class AS400DiagramTestCase {
 		ArrayList<AS400Object> data = new ArrayList<AS400Object>();
 		AS400Object object = new AS400Object();
 		object.setName("PARENT0000");
-		object.setType("RPGLE");
-		object.setAttribute("*SRVPGM");
+		object.setType("*PGM");
+		object.setAttribute("RPGLE");
 		object.setLib("BIBLIOTECA");
 		object.setParent("PARENT0000");
 		data.add(object);
@@ -50,8 +50,8 @@ public class AS400DiagramTestCase {
 		data.add(object);
 		object = new AS400Object();
 		object.setName("CHILD00004");
-		object.setType("RPGLE");
-		object.setAttribute("*SRVPGM");
+		object.setType("*PGM");
+		object.setAttribute("RPGLE");
 		object.setLib("BIBLIOTECA");
 		object.setParent("PARENT0000");
 		data.add(object);

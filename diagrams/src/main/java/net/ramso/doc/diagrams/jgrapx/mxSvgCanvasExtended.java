@@ -13,9 +13,11 @@ import com.mxgraph.shape.mxIShape;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxUtils;
-import com.mxgraph.util.svg.DefaultErrorHandler;
+
+import net.ramso.doc.diagrams.tools.DiagramConstants;
 
 public class mxSvgCanvasExtended extends mxSvgCanvas {
+	private static final String SPACE = " ";
 	protected static Map<String, mxIShape> shapes = new HashMap<String, mxIShape>();
 	// ... have coppied only the related code
 
@@ -180,24 +182,25 @@ public class mxSvgCanvasExtended extends mxSvgCanvas {
 				foreground.setAttribute("stroke-width", String.valueOf(strokeWidth));
 
 				elem.appendChild(foreground);
-			} else if (getSahpe(shape) != null) {
+			} else if (getShape(shape) != null && getShape(shape).getSvg() != null) {
 				// FIXED use loaded shapes
-				Element svg = getSahpe(shape).getSvg();
+				Element svg = getShape(shape).getSvg();
 				NodeList children = ((Element) svg).getChildNodes();
 				int wSvg = Integer.parseInt(svg.getAttribute("width"));
 				int hSvg = Integer.parseInt(svg.getAttribute("height"));
-				int scalew = (wSvg*100/w);
-				int scaleh = (hSvg*100/h);
-				
-				System.out.println(w + "/"+ wSvg + "=" + scale);
+
+				double scalew = w / wSvg;
+				double scaleh = h / hSvg;
+
+				// System.out.println(shape + ": " + w + "/" + wSvg + "=" +
+				// scalew + "-" + h + "/" + hSvg + "=" + scaleh);
 				elem = document.createElement("g");
-				String transform="translate("+(x+wSvg)+","+(y+hSvg)+") scale("+scalew+","+ scaleh+")";
+				String transform = "translate(" + (x) + "," + (y) + ")";
 				elem.setAttribute("transform", transform);
 				elem.setAttribute("x", String.valueOf(x));
 				elem.setAttribute("y", String.valueOf(y));
-				elem.setAttribute("width", String.valueOf(wSvg));
-				elem.setAttribute("height", String.valueOf(hSvg));
-				
+				elem.setAttribute("width", String.valueOf(w));
+				elem.setAttribute("height", String.valueOf(h));
 				for (int j = 0; j < children.getLength(); j++) {
 					if (children.item(j) instanceof Element == false)
 						continue;
@@ -210,23 +213,21 @@ public class mxSvgCanvasExtended extends mxSvgCanvas {
 						String attValue = atts.item(i).getNodeValue();
 						e.setAttribute(attName, attValue);
 					}
-//					e.setAttribute("transform", "scale(500)");
+					transform = "scale(" + scalew + "," + scaleh + ")";
+					e.setAttribute("transform", transform);
+					e.setAttribute("vector-effect", "non-scaling-stroke");
 					elem.appendChild(e);
 				}
-				
 			} else {
 				background = document.createElement("rect");
 				elem = background;
-
 				elem.setAttribute("x", String.valueOf(x));
 				elem.setAttribute("y", String.valueOf(y));
 				elem.setAttribute("width", String.valueOf(w));
 				elem.setAttribute("height", String.valueOf(h));
-
 				if (mxUtils.isTrue(style, mxConstants.STYLE_ROUNDED, false)) {
 					String r = String.valueOf(Math.min(w * mxConstants.RECTANGLE_ROUNDING_FACTOR,
 							h * mxConstants.RECTANGLE_ROUNDING_FACTOR));
-
 					elem.setAttribute("rx", r);
 					elem.setAttribute("ry", r);
 				}
@@ -394,7 +395,7 @@ public class mxSvgCanvasExtended extends mxSvgCanvas {
 		shapes.put(name, shape);
 	}
 
-	public static mxStencilShapeExtended getSahpe(String name) {
+	public static mxStencilShapeExtended getShape(String name) {
 		mxIShape shape = shapes.get(name);
 		return (mxStencilShapeExtended) shape;
 	}

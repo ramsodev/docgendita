@@ -73,11 +73,9 @@ public class DiagramTools {
 	}
 
 	public static String addStencilShape(String nodeXml) {
-
 		int lessthanIndex = nodeXml.indexOf("<");
 		nodeXml = nodeXml.substring(lessthanIndex);
 		mxStencilShapeExtended newShape = new mxStencilShapeExtended(nodeXml);
-		System.out.println(newShape.getSvg());
 		String name = newShape.getName();
 		ImageIcon icon = null;
 		mxGraphics2DCanvas.putShape(name, newShape);
