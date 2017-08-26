@@ -116,7 +116,7 @@ public abstract class BaseDiagram {
 	protected mxGraphComponent getGraphComponent() {
 		if (graphComponent == null) {
 			graphComponent = new MymxGraphComponent(getGraph());
-			graphComponent.getCanvas().setImageBasePath(DiagramConstants.SHAPES_PATH);
+			graphComponent.getCanvas().setImageBasePath(BaseDiagram.class.getResource("/net/ramso/doc/diagrams/shapes/").getPath());
 			graphComponent.setSize(graphComponent.getPreferredSize());
 		}
 		graphComponent.updateComponents();
