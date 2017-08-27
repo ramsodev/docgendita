@@ -51,9 +51,15 @@ public abstract class BaseDiagram {
 
 	public BaseDiagram() {
 		super();
-		System.setProperty("java.awt.headless", "true");
+		// System.setProperty("java.awt.headless", "true");
 		setFileName("diagram");
 		setLayout(DiagramConstants.LAYOUT_ORGANIC);
+	}
+
+	public void run() {
+		addComponents();
+		addConnectors();
+		layout();
 	}
 
 	public void save(String path) throws IOException {
@@ -76,13 +82,15 @@ public abstract class BaseDiagram {
 
 	private void saveSvg(String path) throws IOException {
 		String file_name = path.trim() + File.separator + getFileName() + DiagramConstants.EXTENSION_SVG;
-		mxSvgCanvasExtended canvas = (mxSvgCanvasExtended) mxCellRenderer.drawCells(getGraph(), null, 1, null, new CanvasFactory() {
-			public mxICanvas createCanvas(int width, int height) {
-				mxSvgCanvasExtended canvas = new mxSvgCanvasExtended(mxDomUtils.createSvgDocument(width, height));
-				canvas.setEmbedded(true);
-				return canvas;
-			}
-		});
+		mxSvgCanvasExtended canvas = (mxSvgCanvasExtended) mxCellRenderer.drawCells(getGraph(), null, 1, null,
+				new CanvasFactory() {
+					public mxICanvas createCanvas(int width, int height) {
+						mxSvgCanvasExtended canvas = new mxSvgCanvasExtended(
+								mxDomUtils.createSvgDocument(width, height));
+						canvas.setEmbedded(true);
+						return canvas;
+					}
+				});
 		mxUtils.writeFile(mxXmlUtils.getXml(canvas.getDocument()), file_name);
 	}
 
@@ -91,7 +99,7 @@ public abstract class BaseDiagram {
 		mxGraphComponent graphComponent = getGraphComponent();
 		graphComponent.getCanvas().setImageBasePath(DiagramConstants.SHAPES_PATH);
 		graphComponent.setSize(graphComponent.getPreferredSize());
-		
+
 		graphComponent.updateComponents();
 		mxGraph graph = graphComponent.getGraph();
 		BufferedImage image = mxCellRenderer.createBufferedImage(graph, null, 1, Color.WHITE,
@@ -116,7 +124,8 @@ public abstract class BaseDiagram {
 	protected mxGraphComponent getGraphComponent() {
 		if (graphComponent == null) {
 			graphComponent = new MymxGraphComponent(getGraph());
-			graphComponent.getCanvas().setImageBasePath(BaseDiagram.class.getResource("/net/ramso/doc/diagrams/shapes/").getPath());
+			graphComponent.getCanvas()
+					.setImageBasePath(BaseDiagram.class.getResource("/net/ramso/doc/diagrams/shapes/").getPath());
 			graphComponent.setSize(graphComponent.getPreferredSize());
 		}
 		graphComponent.updateComponents();

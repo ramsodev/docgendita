@@ -30,11 +30,7 @@ public class AS400Diagram extends BaseDiagram {
 		setFileName(getObjs().get(0).getName());
 	}
 
-	public void run() {
-		addComponents();
-		addConnectors();
-		layout();
-	}
+	
 
 	protected void addComponents() {
 		for (AS400Object obj : getObjs()) {
