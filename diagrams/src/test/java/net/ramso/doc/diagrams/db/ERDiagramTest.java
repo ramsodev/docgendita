@@ -37,7 +37,7 @@ public class ERDiagramTest {
 	public void testRun() {
 		try {
 			diagram.run();
-//			diagram.save(path);
+			diagram.save(path);
 			diagram.save(path, "SVG");
 		} catch (Exception e) {
 			e.printStackTrace();
