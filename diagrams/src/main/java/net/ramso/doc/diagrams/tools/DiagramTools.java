@@ -20,6 +20,9 @@ import java.util.stream.Stream;
 
 import javax.swing.ImageIcon;
 
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
@@ -31,6 +34,7 @@ import net.ramso.doc.diagrams.jgrapx.mxSvgCanvasExtended;
 public class DiagramTools {
 
 	private static mxStylesheet stylesheet;
+	private static int repet = 0;
 
 	public static mxStylesheet loadShapes() {
 		if (stylesheet == null) {
@@ -39,10 +43,19 @@ public class DiagramTools {
 			int i = 0;
 			try {
 				URI uri = DiagramTools.class.getResource(DiagramConstants.SHAPES_PATH).toURI();
-				Path myPath;
+				Path myPath = null;
 				if (uri.getScheme().equals("jar")) {
-					FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
-					myPath = fileSystem.getPath(DiagramConstants.SHAPES_PATH);
+					FileSystem fileSystem = null;
+					try {
+						fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
+						myPath = fileSystem.getPath(DiagramConstants.SHAPES_PATH);
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						if (fileSystem != null && fileSystem.isOpen())
+							fileSystem.close();
+					}
+
 				} else {
 					myPath = Paths.get(uri);
 				}
@@ -50,17 +63,20 @@ public class DiagramTools {
 				for (Iterator<Path> it = walk.iterator(); it.hasNext();) {
 					Path s = it.next();
 					InputStream p = DiagramTools.class
-							.getResourceAsStream(DiagramConstants.SHAPES_PATH + 
-									File.separator + s.getFileName());
+							.getResourceAsStream(DiagramConstants.SHAPES_PATH + File.separator + s.getFileName());
 					if (p != null && s.getFileName().toString().endsWith("shape")) {
 						String nodeXml;
 						try {
 							nodeXml = mxUtils.readInputStream(p);
 							String name = addStencilShape(nodeXml);
 							shapes[i++] = name;
-						} catch (IOException e) {
+						} catch (Exception e) {
 							e.printStackTrace();
+						} finally {
+							p.close();
 						}
+					} else if (p != null) {
+						p.close();
 					}
 
 				}
@@ -85,9 +101,11 @@ public class DiagramTools {
 			}
 			Map<String, Map<String, Object>> styles = stylesheet.getStyles();
 			for (String sh : shapes) {
-				Map<String, Object> style = new HashMap<String, Object>();
-				style.put(mxConstants.STYLE_SHAPE, sh);
-				styles.put(sh, style);
+				if (sh != null) {
+					Map<String, Object> style = new HashMap<String, Object>();
+					style.put(mxConstants.STYLE_SHAPE, sh);
+					styles.put(sh, style);
+				}
 			}
 			stylesheet.setStyles(styles);
 		}
@@ -95,12 +113,22 @@ public class DiagramTools {
 	}
 
 	public static String addStencilShape(String nodeXml) {
-		int lessthanIndex = nodeXml.indexOf("<");
-		nodeXml = nodeXml.substring(lessthanIndex);
-		mxStencilShapeExtended newShape = new mxStencilShapeExtended(nodeXml);
-		String name = newShape.getName();
-		mxGraphics2DCanvas.putShape(name, newShape);
-		mxSvgCanvasExtended.putShape(name, newShape);
+		String name = null;
+		try {
+			int lessthanIndex = nodeXml.indexOf("<");
+			nodeXml = nodeXml.substring(lessthanIndex);
+			mxStencilShapeExtended newShape = new mxStencilShapeExtended(nodeXml);
+			name = newShape.getName();
+			mxGraphics2DCanvas.putShape(name, newShape);
+			mxSvgCanvasExtended.putShape(name, newShape);
+		} catch (Exception e) {
+			if (repet > 1) {
+				e.printStackTrace();
+			} else if (e instanceof SAXParseException) {
+				repet++;
+				addStencilShape(nodeXml);
+			}
+		}
 		return name;
 	}
 

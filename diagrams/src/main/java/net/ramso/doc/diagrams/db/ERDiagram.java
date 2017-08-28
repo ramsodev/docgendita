@@ -24,6 +24,7 @@ public class ERDiagram extends BaseDiagram {
 	public ERDiagram(ArrayList<TableData> objs) {
 		super();
 		setObjs(objs);
+		setFileName(getObjs().get(0).getName());
 		w = 100;
 	}
 
