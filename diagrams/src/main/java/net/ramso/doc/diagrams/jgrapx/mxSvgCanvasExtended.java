@@ -1,5 +1,8 @@
 package net.ramso.doc.diagrams.jgrapx;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -398,6 +401,22 @@ public class mxSvgCanvasExtended extends mxSvgCanvas {
 	public static mxStencilShapeExtended getShape(String name) {
 		mxIShape shape = shapes.get(name);
 		return (mxStencilShapeExtended) shape;
+	}
+	@Override
+	protected InputStream getResource(String src)
+	{
+		InputStream stream = null;
+
+		try
+		{
+			stream = new BufferedInputStream(new URL(src).openStream());
+		}
+		catch (Exception e1)
+		{
+			stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(src);
+		}
+
+		return stream;
 	}
 
 }

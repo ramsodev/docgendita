@@ -1,27 +1,22 @@
 package net.ramso.doc.diagrams.tools;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
-import javax.swing.ImageIcon;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.util.mxConstants;
@@ -36,53 +31,11 @@ public class DiagramTools {
 	private static mxStylesheet stylesheet;
 	private static int repet = 0;
 
-	public static mxStylesheet loadShapes() {
+	public static mxStylesheet loadStyleshet() {
 		if (stylesheet == null) {
-			String[] shapes = { DiagramConstants.SHAPE_DISK, DiagramConstants.SHAPE_DISPLAY,
-					DiagramConstants.SHAPE_DOCUMENT, DiagramConstants.SHAPE_PROCESS };
-			int i = 0;
-			try {
-				URI uri = DiagramTools.class.getResource(DiagramConstants.SHAPES_PATH).toURI();
-				Path myPath = null;
-				if (uri.getScheme().equals("jar")) {
-					FileSystem fileSystem = null;
-					try {
-						fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
-						myPath = fileSystem.getPath(DiagramConstants.SHAPES_PATH);
-					} catch (Exception e) {
-						e.printStackTrace();
-					} finally {
-						if (fileSystem != null && fileSystem.isOpen())
-							fileSystem.close();
-					}
+			DiagramTools dt = new DiagramTools();
+			String[] shapes = dt.loadShapes();
 
-				} else {
-					myPath = Paths.get(uri);
-				}
-				Stream<Path> walk = Files.walk(myPath, 1);
-				for (Iterator<Path> it = walk.iterator(); it.hasNext();) {
-					Path s = it.next();
-					InputStream p = DiagramTools.class
-							.getResourceAsStream(DiagramConstants.SHAPES_PATH + File.separator + s.getFileName());
-					if (p != null && s.getFileName().toString().endsWith("shape")) {
-						String nodeXml;
-						try {
-							nodeXml = mxUtils.readInputStream(p);
-							String name = addStencilShape(nodeXml);
-							shapes[i++] = name;
-						} catch (Exception e) {
-							e.printStackTrace();
-						} finally {
-							p.close();
-						}
-					} else if (p != null) {
-						p.close();
-					}
-
-				}
-			} catch (URISyntaxException | IOException e) {
-				e.printStackTrace();
-			}
 			stylesheet = new mxStylesheet();
 			// configure "figures" aka "vertex"
 			{
@@ -112,24 +65,78 @@ public class DiagramTools {
 		return stylesheet;
 	}
 
-	public static String addStencilShape(String nodeXml) {
-		String name = null;
+	private String[] loadShapes() {
+		int i = 0;
+		String[] shapes = { DiagramConstants.SHAPE_DISK, DiagramConstants.SHAPE_DISPLAY,
+				DiagramConstants.SHAPE_DOCUMENT, DiagramConstants.SHAPE_PROCESS };
 		try {
-			int lessthanIndex = nodeXml.indexOf("<");
-			nodeXml = nodeXml.substring(lessthanIndex);
-			mxStencilShapeExtended newShape = new mxStencilShapeExtended(nodeXml);
-			name = newShape.getName();
-			mxGraphics2DCanvas.putShape(name, newShape);
-			mxSvgCanvasExtended.putShape(name, newShape);
-		} catch (Exception e) {
-			if (repet > 1) {
-				e.printStackTrace();
-			} else if (e instanceof SAXParseException) {
-				repet++;
-				addStencilShape(nodeXml);
+			List<String> fs = getResourceFiles(DiagramConstants.SHAPES_PATH);
+
+			for (String s : fs) {
+				InputStream p = getResourceAsStream(DiagramConstants.SHAPES_PATH  + s);
+				if (p != null && s.endsWith("shape")) {
+					String nodeXml;
+					try {
+						nodeXml = mxUtils.readInputStream(p);
+						String name = addStencilShape(nodeXml);
+						shapes[i++] = name;
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						p.close();
+					}
+				} else if (p != null) {
+					p.close();
+				}
+
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		return shapes;
+	}
+
+	private String addStencilShape(String nodeXml) throws ParserConfigurationException, SAXException, IOException {
+		String name = null;
+		int lessthanIndex = nodeXml.indexOf("<");
+		nodeXml = nodeXml.substring(lessthanIndex);
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(new InputSource(new StringReader(nodeXml)));		
+		mxStencilShapeExtended newShape = new mxStencilShapeExtended(doc);
+		name = newShape.getName();
+		mxGraphics2DCanvas.putShape(name, newShape);
+		mxSvgCanvasExtended.putShape(name, newShape);
 		return name;
 	}
 
+	private List<String> getResourceFiles(String path) throws IOException {
+		List<String> filenames = new ArrayList<>();
+		try (InputStream in = getResourceAsStream(path);
+
+				BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+			String resource;
+
+			while ((resource = br.readLine()) != null) {
+				filenames.add(resource);
+			}
+		}
+		if (filenames.isEmpty()) {
+			filenames.add("display.shape");
+			filenames.add("document.shape");
+			filenames.add("magdisk.shape");
+			filenames.add("predefdproc.shape");
+		}
+		return filenames;
+	}
+
+	private InputStream getResourceAsStream(String resource) {
+		final InputStream in = getContextClassLoader().getResourceAsStream(resource);
+
+		return in == null ? getClass().getResourceAsStream(resource) : in;
+	}
+
+	private ClassLoader getContextClassLoader() {
+		return Thread.currentThread().getContextClassLoader();
+	}
 }

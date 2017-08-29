@@ -23,35 +23,35 @@ public class AS400Diagram extends BaseDiagram {
 
 	public AS400Diagram(ArrayList<AS400Object> objs) {
 		super();
-		
+
 		vertex = new HashMap<String, Object>();
 		edges = new HashMap<String, String>();
 		setObjs(objs);
 		setFileName(getObjs().get(0).getName());
 	}
 
-	
-
 	protected void addComponents() {
 		for (AS400Object obj : getObjs()) {
-			Object shape;
-			String title = TextUtils.createMultilineString(
-					new String[] { obj.getName(), obj.getLib(), obj.getAttribute() + "/" + obj.getType() });
-			if ((obj.getType().compareTo("*PGM") == 0) | (obj.getType().compareTo("*SRVPGM") == 0)) {
-				shape = addVertex(title, DiagramConstants.SHAPE_PROCESS);
+			if (!vertex.containsKey(obj.getName())) {
+				Object shape;
+				String title = TextUtils.createMultilineString(
+						new String[] { obj.getName(), obj.getLib(), obj.getAttribute() + "/" + obj.getType() });
+				if ((obj.getType().compareTo("*PGM") == 0) | (obj.getType().compareTo("*SRVPGM") == 0)) {
+					shape = addVertex(title, DiagramConstants.SHAPE_PROCESS);
 
-			} else if ((obj.getAttribute().compareTo("PF-DTA") == 0) | (obj.getAttribute().compareTo("LF") == 0)) {
-				shape = addVertex(title, DiagramConstants.SHAPE_DISK);
-			} else if (obj.getAttribute().compareTo("DSPF") == 0) {
-				shape = addVertex(title, DiagramConstants.SHAPE_DISPLAY);
-			} else if (obj.getAttribute().compareTo("PRTF") == 0) {
-				shape = addVertex(title, DiagramConstants.SHAPE_DOCUMENT);
-			} else if (obj.getType().compareTo("*FILE") == 0) {
-				shape = addVertex(title, mxConstants.SHAPE_CYLINDER);
-			} else {
-				shape = addVertex(title, mxConstants.SHAPE_RECTANGLE);
+				} else if ((obj.getAttribute().compareTo("PF-DTA") == 0) | (obj.getAttribute().compareTo("LF") == 0)) {
+					shape = addVertex(title, DiagramConstants.SHAPE_DISK);
+				} else if (obj.getAttribute().compareTo("DSPF") == 0) {
+					shape = addVertex(title, DiagramConstants.SHAPE_DISPLAY);
+				} else if (obj.getAttribute().compareTo("PRTF") == 0) {
+					shape = addVertex(title, DiagramConstants.SHAPE_DOCUMENT);
+				} else if (obj.getType().compareTo("*FILE") == 0) {
+					shape = addVertex(title, mxConstants.SHAPE_CYLINDER);
+				} else {
+					shape = addVertex(title, mxConstants.SHAPE_RECTANGLE);
+				}
+				vertex.put(obj.getName(), shape);
 			}
-			vertex.put(obj.getName(), shape);
 			edges.put(obj.getName(), obj.getParent());
 		}
 	}
@@ -78,9 +78,5 @@ public class AS400Diagram extends BaseDiagram {
 			}
 		}
 	}
-
-
-
-	
 
 }

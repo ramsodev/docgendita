@@ -40,12 +40,12 @@ public class Test extends ERDiagram {
 		objs.add(t);
 		test = new ERDiagram(objs);
 		test.run();
-//		try {
-//			test.save("/home/jjescudero/temp/dita/", "SVG");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			test.save("/home/jjescudero/temp/dita/", "SVG");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(test.getGraphComponent());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

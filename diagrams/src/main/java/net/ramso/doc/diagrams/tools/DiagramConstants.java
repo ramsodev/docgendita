@@ -10,7 +10,8 @@ public class DiagramConstants {
 	public static final String EXPORT_SVG="svg";
 	public static final String EXTENSION_PNG = "."+EXPORT_PNG;
 	public static final String EXTENSION_SVG = "."+EXPORT_SVG;
-	public static final String SHAPES_PATH="/net/ramso/doc/diagrams/shapes";
+	public static final String SHAPES_PATH="net/ramso/doc/diagrams/shapes/";
+	public static final String ICONS_PATH="net/ramso/doc/diagrams/icons/";
 	public static final double DEFAULT_POS_X = 10;
 	public static final double DEFAULT_POS_Y = 10;
 	public static final double DEFAULT_SIZE_WIDTH = 100;

@@ -88,6 +88,7 @@ public abstract class BaseDiagram {
 						mxSvgCanvasExtended canvas = new mxSvgCanvasExtended(
 								mxDomUtils.createSvgDocument(width, height));
 						canvas.setEmbedded(true);
+						canvas.setImageBasePath(DiagramConstants.ICONS_PATH);
 						return canvas;
 					}
 				});
@@ -97,7 +98,7 @@ public abstract class BaseDiagram {
 	private void savePng(String path) throws IOException {
 		String file_name = path.trim() + File.separator + getFileName() + DiagramConstants.EXTENSION_PNG;
 		mxGraphComponent graphComponent = getGraphComponent();
-		graphComponent.getCanvas().setImageBasePath(DiagramConstants.SHAPES_PATH);
+		graphComponent.getCanvas().setImageBasePath("/"+DiagramConstants.ICONS_PATH);
 		graphComponent.setSize(graphComponent.getPreferredSize());
 
 		graphComponent.updateComponents();
@@ -124,8 +125,7 @@ public abstract class BaseDiagram {
 	protected mxGraphComponent getGraphComponent() {
 		if (graphComponent == null) {
 			graphComponent = new MymxGraphComponent(getGraph());
-			graphComponent.getCanvas()
-					.setImageBasePath(BaseDiagram.class.getResource("/net/ramso/doc/diagrams/shapes/").getPath());
+			graphComponent.getCanvas().setImageBasePath("/"+DiagramConstants.ICONS_PATH);
 			graphComponent.setSize(graphComponent.getPreferredSize());
 		}
 		graphComponent.updateComponents();
@@ -134,7 +134,7 @@ public abstract class BaseDiagram {
 
 	protected mxGraph getGraph() {
 		if (graph == null) {
-			graph = new mxGraph(DiagramTools.loadShapes());
+			graph = new mxGraph(DiagramTools.loadStyleshet());
 			graph.setBorder(10);
 		}
 		return graph;

@@ -63,7 +63,7 @@ public class GenerateDiagram {
 			}
 			File f = new File(outdir.getAbsolutePath() + File.separator + DiagramConstants.TEMPLATE);
 			Path out = f.toPath();
-			InputStream in = GenerateDiagram.class.getResourceAsStream("/" + DiagramConstants.TEMPLATE);
+			InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("/" + DiagramConstants.TEMPLATE);
 			Files.copy(in, out);
 			in.close();
 			System.out.println("Template generado en :" + f.getAbsolutePath());

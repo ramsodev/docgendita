@@ -92,7 +92,7 @@ public class ERDiagram extends BaseDiagram {
 		double x = (getGraph().getModel().getChildCount(parent) * 100) + DiagramConstants.DEFAULT_POS_X;
 		double y = DiagramConstants.DEFAULT_POS_Y + x;
 		int i = 0;
-		Object[] cells = new Object[data.getPrimaryKeys().size() + 3];
+		Object[] cells = new Object[(data.getPrimaryKeys().size() *2) + 1];
 		h = data.getPrimaryKeys().size() * 20;
 		// cells[0] = getGraph().insertVertex(parent, null, null, x, y, w, h);
 		cells[i++] = getGraph().insertVertex(parent, null, data.getSchema().trim() + "." + data.getName().trim(), x, y,
@@ -101,18 +101,21 @@ public class ERDiagram extends BaseDiagram {
 		y += 20;
 		// Añadir una caja para pk
 		int pi = i;
-//		cells[i++] = getGraph().insertVertex(parent, null, null, x, y, w, h);
+		// cells[i++] = getGraph().insertVertex(parent, null, null, x, y, w, h);
 
 		for (String pk : data.getPrimaryKeys()) {
 			cells[i++] = getGraph().insertVertex(parent, null, pk.trim(), x + 10, y, w - 10, 20,
 					mxConstants.STYLE_ALIGN + "=" + mxConstants.ALIGN_LEFT + ";" + mxConstants.STYLE_STROKEWIDTH + "=0"
 							+ ";" + mxConstants.STYLE_FONTSTYLE + "=" + mxConstants.FONT_UNDERLINE + ";"
-							+ mxConstants.STYLE_FILLCOLOR + "=none;");
+							+ mxConstants.STYLE_FILLCOLOR + "=none;" + mxConstants.STYLE_IMAGE + "PrimaryKey.png");
+			cells[i++] = getGraph().insertVertex(parent, null, null, x + 1, y, 10, 20,
+					mxConstants.STYLE_SHAPE + "=" + mxConstants.SHAPE_IMAGE +";"+ mxConstants.STYLE_FILLCOLOR + "=RED;"
+							+ mxConstants.STYLE_IMAGE + "=PrimaryKey.png");
 			y += 20;
 		}
 		// TODO: Añadir campos
-//		 cells[i++] = getGraph().insertVertex(parent, null, null, x, y, w,
-//		 20,mxConstants.STYLE_FILLCOLOR + "=lightgray");
+		// cells[i++] = getGraph().insertVertex(parent, null, null, x, y, w,
+		// 20,mxConstants.STYLE_FILLCOLOR + "=lightgray");
 		Object g = getGraph().groupCells(null, 0, cells);
 		return g;
 	}
