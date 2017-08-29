@@ -136,6 +136,9 @@ public abstract class BaseDiagram {
 		if (graph == null) {
 			graph = new mxGraph(DiagramTools.loadStyleshet());
 			graph.setBorder(10);
+			graph.setAutoSizeCells(true);
+			graph.setConnectableEdges(true);
+			graph.setPortsEnabled(true);
 		}
 		return graph;
 	}

@@ -11,10 +11,20 @@ import java.util.ArrayList;
 public class TableData {
 	public static final int ONETOONE = 0;
 	public static final int ONETOMANY = 1;
+	public static final int TABLE = 0;
+	public static final int VIEW = 1;
+	public static final int JOIN = 2;
+	public static final int PK = 0;
+	public static final int UNIQUE = 1;
+	public static final int ORDER = 2;
+	public static final int ON = 3;
+	public static final int RELATION = 2;
+	public static final int FILTER = 4;
 	private String schema;
 	private String name;
-	private ArrayList<String> primaryKeys = new ArrayList<String>();
+	private ArrayList<Object[]> primaryKeys = new ArrayList<Object[]>();
 	private ArrayList<Object[]> relations = new ArrayList<Object[]>();
+	private int type = TABLE;
 
 	/**
 	 * @return the name
@@ -34,7 +44,7 @@ public class TableData {
 	/**
 	 * @return the primaryKeys
 	 */
-	public ArrayList<String> getPrimaryKeys() {
+	public ArrayList<Object[]> getPrimaryKeys() {
 		return primaryKeys;
 	}
 
@@ -49,7 +59,10 @@ public class TableData {
 	 * @param primaryKey
 	 */
 	public void addPrimaryKey(String primaryKey) {
-		primaryKeys.add(primaryKey);
+		addPrimaryKey(primaryKey,PK);
+	}
+	public void addPrimaryKey(String primaryKey, int type) {
+		primaryKeys.add( new Object[]{primaryKey,type});
 	}
 
 	public void addRelation(int type, String table) {
@@ -79,15 +92,14 @@ public class TableData {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof TableData) {
-			if (getName().equals(((TableData) obj).getName())
-					&& getSchema().equals(((TableData) obj).getSchema())) {
+			if (getName().equals(((TableData) obj).getName()) && getSchema().equals(((TableData) obj).getSchema())) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public void addPrimaryKey(ArrayList<String> primaryKey) {
+	public void addPrimaryKey(ArrayList<Object[]> primaryKey) {
 		this.primaryKeys = primaryKey;
 
 	}
@@ -95,6 +107,20 @@ public class TableData {
 	public void addRelations(ArrayList<Object[]> relations) {
 		this.relations = relations;
 
+	}
+
+	/**
+	 * @return the type
+	 */
+	public int getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(int type) {
+		this.type = type;
 	}
 
 }

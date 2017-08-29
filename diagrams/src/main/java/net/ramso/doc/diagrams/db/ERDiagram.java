@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxConstants;
 
 import net.ramso.doc.diagrams.BaseDiagram;
@@ -26,6 +27,7 @@ public class ERDiagram extends BaseDiagram {
 		setObjs(objs);
 		setFileName(getObjs().get(0).getName());
 		w = 100;
+		setLayout(DiagramConstants.LAYOUT_TREE_V);
 	}
 
 	/**
@@ -56,12 +58,28 @@ public class ERDiagram extends BaseDiagram {
 					String style = mxConstants.STYLE_EDGE + "=" + mxConstants.EDGESTYLE_ENTITY_RELATION + ";"
 							+ mxConstants.STYLE_STARTARROW + "=" + mxConstants.NONE + ";" + mxConstants.STYLE_ENDARROW
 							+ "=" + mxConstants.ARROW_OVAL;
-					if (((int) relation[0]) == TableData.ONETOONE) {
+					switch ((int) relation[0]) {
+					case TableData.ONETOONE:
 						text = "1 .. 1";
-						style += mxConstants.STYLE_EDGE + "=" + mxConstants.EDGESTYLE_ENTITY_RELATION + ";"
+						style = mxConstants.STYLE_EDGE + "=" + mxConstants.EDGESTYLE_ENTITY_RELATION + ";"
 								+ mxConstants.STYLE_STARTARROW + "=" + mxConstants.NONE + ";"
 								+ mxConstants.STYLE_ENDARROW + "=" + mxConstants.NONE;
+						break;
+
+					case TableData.ONETOMANY:
+						text = "1 .. n";
+						style = mxConstants.STYLE_EDGE + "=" + mxConstants.EDGESTYLE_ENTITY_RELATION + ";"
+								+ mxConstants.STYLE_STARTARROW + "=" + mxConstants.NONE + ";"
+								+ mxConstants.STYLE_ENDARROW + "=" + mxConstants.ARROW_OVAL;
+						break;
+					default:
+						text = "";
+						style = mxConstants.STYLE_EDGE + "=" + mxConstants.EDGESTYLE_ENTITY_RELATION + ";"
+								+ mxConstants.STYLE_STARTARROW + "=" + mxConstants.ARROW_OPEN + ";"
+								+ mxConstants.STYLE_ENDARROW + "=" + mxConstants.ARROW_OPEN;
+						break;
 					}
+
 					Object target = vertex.get((String) relation[1]);
 					getGraph().insertEdge(parent, null, text, source, target, style);
 				}
@@ -92,31 +110,68 @@ public class ERDiagram extends BaseDiagram {
 		double x = (getGraph().getModel().getChildCount(parent) * 100) + DiagramConstants.DEFAULT_POS_X;
 		double y = DiagramConstants.DEFAULT_POS_Y + x;
 		int i = 0;
-		Object[] cells = new Object[(data.getPrimaryKeys().size() *2) + 1];
+		String color = "lightgray";
+		String icon = "primary_key.png";
+		switch (data.getType()) {
+		case TableData.TABLE:
+			color = "lightgray";
+			break;
+		case TableData.VIEW:
+			color = "yellow";
+			break;
+		default:
+			h = w;
+			Object cell = getGraph().insertVertex(parent, null, data.getSchema().trim() + "." + data.getName().trim(),
+					x, y, w, h, "shape=" + mxConstants.SHAPE_RHOMBUS);
+			return cell;
+		}
+
+		Object[] cells = new Object[(data.getPrimaryKeys().size() * 2) + 2];
 		h = data.getPrimaryKeys().size() * 20;
-		// cells[0] = getGraph().insertVertex(parent, null, null, x, y, w, h);
+		// cells[i++] = getGraph().insertVertex(parent, null, null, x, y, w+10,
+		// h+10,"ROUNDED");
 		cells[i++] = getGraph().insertVertex(parent, null, data.getSchema().trim() + "." + data.getName().trim(), x, y,
-				w, 20, mxConstants.STYLE_FILLCOLOR + "=lightgray;" + mxConstants.STYLE_VERTICAL_ALIGN + "="
-						+ mxConstants.ALIGN_MIDDLE);// BAckground gris
+				w, 20, mxConstants.STYLE_FILLCOLOR + "=" + color + ";" + mxConstants.STYLE_VERTICAL_ALIGN + "="
+						+ mxConstants.ALIGN_MIDDLE);
 		y += 20;
 		// Añadir una caja para pk
 		int pi = i;
 		// cells[i++] = getGraph().insertVertex(parent, null, null, x, y, w, h);
-
-		for (String pk : data.getPrimaryKeys()) {
-			cells[i++] = getGraph().insertVertex(parent, null, pk.trim(), x + 10, y, w - 10, 20,
+		for (Object[] pk : data.getPrimaryKeys()) {
+			String name = ((String) pk[0]).trim();
+			switch ((int) pk[1]) {
+			case TableData.PK:
+				icon = "primary_key.png";
+				break;
+			case TableData.UNIQUE:
+				icon = "unique_key.png";
+				break;
+			case TableData.ORDER:
+				icon = "Secuencia.png";
+				break;
+			case TableData.ON:
+				icon = "PKRelationTable.png";
+				break;
+			case TableData.FILTER:
+				icon = "filter.png";
+				break;
+			default:
+				icon = "Column.png";
+				break;
+			}
+			cells[i++] = getGraph().insertVertex(parent, null, name, x + 10, y, w - 10, 20,
 					mxConstants.STYLE_ALIGN + "=" + mxConstants.ALIGN_LEFT + ";" + mxConstants.STYLE_STROKEWIDTH + "=0"
 							+ ";" + mxConstants.STYLE_FONTSTYLE + "=" + mxConstants.FONT_UNDERLINE + ";"
-							+ mxConstants.STYLE_FILLCOLOR + "=none;" + mxConstants.STYLE_IMAGE + "PrimaryKey.png");
-			cells[i++] = getGraph().insertVertex(parent, null, null, x + 1, y, 10, 20,
-					mxConstants.STYLE_SHAPE + "=" + mxConstants.SHAPE_IMAGE +";"+ mxConstants.STYLE_FILLCOLOR + "=RED;"
-							+ mxConstants.STYLE_IMAGE + "=PrimaryKey.png");
+							+ mxConstants.STYLE_FILLCOLOR + "=none;");
+
+			cells[i++] = getGraph().insertVertex(parent, null, null, x + 1, y, 10, 20, mxConstants.STYLE_SHAPE + "="
+					+ mxConstants.SHAPE_IMAGE + ";" + mxConstants.STYLE_IMAGE + "=" + icon);
 			y += 20;
 		}
 		// TODO: Añadir campos
 		// cells[i++] = getGraph().insertVertex(parent, null, null, x, y, w,
 		// 20,mxConstants.STYLE_FILLCOLOR + "=lightgray");
-		Object g = getGraph().groupCells(null, 0, cells);
+		mxCell g = (mxCell) getGraph().groupCells(null, 0, cells);
 		return g;
 	}
 
