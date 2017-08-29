@@ -93,11 +93,11 @@ public class GenerateDiagram {
 			while ((line = br.readLine()) != null) {
 				String[] data = line.split(separator);
 				AS400Object object = new AS400Object();
-				object.setName(data[0]);
-				object.setType(data[2]);
-				object.setAttribute(data[3]);
-				object.setLib(data[1]);
-				object.setParent(data[4]);
+				object.setName(data[0].trim());
+				object.setType(data[2].trim());
+				object.setAttribute(data[3].trim());
+				object.setLib(data[1].trim());
+				object.setParent(data[4].trim());
 				objs.add(object);
 			}
 		} finally {
